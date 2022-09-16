@@ -55,11 +55,13 @@ public class UserController {
                     new AttributeType().withName("email").withValue(userSignUpRequest.getEmail());
             AttributeType emailVerifiedAttr =
                     new AttributeType().withName("email_verified").withValue("true");
+            AttributeType addressAttr =
+                    new AttributeType().withName("address").withValue(userSignUpRequest.getAddress());
 
             AdminCreateUserRequest userRequest = new AdminCreateUserRequest()
                     .withUserPoolId(userPoolId).withUsername(userSignUpRequest.getUsername())
                     .withTemporaryPassword(userSignUpRequest.getPassword())
-                    .withUserAttributes(emailAttr, emailVerifiedAttr)
+                    .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr)
                     .withMessageAction(MessageActionType.SUPPRESS)
                     .withDesiredDeliveryMediums(DeliveryMediumType.EMAIL);
 
@@ -68,6 +70,7 @@ public class UserController {
             System.out.println("User " + createUserResult.getUser().getUsername()
                     + " is created. Status: " + createUserResult.getUser().getUserStatus());
 
+            System.out.println("User address is " + userSignUpRequest.getAddress());
             // Disable force change password during first login
             AdminSetUserPasswordRequest adminSetUserPasswordRequest =
                     new AdminSetUserPasswordRequest().withUsername(userSignUpRequest.getUsername())
