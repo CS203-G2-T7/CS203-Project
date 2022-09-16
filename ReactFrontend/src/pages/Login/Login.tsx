@@ -1,3 +1,12 @@
+import LeftContent from "./LeftContent/LeftContent";
+import RightContent from "./RightContent/RightContent";
+import { LoginStyled } from "./Login.styled";
+
 export default function Login() {
-  return <p>First commit login page</p>;
+  return (
+    <LoginStyled>
+      <LeftContent />
+      <RightContent />
+    </LoginStyled>
+  );
 }

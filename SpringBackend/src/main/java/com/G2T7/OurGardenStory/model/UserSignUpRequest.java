@@ -4,6 +4,7 @@ public class UserSignUpRequest {
     private String username;
     private String email;
     private String password;
+    private String address;
 
     public String getUsername() {
         return username;
@@ -29,4 +30,11 @@ public class UserSignUpRequest {
         this.password = password;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }
