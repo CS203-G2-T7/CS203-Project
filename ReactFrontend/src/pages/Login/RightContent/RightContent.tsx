@@ -6,11 +6,8 @@ type Props = {};
 
 export default function RightContent({}: Props) {
   return (
-    <RightContentStyled>
-      <RightImageStyled
-        src="./image/Right content leaf image.png"
-        alt="Leaves"
-      />
-    </RightContentStyled>
+    <RightImageStyled src="./image/MonsteraImg.jpg" alt="Monstera Leaves" />
+    // <RightContentStyled>
+    // </RightContentStyled>
   );
 }
