@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,7 +49,7 @@ public class UserController {
     private String clientId;
 
     @PostMapping(path = "/sign-up")
-    public void signUp(@RequestBody  UserSignUpRequest userSignUpRequest) {
+    public ResponseEntity<?> signUp(@RequestBody  UserSignUpRequest userSignUpRequest) {
 
         try {
 
@@ -84,6 +86,8 @@ public class UserController {
         } catch (Exception e) {
             System.out.println("Setting user password");
         }
+
+        return ResponseEntity.ok("User registered successfully!");
     }
 
 
@@ -169,12 +173,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/detail")
-    public @ResponseBody  UserDetail getUserDetail() {
+    public @ResponseBody ResponseEntity<?> getUserDetail() {
 
-        UserDetail userDetail = new UserDetail();
-        userDetail.setFirstName("Test");
-        userDetail.setLastName("Buddy");
-        userDetail.setEmail("testbuddy@tutotialsbuddy.com");
-        return userDetail;
+        return ResponseEntity.ok("User is authenticated!");
     }
 }
