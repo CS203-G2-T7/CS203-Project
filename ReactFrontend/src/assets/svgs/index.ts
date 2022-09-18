@@ -1,10 +1,5 @@
-export { ReactComponent as RestaurantLogo } from "./RestaurantLogo.svg";
-export { ReactComponent as SearchIcon } from "./SearchIcon.svg";
-export { ReactComponent as DownArrow } from "./DownArrow.svg";
-export { ReactComponent as CloseIcon } from "./CloseIcon.svg";
-export { ReactComponent as ValidIcon } from "./ValidIcon.svg";
-export { ReactComponent as InvalidIcon } from "./InvalidIcon.svg";
-export { ReactComponent as PlusButton } from "./PlusButton.svg";
-export { ReactComponent as MinusButton } from "./MinusButton.svg";
-export { ReactComponent as PlusIcon } from "./PlusIcon.svg";
-export { ReactComponent as MinusIcon } from "./MinusIcon.svg";
+export { ReactComponent as BottomRight } from "./BottomRight.svg";
+export { ReactComponent as RoundLeaf } from "./RoundLeaf.svg";
+export { ReactComponent as SharpLeaf } from "./SharpLeaf.svg";
+export { ReactComponent as SquareLeaf } from "./SquareLeaf.svg";
+export { ReactComponent as TripleLeaf } from "./TripleLeaf.svg";

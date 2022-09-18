@@ -5,6 +5,11 @@ public class UserSignUpRequest {
     private String email;
     private String password;
     private String address;
+    private String nric;
+    private String birthDate;
+    private String phoneNumber;
+    private String firstName;
+    private String lastName;
 
     public String getUsername() {
         return username;
@@ -37,4 +42,46 @@ public class UserSignUpRequest {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    public String getNRIC() {
+        return nric;
+    }
+
+    public void setNRIC(String nric) {
+        this.nric = nric;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    
 }

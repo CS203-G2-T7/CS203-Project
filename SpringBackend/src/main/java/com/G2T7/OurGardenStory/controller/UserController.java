@@ -59,11 +59,28 @@ public class UserController {
                     new AttributeType().withName("email_verified").withValue("true");
             AttributeType addressAttr =
                     new AttributeType().withName("address").withValue(userSignUpRequest.getAddress());
+            AttributeType usernameAttr =
+                    new AttributeType().withName("username").withValue(userSignUpRequest.getUsername());
+            AttributeType passwordAttr = 
+                    new AttributeType().withName("password").withValue(userSignUpRequest.getPassword());
+            AttributeType nricAttr = 
+                    new AttributeType().withName("nric").withValue(userSignUpRequest.getNRIC());
+            AttributeType birthDateAttr = 
+                    new AttributeType().withName("date_of_birth").withValue(userSignUpRequest.getBirthDate());
+            AttributeType phoneNumberAttr = 
+                    new AttributeType().withName("phone_number").withValue(userSignUpRequest.getPhoneNumber());
+            AttributeType phoneNumberVerifiedAttr = 
+                    new AttributeType().withName("phone_number_verified").withValue("true");
+            AttributeType firstNameAttr = 
+                    new AttributeType().withName("first_name").withValue(userSignUpRequest.getFirstName());
+            AttributeType lastNameAttr = 
+                    new AttributeType().withName("last_name").withValue(userSignUpRequest.getLastName());
 
             AdminCreateUserRequest userRequest = new AdminCreateUserRequest()
                     .withUserPoolId(userPoolId).withUsername(userSignUpRequest.getUsername())
                     .withTemporaryPassword(userSignUpRequest.getPassword())
-                    .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr)
+                    .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr, usernameAttr, passwordAttr, 
+                                        nricAttr, birthDateAttr, phoneNumberAttr, phoneNumberVerifiedAttr, firstNameAttr, lastNameAttr)
                     .withMessageAction(MessageActionType.SUPPRESS)
                     .withDesiredDeliveryMediums(DeliveryMediumType.EMAIL);
 
@@ -73,6 +90,12 @@ public class UserController {
                     + " is created. Status: " + createUserResult.getUser().getUserStatus());
 
             System.out.println("User address is " + userSignUpRequest.getAddress());
+            System.out.println("User username is " + userSignUpRequest.getUsername());
+            System.out.println("User NRIC is " + userSignUpRequest.getNRIC());
+            System.out.println("User date of birth is " + userSignUpRequest.getBirthDate());
+            System.out.println("User phone number is " + userSignUpRequest.getPhoneNumber());
+            System.out.println("User first name is " + userSignUpRequest.getFirstName());
+            System.out.println("User last name is " + userSignUpRequest.getLastName());
             // Disable force change password during first login
             AdminSetUserPasswordRequest adminSetUserPasswordRequest =
                     new AdminSetUserPasswordRequest().withUsername(userSignUpRequest.getUsername())
