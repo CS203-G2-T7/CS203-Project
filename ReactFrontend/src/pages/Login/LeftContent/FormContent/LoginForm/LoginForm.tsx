@@ -48,6 +48,10 @@ export default function LoginForm({}: Props) {
               value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
               message: "Not a valid email.",
             },
+            max: {
+              value: 320,
+              message: "Maximimum number of characters 320.",
+            },
           })}
           placeholder="Enter your email"
         />
