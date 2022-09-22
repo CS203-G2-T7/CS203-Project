@@ -56,7 +56,7 @@ export default function LoginForm({}: Props) {
           // pattern: {
           //   value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
           //   message: "Not a valid email.",
-          // },
+          // }, //no validation for username
           max: {
             value: 320,
             message: "Maximimum number of characters 320.",

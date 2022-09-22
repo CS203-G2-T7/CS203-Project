@@ -10,7 +10,7 @@ public class UserSignUpRequest {
     private String email;
     private String password;
     private String address;
-    private String nric;
+    private String nric; // don't need
     private String birthDate;
     private String phoneNumber;
     private String givenName;
