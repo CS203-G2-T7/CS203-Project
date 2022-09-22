@@ -1,6 +1,7 @@
 import React from "react";
 import {
   BottomRight,
+  CircleLeaf,
   RoundLeaf,
   SharpLeaf,
   SquareLeaf,
@@ -11,6 +12,7 @@ import { SharpLeafStyled } from "./SharpLeaf.styled";
 import { SquareLeafStyled } from "./SquareLeaf.styled";
 import { TripleLeafStyled } from "./TripleLeaf.styled";
 import { BottomRightStyled } from "./BottomRight.styled";
+import { CircleLeafStyled } from "./CircleLeaf.styled";
 import { VectorBackgroundStyled } from "./VectorBackground.styled";
 
 type Props = {};
@@ -37,7 +39,10 @@ export default function VectorBackground({}: Props) {
       <BottomRightStyled>
         <BottomRight />
       </BottomRightStyled>
-      
+
+      <CircleLeafStyled>
+        <CircleLeaf />
+      </CircleLeafStyled>
     </VectorBackgroundStyled>
   );
 }

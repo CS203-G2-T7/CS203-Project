@@ -1,6 +1,6 @@
 import React from "react";
 import VectorBackground from "./VectorBackground/VectorBackground";
-import { LeftContentStyled } from "./VectorBackground/LeftContent.styled";
+import { LeftContentStyled } from "./LeftContent.styled";
 import FormContent from "./FormContent/FormContent";
 
 type Props = {};
