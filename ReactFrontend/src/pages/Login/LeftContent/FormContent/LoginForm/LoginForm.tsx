@@ -1,6 +1,7 @@
 import { RedErrorCircle, ViewPWIcon } from "assets/svgs";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import TextField from "@mui/material/TextField";
+import { useForm, Controller } from "react-hook-form";
 import { EmailFieldStyled } from "./EmailField.styled";
 import HelperText from "./HelperText/HelperText";
 import { LoginFormStyled } from "./LoginForm.styled";
@@ -27,6 +28,7 @@ export default function LoginForm({}: Props) {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm({
     defaultValues: defaultFormData,
@@ -39,39 +41,51 @@ export default function LoginForm({}: Props) {
 
   return (
     <LoginFormStyled onSubmit={handleSubmit(submitHandler)}>
-      <EmailFieldStyled valid={errors.email == null}>
-        <label>Email</label>
-        <input
-          {...register("email", {
-            required: "Email is required.",
-            pattern: {
-              value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-              message: "Not a valid email.",
-            },
-            max: {
-              value: 320,
-              message: "Maximimum number of characters 320.",
-            },
-          })}
-          placeholder="Enter your email"
-        />
-      </EmailFieldStyled>
-      <PasswordFieldStyled valid={errors.password == null}>
-        <label>Password</label>
-        <input
-          type={showPass}
-          {...register("password", { required: "Password cannot be empty." })}
-          placeholder="Enter your password"
-        />
-        <ViewPWIconStyled
-          onMouseDown={() => {
-            setShowPass("text");
-          }}
-          onMouseUp={() => {
-            setShowPass("password");
-          }}
-        />
-      </PasswordFieldStyled>
+      <Controller
+        name={"email"}
+        control={control}
+        rules={{
+          required: "Email is required.",
+          pattern: {
+            value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+            message: "Not a valid email.",
+          },
+          max: {
+            value: 320,
+            message: "Maximimum number of characters 320.",
+          },
+        }}
+        render={({
+          field: { onChange, onBlur, value, name, ref },
+          fieldState: { isTouched, isDirty, error },
+        }) => (
+          <TextField
+            error={error != null}
+            onChange={onChange}
+            value={value}
+            label={"Email"}
+            inputRef={ref}
+          />
+        )}
+      />
+      <Controller
+        name={"password"}
+        control={control}
+        rules={{ required: "Password cannot be empty." }}
+        render={({
+          field: { onChange, onBlur, value, name, ref },
+          fieldState: { isTouched, isDirty, error },
+        }) => (
+          <TextField
+            error={error != null}
+            onChange={onChange}
+            value={value}
+            label={"Password"}
+            inputRef={ref}
+            type={"password"}
+          />
+        )}
+      />
       <HelperText validPass={errors.password == null} />
       <SubmitInputStyled type="submit" />
       <SignUpCTA />
