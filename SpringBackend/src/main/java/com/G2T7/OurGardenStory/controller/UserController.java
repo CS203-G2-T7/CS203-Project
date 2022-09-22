@@ -49,7 +49,7 @@ public class UserController {
     private String clientId;
 
     @PostMapping(path = "/sign-up")
-    public ResponseEntity<?> signUp(@RequestBody  UserSignUpRequest userSignUpRequest) {
+    public ResponseEntity<?> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
 
         try {
 
@@ -59,28 +59,24 @@ public class UserController {
                     new AttributeType().withName("email_verified").withValue("true");
             AttributeType addressAttr =
                     new AttributeType().withName("address").withValue(userSignUpRequest.getAddress());
-            AttributeType usernameAttr =
-                    new AttributeType().withName("username").withValue(userSignUpRequest.getUsername());
-            AttributeType passwordAttr = 
-                    new AttributeType().withName("password").withValue(userSignUpRequest.getPassword());
-            AttributeType nricAttr = 
-                    new AttributeType().withName("nric").withValue(userSignUpRequest.getNRIC());
-            AttributeType birthDateAttr = 
-                    new AttributeType().withName("date_of_birth").withValue(userSignUpRequest.getBirthDate());
-            AttributeType phoneNumberAttr = 
+            AttributeType givenNameAttr =
+                    new AttributeType().withName("given_name").withValue(userSignUpRequest.getGivenName());
+            AttributeType familyNameAttr =
+                    new AttributeType().withName("family_name").withValue(userSignUpRequest.getFamilyName());
+            AttributeType birthDateAttr =
+                    new AttributeType().withName("birthdate").withValue(userSignUpRequest.getBirthDate());
+            AttributeType phoneNumberAttr =
                     new AttributeType().withName("phone_number").withValue(userSignUpRequest.getPhoneNumber());
-            AttributeType phoneNumberVerifiedAttr = 
+            AttributeType phoneNumberVerifiedAttr =
                     new AttributeType().withName("phone_number_verified").withValue("true");
-            AttributeType firstNameAttr = 
-                    new AttributeType().withName("first_name").withValue(userSignUpRequest.getFirstName());
-            AttributeType lastNameAttr = 
-                    new AttributeType().withName("last_name").withValue(userSignUpRequest.getLastName());
+            AttributeType nricAttr =
+                    new AttributeType().withName("custom:NRIC").withValue(userSignUpRequest.getNRIC());
 
             AdminCreateUserRequest userRequest = new AdminCreateUserRequest()
                     .withUserPoolId(userPoolId).withUsername(userSignUpRequest.getUsername())
                     .withTemporaryPassword(userSignUpRequest.getPassword())
-                    .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr, usernameAttr, passwordAttr, 
-                                        nricAttr, birthDateAttr, phoneNumberAttr, phoneNumberVerifiedAttr, firstNameAttr, lastNameAttr)
+                    .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr, givenNameAttr, familyNameAttr,
+                            birthDateAttr, phoneNumberAttr, phoneNumberVerifiedAttr, nricAttr)
                     .withMessageAction(MessageActionType.SUPPRESS)
                     .withDesiredDeliveryMediums(DeliveryMediumType.EMAIL);
 
@@ -90,12 +86,11 @@ public class UserController {
                     + " is created. Status: " + createUserResult.getUser().getUserStatus());
 
             System.out.println("User address is " + userSignUpRequest.getAddress());
-            System.out.println("User username is " + userSignUpRequest.getUsername());
-            System.out.println("User NRIC is " + userSignUpRequest.getNRIC());
-            System.out.println("User date of birth is " + userSignUpRequest.getBirthDate());
+            System.out.println("User Given name is " + userSignUpRequest.getGivenName());
+            System.out.println("User Family name is " + userSignUpRequest.getFamilyName());
+            System.out.println("User Date of Birth is " + userSignUpRequest.getBirthDate());
             System.out.println("User phone number is " + userSignUpRequest.getPhoneNumber());
-            System.out.println("User first name is " + userSignUpRequest.getFirstName());
-            System.out.println("User last name is " + userSignUpRequest.getLastName());
+            System.out.println("User NRIC is " + userSignUpRequest.getNRIC());
             // Disable force change password during first login
             AdminSetUserPasswordRequest adminSetUserPasswordRequest =
                     new AdminSetUserPasswordRequest().withUsername(userSignUpRequest.getUsername())

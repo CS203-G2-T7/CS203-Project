@@ -13,6 +13,7 @@ public class UserDetail {
     private String DOB;
     private String password;
     private LocalDate DateCreated;
+    private String given_name;
 
     public String getFirstName() {
         return firstName;
@@ -82,5 +83,11 @@ public class UserDetail {
         return DateCreated;
     }
 
+    public String getGivenName() {
+        return given_name;
+    }
 
+    public void setGivenName(String given_name) {
+        this.given_name = given_name;
+    }
 }
