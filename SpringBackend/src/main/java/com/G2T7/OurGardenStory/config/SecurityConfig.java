@@ -33,14 +33,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
 
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+                .getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(userDetailsService);
         authenticationManager = authenticationManagerBuilder.build();
 
         List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL);
 
         http.csrf().disable().cors().disable().authorizeHttpRequests().antMatchers(permitAllEndpointList
-                        .toArray(new String[permitAllEndpointList.size()])).permitAll()
+                .toArray(new String[permitAllEndpointList.size()])).permitAll()
                 .antMatchers(HttpMethod.GET, "/api/users/detail").authenticated()
                 .anyRequest().authenticated()
                 .and()
@@ -50,17 +51,17 @@ public class SecurityConfig {
     }
 }
 
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
+// @Override
+// protected void configure(HttpSecurity http) throws Exception {
 //
-//        List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL);
+// List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL);
 //
-//        http.cors().and().csrf().disable()
-//                .authorizeRequests(expressionInterceptUrlRegistry -> expressionInterceptUrlRegistry
-//                        .antMatchers(permitAllEndpointList
-//                                .toArray(new String[permitAllEndpointList.size()]))
-//                        .permitAll().anyRequest().authenticated())
-//                .oauth2ResourceServer().jwt();
-//    }
-//}
+// http.cors().and().csrf().disable()
+// .authorizeRequests(expressionInterceptUrlRegistry ->
+// expressionInterceptUrlRegistry
+// .antMatchers(permitAllEndpointList
+// .toArray(new String[permitAllEndpointList.size()]))
+// .permitAll().anyRequest().authenticated())
+// .oauth2ResourceServer().jwt();
+// }
+// }
