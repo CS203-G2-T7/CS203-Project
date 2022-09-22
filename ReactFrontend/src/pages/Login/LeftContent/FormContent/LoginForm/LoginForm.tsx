@@ -2,10 +2,8 @@ import { RedErrorCircle, ViewPWIcon } from "assets/svgs";
 import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { useForm, Controller } from "react-hook-form";
-import { EmailFieldStyled } from "./EmailField.styled";
 import HelperText from "./HelperText/HelperText";
 import { LoginFormStyled } from "./LoginForm.styled";
-import { PasswordFieldStyled } from "./PasswordField.styled";
 import SignUpCTA from "./SignUpCTA/SignUpCTA";
 import { SubmitInputStyled } from "./SubmitInput.styled";
 import { ViewPWIconStyled } from "./ViewPWIcon.styled";
@@ -65,6 +63,9 @@ export default function LoginForm({}: Props) {
             value={value}
             label={"Email"}
             inputRef={ref}
+            fullWidth
+            margin="normal"
+            placeholder="name@email.com"
           />
         )}
       />
@@ -82,7 +83,21 @@ export default function LoginForm({}: Props) {
             value={value}
             label={"Password"}
             inputRef={ref}
-            type={"password"}
+            type={showPass}
+            fullWidth
+            margin="normal"
+            InputProps={{
+              endAdornment: (
+                <ViewPWIconStyled
+                  onMouseDown={() => {
+                    setShowPass("text");
+                  }}
+                  onMouseUp={() => {
+                    setShowPass("password");
+                  }}
+                />
+              ),
+            }}
           />
         )}
       />
