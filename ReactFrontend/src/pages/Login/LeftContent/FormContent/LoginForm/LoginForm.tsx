@@ -6,6 +6,7 @@ import { LoginFormStyled } from "./LoginForm.styled";
 import SignUpCTA from "./SignUpCTA/SignUpCTA";
 import { SubmitInputStyled } from "./SubmitInput.styled";
 import { ViewPWIconStyled } from "./ViewPWIcon.styled";
+import loginService, { LoginData } from "service/loginService";
 
 type Props = {};
 
@@ -32,7 +33,17 @@ export default function LoginForm({}: Props) {
   });
 
   const submitHandler = (data: FormDataType): void => {
-    console.log(data);
+    loginService
+      .loginUser({
+        username: data.email,
+        password: data.password,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -42,10 +53,10 @@ export default function LoginForm({}: Props) {
         control={control}
         rules={{
           required: "Email is required.",
-          pattern: {
-            value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-            message: "Not a valid email.",
-          },
+          // pattern: {
+          //   value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+          //   message: "Not a valid email.",
+          // },
           max: {
             value: 320,
             message: "Maximimum number of characters 320.",
