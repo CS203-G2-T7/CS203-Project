@@ -1,5 +1,4 @@
-import { RedErrorCircle, ViewPWIcon } from "assets/svgs";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { useForm, Controller } from "react-hook-form";
 import HelperText from "./HelperText/HelperText";
@@ -24,7 +23,6 @@ export default function LoginForm({}: Props) {
   const [showPass, setShowPass] = useState("password");
 
   const {
-    register,
     handleSubmit,
     control,
     formState: { errors },
