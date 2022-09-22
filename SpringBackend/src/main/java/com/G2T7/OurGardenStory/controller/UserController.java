@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,7 +49,7 @@ public class UserController {
     private String clientId;
 
     @PostMapping(path = "/sign-up")
-    public void signUp(@RequestBody  UserSignUpRequest userSignUpRequest) {
+    public ResponseEntity<?> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
 
         try {
 
@@ -57,11 +59,24 @@ public class UserController {
                     new AttributeType().withName("email_verified").withValue("true");
             AttributeType addressAttr =
                     new AttributeType().withName("address").withValue(userSignUpRequest.getAddress());
+            AttributeType givenNameAttr =
+                    new AttributeType().withName("given_name").withValue(userSignUpRequest.getGivenName());
+            AttributeType familyNameAttr =
+                    new AttributeType().withName("family_name").withValue(userSignUpRequest.getFamilyName());
+            AttributeType birthDateAttr =
+                    new AttributeType().withName("birthdate").withValue(userSignUpRequest.getBirthDate());
+            AttributeType phoneNumberAttr =
+                    new AttributeType().withName("phone_number").withValue(userSignUpRequest.getPhoneNumber());
+            AttributeType phoneNumberVerifiedAttr =
+                    new AttributeType().withName("phone_number_verified").withValue("true");
+            AttributeType nricAttr =
+                    new AttributeType().withName("custom:NRIC").withValue(userSignUpRequest.getNRIC());
 
             AdminCreateUserRequest userRequest = new AdminCreateUserRequest()
                     .withUserPoolId(userPoolId).withUsername(userSignUpRequest.getUsername())
                     .withTemporaryPassword(userSignUpRequest.getPassword())
-                    .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr)
+                    .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr, givenNameAttr, familyNameAttr,
+                            birthDateAttr, phoneNumberAttr, phoneNumberVerifiedAttr, nricAttr)
                     .withMessageAction(MessageActionType.SUPPRESS)
                     .withDesiredDeliveryMediums(DeliveryMediumType.EMAIL);
 
@@ -71,6 +86,11 @@ public class UserController {
                     + " is created. Status: " + createUserResult.getUser().getUserStatus());
 
             System.out.println("User address is " + userSignUpRequest.getAddress());
+            System.out.println("User Given name is " + userSignUpRequest.getGivenName());
+            System.out.println("User Family name is " + userSignUpRequest.getFamilyName());
+            System.out.println("User Date of Birth is " + userSignUpRequest.getBirthDate());
+            System.out.println("User phone number is " + userSignUpRequest.getPhoneNumber());
+            System.out.println("User NRIC is " + userSignUpRequest.getNRIC());
             // Disable force change password during first login
             AdminSetUserPasswordRequest adminSetUserPasswordRequest =
                     new AdminSetUserPasswordRequest().withUsername(userSignUpRequest.getUsername())
@@ -84,6 +104,8 @@ public class UserController {
         } catch (Exception e) {
             System.out.println("Setting user password");
         }
+
+        return ResponseEntity.ok("User registered successfully!");
     }
 
 
@@ -169,12 +191,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/detail")
-    public @ResponseBody  UserDetail getUserDetail() {
+    public @ResponseBody ResponseEntity<?> getUserDetail() {
 
-        UserDetail userDetail = new UserDetail();
-        userDetail.setFirstName("Test");
-        userDetail.setLastName("Buddy");
-        userDetail.setEmail("testbuddy@tutotialsbuddy.com");
-        return userDetail;
+        return ResponseEntity.ok("User is authenticated!");
     }
 }

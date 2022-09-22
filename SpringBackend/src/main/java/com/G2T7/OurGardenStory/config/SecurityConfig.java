@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -30,7 +31,7 @@ public class SecurityConfig {
     UserDetailsService userDetailsService;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
 
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(userDetailsService);
@@ -40,6 +41,7 @@ public class SecurityConfig {
 
         http.csrf().disable().cors().disable().authorizeHttpRequests().antMatchers(permitAllEndpointList
                         .toArray(new String[permitAllEndpointList.size()])).permitAll()
+                .antMatchers(HttpMethod.GET, "/api/users/detail").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .authenticationManager(authenticationManager)
