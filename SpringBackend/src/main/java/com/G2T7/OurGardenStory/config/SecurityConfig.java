@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
@@ -40,9 +39,10 @@ public class SecurityConfig {
 
         List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL);
 
-        http.csrf().disable().cors().disable().authorizeHttpRequests().antMatchers(permitAllEndpointList
-                .toArray(new String[permitAllEndpointList.size()])).permitAll()
-                .antMatchers(HttpMethod.GET, "/api/users/detail").authenticated()
+        http.csrf().disable().cors().disable().authorizeHttpRequests()
+                .antMatchers(permitAllEndpointList.toArray(new String[permitAllEndpointList.size()]))
+                .permitAll()
+                .antMatchers(HttpMethod.POST, "/home").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .authenticationManager(authenticationManager)
