@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
-export const StyledFirstTextFields = styled.div`
+export const StyledThirdTextFields = styled.div`
   display: flex;
   flex-direction: column;
-  width: 50%;
+  justify-content: center;
+  width: 30%;
   padding-top: 5%;
   gap: 30px;
   margin: auto;

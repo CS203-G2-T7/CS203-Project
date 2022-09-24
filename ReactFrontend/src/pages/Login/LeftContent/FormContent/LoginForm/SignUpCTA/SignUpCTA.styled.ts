@@ -8,11 +8,14 @@ export const SignUpCTAStyled = styled.div`
   gap: 4px;
   span {
     font-size: 12px;
-
-    &:last-child {
-      color: #3c72db;
-      font-weight: 500;
-      cursor: pointer;
-    }
+  }
+  a:hover,
+  a:visited,
+  a:link,
+  a:active {
+    cursor: pointer;
+    text-decoration: none;
+    color: #3c72db;
+    font-weight: 500;
   }
 `;

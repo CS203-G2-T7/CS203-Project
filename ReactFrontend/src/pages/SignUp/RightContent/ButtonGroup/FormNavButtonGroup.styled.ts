@@ -8,4 +8,8 @@ export const FormNavButtonGroup = styled.div`
   width: 492px;
   margin: auto;
   padding-top: 125px;
+
+  .MuiButton-root {
+    border-radius: 16px;
+  }
 `;
