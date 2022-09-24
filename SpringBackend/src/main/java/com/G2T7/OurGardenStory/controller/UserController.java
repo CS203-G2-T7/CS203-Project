@@ -3,6 +3,9 @@ package com.G2T7.OurGardenStory.controller;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+
+import com.G2T7.OurGardenStory.model.*;
+import com.G2T7.OurGardenStory.repository.GardenRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +35,6 @@ import com.amazonaws.services.cognitoidp.model.DeliveryMediumType;
 import com.amazonaws.services.cognitoidp.model.InvalidParameterException;
 import com.amazonaws.services.cognitoidp.model.MessageActionType;
 import com.G2T7.OurGardenStory.exception.CustomException;
-import com.G2T7.OurGardenStory.model.UserDetail;
-import com.G2T7.OurGardenStory.model.UserSignInRequest;
-import com.G2T7.OurGardenStory.model.UserSignInResponse;
-import com.G2T7.OurGardenStory.model.UserSignUpRequest;
 
 @CrossOrigin("*") //makes this api callable by other locally run servers, specifically, "localhost:3000", the frontend app.
 @RestController

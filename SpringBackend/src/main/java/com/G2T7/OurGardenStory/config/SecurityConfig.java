@@ -39,9 +39,9 @@ public class SecurityConfig {
 
         List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL);
 
-        http.csrf().disable().cors().disable().authorizeHttpRequests().antMatchers(permitAllEndpointList
-                        .toArray(new String[permitAllEndpointList.size()])).permitAll()
-                .antMatchers(HttpMethod.GET, "/api/users/detail").authenticated()
+        http.csrf().disable().cors().disable().authorizeHttpRequests()
+                .antMatchers(permitAllEndpointList.toArray(new String[permitAllEndpointList.size()])).permitAll()
+                .antMatchers(HttpMethod.POST, "/home").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .authenticationManager(authenticationManager)
