@@ -1,5 +1,4 @@
 import React from "react";
-import { RightContentStyled } from "./RightContent.styled";
 import { RightImageStyled } from "./RightImage.styled";
 
 type Props = {};

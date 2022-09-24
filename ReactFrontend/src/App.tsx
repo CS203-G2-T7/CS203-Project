@@ -2,6 +2,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "pages/Home/Home";
 import NotFound from "pages/404";
 import Login from "pages/Login/Login";
+import SignUp from "pages/SignUp/SignUp";
 
 function App() {
   const location = useLocation();
@@ -12,7 +13,7 @@ function App() {
       <Route path="/" element={<Login />} />
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/login" element={<Login />} />
+      <Route path="/sign-up" element={<SignUp />} />
 
       {/* Accessible to NOT logged in users */}
 

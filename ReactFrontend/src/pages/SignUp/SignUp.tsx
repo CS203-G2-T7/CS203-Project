@@ -1,7 +1,12 @@
-import React from "react";
+import LeftContent from "./LeftContent/LeftContent";
+import RightContent from "./RightContent/RightContent";
+import { SignUpStyled } from "./SignUp.styled";
 
-type Props = {};
-
-export default function SignUp({}: Props) {
-  return <div>SignUp</div>;
+export default function Login() {
+  return (
+    <SignUpStyled>
+      <LeftContent />
+      <RightContent />
+    </SignUpStyled>
+  );
 }
