@@ -42,6 +42,8 @@ public class SecurityConfig {
         http.csrf().disable().cors().disable().authorizeHttpRequests()
                 .antMatchers(permitAllEndpointList.toArray(new String[permitAllEndpointList.size()])).permitAll()
                 .antMatchers(HttpMethod.POST, "/home").permitAll()
+                .antMatchers(HttpMethod.GET, "/home/*").permitAll()
+                .antMatchers(HttpMethod.POST, "/ballot").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .authenticationManager(authenticationManager)
