@@ -59,6 +59,12 @@
 			<artifactId>java-jwt</artifactId>
 			<version>4.0.0</version>
 		</dependency>
+		<!-- java jwk  -->
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>jwks-rsa</artifactId>
+			<version>0.21.2</version>
+		</dependency>
 
 		<!-- AWS Java SDK Cognito -->
 		<dependency>
