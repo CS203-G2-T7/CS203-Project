@@ -37,14 +37,14 @@ public class SecurityConfig {
         authenticationManagerBuilder.userDetailsService(userDetailsService);
         authenticationManager = authenticationManagerBuilder.build();
 
-        List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL);
+        List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL); // add "/home" etc.?
 
         http.csrf().disable().cors().disable().authorizeHttpRequests()
                 .antMatchers(permitAllEndpointList.toArray(new String[permitAllEndpointList.size()]))
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/home").permitAll()
                 .antMatchers(HttpMethod.GET, "/home/*").permitAll()
-                .antMatchers(HttpMethod.POST, "/ballot").permitAll()
+                .antMatchers(HttpMethod.POST, "/ballot").permitAll() // combine to line 43, permitAllEndpointList?
                 .anyRequest().authenticated()
                 .and()
                 .authenticationManager(authenticationManager)
