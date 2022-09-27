@@ -39,6 +39,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     // only the Token
     if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
       jwtToken = requestTokenHeader.substring(7);
+      System.out.println("Access Token: " + jwtToken);
 
       try {
         decodedToken = JWT.decode(jwtToken);
@@ -54,12 +55,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
       String header = decodedToken.getHeader();
       String payload = decodedToken.getPayload();
       String sig = decodedToken.getSignature();
-      // String id = decodedToken.getId();
-      System.out.println(header + payload + sig);
+      System.out.println();
+      // System.out.println("Header: " + header);
+      // System.out.println("Payload: " + payload);
+      // System.out.println("Signature: " + sig);
+      System.out.println("ID: " + decodedToken.getId());
+      System.out.println("kid: " + decodedToken.getKeyId());
+      System.out.println("iss: " + decodedToken.getIssuer());
+      decodedToken.getClaims().forEach((key, claim) -> {
+        System.out.println("Key: " + key);
+        System.out.println("Claim: " + claim.asString());
+      });
+
     }
 
     // DecodedJWT decodedJWT = JWT.decode(jwtToken);
-
+    filterChain.doFilter(request, response);
   }
 }
 

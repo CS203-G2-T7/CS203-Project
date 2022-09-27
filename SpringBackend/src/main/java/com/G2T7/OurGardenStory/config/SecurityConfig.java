@@ -15,6 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.G2T7.OurGardenStory.config.*;
 
 @Configuration
 @EnableWebSecurity
@@ -28,6 +30,12 @@ public class SecurityConfig {
 
     @Autowired
     UserDetailsService userDetailsService;
+
+    // JWT
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
+    @Autowired
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
@@ -45,25 +53,13 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/home").permitAll()
                 .antMatchers(HttpMethod.GET, "/home/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/ballot").permitAll() // combine to line 43, permitAllEndpointList?
-                .anyRequest().authenticated()
-                .and()
+                .anyRequest().authenticated().and()
                 .authenticationManager(authenticationManager)
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }
-
-// @Override
-// protected void configure(HttpSecurity http) throws Exception {
-//
-// List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL);
-//
-// http.cors().and().csrf().disable()
-// .authorizeRequests(expressionInterceptUrlRegistry ->
-// expressionInterceptUrlRegistry
-// .antMatchers(permitAllEndpointList
-// .toArray(new String[permitAllEndpointList.size()]))
-// .permitAll().anyRequest().authenticated())
-// .oauth2ResourceServer().jwt();
-// }
-// }
