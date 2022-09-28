@@ -12,10 +12,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import com.G2T7.OurGardenStory.config.*;
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +31,12 @@ public class SecurityConfig {
     @Autowired
     UserDetailsService userDetailsService;
 
+    // JWT
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
+    @Autowired
+    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
     @Bean
     public SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
 
@@ -38,30 +45,21 @@ public class SecurityConfig {
         authenticationManagerBuilder.userDetailsService(userDetailsService);
         authenticationManager = authenticationManagerBuilder.build();
 
-        List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL);
+        List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL); // add "/home" etc.?
 
-        http.csrf().disable().cors().disable().authorizeHttpRequests().antMatchers(permitAllEndpointList
-                .toArray(new String[permitAllEndpointList.size()])).permitAll()
-                .antMatchers(HttpMethod.GET, "/api/users/detail").authenticated()
-                .anyRequest().authenticated()
-                .and()
+        http.csrf().disable().cors().disable().authorizeHttpRequests()
+                .antMatchers(permitAllEndpointList.toArray(new String[permitAllEndpointList.size()]))
+                .permitAll()
+                .antMatchers(HttpMethod.POST, "/home").permitAll()
+                .antMatchers(HttpMethod.GET, "/home/*").permitAll()
+                .antMatchers(HttpMethod.POST, "/ballot").permitAll() // combine to line 43, permitAllEndpointList?
+                .anyRequest().authenticated().and()
                 .authenticationManager(authenticationManager)
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }
-
-// @Override
-// protected void configure(HttpSecurity http) throws Exception {
-//
-// List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL);
-//
-// http.cors().and().csrf().disable()
-// .authorizeRequests(expressionInterceptUrlRegistry ->
-// expressionInterceptUrlRegistry
-// .antMatchers(permitAllEndpointList
-// .toArray(new String[permitAllEndpointList.size()]))
-// .permitAll().anyRequest().authenticated())
-// .oauth2ResourceServer().jwt();
-// }
-// }
