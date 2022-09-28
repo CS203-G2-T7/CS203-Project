@@ -16,7 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.G2T7.OurGardenStory.config.*;
 
 @Configuration
 @EnableWebSecurity
@@ -53,7 +52,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/home").permitAll()
                 .antMatchers(HttpMethod.GET, "/home/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/ballot").permitAll() // combine to line 43, permitAllEndpointList?
-                .anyRequest().authenticated().and()
+                .anyRequest().authenticated().and() // all other routes, including undefined ones must be authenticated.
                 .authenticationManager(authenticationManager)
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

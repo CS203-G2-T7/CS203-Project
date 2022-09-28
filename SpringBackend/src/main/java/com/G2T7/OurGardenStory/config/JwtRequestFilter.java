@@ -3,8 +3,6 @@ package com.G2T7.OurGardenStory.config;
 import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,27 +12,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-// import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.Verification;
-import com.auth0.jwk.Jwk;
-import com.auth0.jwk.JwkException;
-import com.auth0.jwk.JwkProvider;
-import com.auth0.jwk.JwkProviderBuilder;
-import com.auth0.jwk.SigningKeyNotFoundException;
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+
+import com.auth0.jwk.Jwk;
+import com.auth0.jwk.JwkProvider;
+import com.auth0.jwk.JwkProviderBuilder;
+import com.auth0.jwk.JwkException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -44,8 +36,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    // TODO Auto-generated method stub
-    String requestTokenHeader = request.getHeader("Authorization");
 
     String jwtToken = null;
     DecodedJWT decodedToken = null;
@@ -53,12 +43,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     String kid = "";
     boolean valid = true;
 
+    String requestTokenHeader = request.getHeader("Authorization");
+
     // JWT Token is in the form "Bearer token". Remove Bearer word and get
     // only the Token
     if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-      jwtToken = requestTokenHeader.substring(7);
-      // System.out.println("Access Token: " + jwtToken);
+      jwtToken = requestTokenHeader.substring(7); // Raw JWT string
 
+      // get and decode JWTToken from HTTP request
       try {
         decodedToken = JWT.decode(jwtToken);
       } catch (JWTDecodeException e) {
@@ -84,6 +76,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
       valid = false;
     }
 
+    // Get JWK Keyset from Amazon Cognito
+    // Verify JWT Signature from request
     try {
       JwkProvider provider = new JwkProviderBuilder(new URL(JWKURL)).build(); // create JWK provider from Cognito URL.
       Jwk jwk = provider.get(kid); // get JWK from key id
@@ -99,9 +93,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     if (!valid)
       System.out.println("JWT not valid.");
     else {
+      // TODO: From here means JWT verified. Provide logic to authenticate route.
       System.out.println(username + " authentication successful!");
     }
-
     filterChain.doFilter(request, response);
   }
 }
