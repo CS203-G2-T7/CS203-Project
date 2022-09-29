@@ -1,16 +1,12 @@
 import styled from "styled-components";
 
 export const LeftSectionStyled = styled.div`
-    /* background-color: red; */
-    display: flex;
-    flex-direction: row;
-    padding: 30px;
-    align-self: center;
-    
-
-    div{
-        font-size: 20;
-        margin-left: 10px;
-        align-self: center;
-    } 
+  /* background-color: red; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: calc(8rem / 16); //0.5rem -> 8px
+  span {
+    font-size: 20;
+  }
 `;

@@ -5,6 +5,7 @@ import { HeaderStyled } from "./Header.styled";
 
 type Props = {};
 
+//TODO: Rename to Navbar
 export default function Header({}: Props) {
   return (
     <HeaderStyled>

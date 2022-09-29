@@ -2,24 +2,18 @@ import { randomFillSync } from "crypto";
 import React from "react";
 import { TransformStream } from "stream/web";
 import { RightSectionStyled } from "./RightSection.styled";
+// import {AccountButton} from ""
+import { AccountButton } from "assets/svgs";
 
 type Props = {};
 
 export default function RightSection({}: Props) {
   return (
     <RightSectionStyled>
-      <div>
-        whatever
-      </div>
-
-      <div>
-        whatever
-      </div>
-
-      <div>
-        whatever
-      </div>
+      <a href="/">Home</a>
+      <a href="/">About</a>
+      <a href="/">Gardens</a>
+      <AccountButton />
     </RightSectionStyled>
   );
 }
-

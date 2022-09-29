@@ -7,5 +7,4 @@ export { ReactComponent as CircleLeaf } from "./CircleLeaf.svg";
 export { ReactComponent as ViewPWIcon } from "./ViewPWIcon.svg";
 export { ReactComponent as RedErrorCircle } from "./RedErrorCircle.svg";
 export { ReactComponent as LogoMain } from "./LogoMain.svg";
-
-
+export { ReactComponent as AccountButton } from "./AccountButton.svg";
