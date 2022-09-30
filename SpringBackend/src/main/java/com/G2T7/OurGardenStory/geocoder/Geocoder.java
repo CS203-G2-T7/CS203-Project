@@ -8,13 +8,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+import org.springframework.beans.factory.annotation.Value;
+
 public class Geocoder {
 
     private static final String GEOCODING_RESOURCE = "https://geocode.search.hereapi.com/v1/geocode";
-    private static final String API_KEY = "sEul8xoZF2Wwg21RxDO5a0lxJJnsg0AWBetZeCHsZuI";
+    @Value("${Geocoder_API_KEY}")
+    private static String API_KEY; // Get from application.properties. Don't write in plaintext.
 
-    
-    public static void main(String[] args) throws IOException, InterruptedException{
+    public static void main(String[] args) throws IOException, InterruptedException {
         GeocodeSync(GEOCODING_RESOURCE);
     }
 
@@ -22,7 +24,7 @@ public class Geocoder {
 
         HttpClient httpClient = HttpClient.newHttpClient();
 
-        String encodedQuery = URLEncoder.encode(query,"UTF-8");
+        String encodedQuery = URLEncoder.encode(query, "UTF-8");
         String requestUri = GEOCODING_RESOURCE + "?apiKey=" + API_KEY + "&q=" + encodedQuery;
 
         HttpRequest geocodingRequest = HttpRequest.newBuilder().GET().uri(URI.create(requestUri))
@@ -34,6 +36,4 @@ public class Geocoder {
         return (String) geocodingResponse.body();
     }
 
-
 }
-
