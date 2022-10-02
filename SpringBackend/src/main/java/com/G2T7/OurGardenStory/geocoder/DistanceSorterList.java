@@ -115,9 +115,9 @@ public class DistanceSorterList {
 
     //TODO: need to implement the add and remove methods for any parituclar distance in the linkedlist
 
+    //this method sorts the linked list from smallest to largest distance
     public void sortList()
     {
-
         // Node current will point to head
         DistanceSorter current = head;
         DistanceSorter index = null;
@@ -129,14 +129,11 @@ public class DistanceSorterList {
         }
         else {
             while (current != null) {
-                // Node index will point to node next to
-                // current
+                // Node index will point to node next to current
                 index = current.next;
 
                 while (index != null) {
-                    // If current node's data is greater
-                    // than index's node data, swap the data
-                    // between them
+                    // If current node's distance is greater than index's node distance, swap the distance between them
                     if (current.distance > index.distance) {
                         temp = current.distance;
                         current.distance = index.distance;
@@ -168,8 +165,6 @@ public class DistanceSorterList {
         //Change the next of last node
         current.next = new_node;
         size++;
-
-        sortList();
     }
 
     public void remove(double distance) {
@@ -196,8 +191,6 @@ public class DistanceSorterList {
         // Unlink the node from linked list
         prev.next = temp.next;
         size--;
-
-        sortList();
     }
 
 
