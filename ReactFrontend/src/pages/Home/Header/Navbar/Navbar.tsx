@@ -1,16 +1,15 @@
 import React from "react";
 import LeftSection from "./LeftSection/LeftSection";
 import RightSection from "./RightSection/RightSection";
-import { HeaderStyled } from "./Header.styled";
+import { NavbarStyled } from "./Navbar.styled";
 
 type Props = {};
 
-//TODO: Rename to Navbar
-export default function Header({}: Props) {
+export default function Navbar({}: Props) {
   return (
-    <HeaderStyled>
+    <NavbarStyled>
       <LeftSection />
       <RightSection />
-    </HeaderStyled>
+    </NavbarStyled>
   );
 }

@@ -2,7 +2,6 @@ import { randomFillSync } from "crypto";
 import React from "react";
 import { TransformStream } from "stream/web";
 import { RightSectionStyled } from "./RightSection.styled";
-// import {AccountButton} from ""
 import { AccountButton } from "assets/svgs";
 
 type Props = {};

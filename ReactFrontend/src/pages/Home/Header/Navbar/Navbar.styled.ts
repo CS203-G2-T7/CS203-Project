@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const HeaderStyled = styled.nav`
+export const NavbarStyled = styled.nav`
   display: flex;
   flex-direction: row;
   color: white;

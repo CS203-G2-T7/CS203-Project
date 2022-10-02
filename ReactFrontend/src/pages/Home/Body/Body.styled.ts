@@ -1,5 +1,5 @@
 import styled from "styled-components";
 
-export const BottomStyled = styled.div`
+export const BodyStyled = styled.div`
 
 `;

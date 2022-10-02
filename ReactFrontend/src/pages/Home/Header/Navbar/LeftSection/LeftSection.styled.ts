@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const LeftSectionStyled = styled.div`
-  /* background-color: red; */
   display: flex;
   flex-direction: row;
   align-items: center;

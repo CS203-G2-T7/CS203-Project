@@ -1,7 +1,6 @@
 import React from "react";
-import Background from "./Background/Background";
-import Top from "./Top/Top";
-import Bottom from "./Bottom/Bottom";
+import Header from "./Header/Header";
+import Body from "./Body/Body";
 
 import { HomeStyled } from "./Home.styled";
 
@@ -11,9 +10,8 @@ export default function Home({}: Props) {
   return (
     <>
       <HomeStyled>
-        <Top />
-        <Bottom />
-        {/* <Background /> */}
+        <Header />
+        <Body />
       </HomeStyled>
     </>
   );

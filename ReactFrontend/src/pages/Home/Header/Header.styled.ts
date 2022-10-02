@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const TopStyled = styled.div`
+export const HeaderStyled = styled.div`
     display: block flex;
     flex-direction: column;
 
