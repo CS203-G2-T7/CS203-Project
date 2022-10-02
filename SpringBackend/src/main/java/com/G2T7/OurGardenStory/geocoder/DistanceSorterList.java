@@ -115,12 +115,89 @@ public class DistanceSorterList {
 
     //TODO: need to implement the add and remove methods for any parituclar distance in the linkedlist
 
-    public void add(double distance) {
+    public void sortList()
+    {
 
+        // Node current will point to head
+        DistanceSorter current = head;
+        DistanceSorter index = null;
+
+        double temp;
+
+        if (head == null) {
+            return;
+        }
+        else {
+            while (current != null) {
+                // Node index will point to node next to
+                // current
+                index = current.next;
+
+                while (index != null) {
+                    // If current node's data is greater
+                    // than index's node data, swap the data
+                    // between them
+                    if (current.distance > index.distance) {
+                        temp = current.distance;
+                        current.distance = index.distance;
+                        index.distance = temp;
+                    }
+
+                    index = index.next;
+                }
+                current = current.next;
+            }
+        }
+    }
+
+    public void add(double distance) {
+        DistanceSorter new_node = new DistanceSorter(distance, null);
+
+        //If the Linked List is empty, then make the new node as head
+        if (head == null) {
+            head = new DistanceSorter(distance, null);
+            return;
+        }
+
+        //Else traverse till the last node
+        DistanceSorter current = head;
+        while (current.next != null) {
+            current = current.next;
+        }
+
+        //Change the next of last node
+        current.next = new_node;
+        size++;
+
+        sortList();
     }
 
     public void remove(double distance) {
-        
+
+        DistanceSorter temp = head;
+        DistanceSorter prev = null;
+
+        // Delete head node
+        if (temp != null && temp.distance == distance) {
+            head = temp.next; // Changed head
+            return;
+        }
+
+        //delete node that is not head or tail
+        while (temp != null && temp.distance != distance) {
+            prev = temp;
+            temp = temp.next;
+        }
+
+        // If distance is not inside the linked list
+        if (temp == null) {
+            return;
+        }
+        // Unlink the node from linked list
+        prev.next = temp.next;
+        size--;
+
+        sortList();
     }
 
 
