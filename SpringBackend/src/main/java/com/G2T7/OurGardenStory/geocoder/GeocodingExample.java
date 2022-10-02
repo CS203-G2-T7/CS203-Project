@@ -44,9 +44,8 @@ public class GeocodingExample {
             System.out.println(label + " is located at " + lat2 + "," + lng2 + ".");
         }
 
-       double result = distanceBetweenTwoPoints(lat1, lng1, lat2, lng2);
-       System.out.println("The distance between the two addresses is " + result + "km");
-
+        double result = distanceBetweenTwoPoints(lat1, lng1, lat2, lng2);
+        System.out.println("The distance between the two addresses is " + result + "km");
 
     }
 
