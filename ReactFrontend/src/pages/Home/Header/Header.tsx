@@ -6,9 +6,9 @@ import { HeaderStyled } from "./Header.styled";
 type Props = {};
 export default function Header({}: Props) {
   return (
-    <HeaderStyled>
+    <>
       <Navbar />
       <MessageSection />
-    </HeaderStyled>
+    </>
   );
 }

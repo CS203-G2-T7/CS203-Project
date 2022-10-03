@@ -8,7 +8,6 @@ export default function MessageSection({}: Props) {
     <MessageSectionStyled>
         <h1>Be one with nature</h1>
         <h2>Building communities around gardens</h2>
-
     </MessageSectionStyled>
   );
 }
