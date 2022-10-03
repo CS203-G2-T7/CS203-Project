@@ -71,15 +71,12 @@ public class UserController {
                     .withValue(userSignUpRequest.getPhoneNumber());
             AttributeType phoneNumberVerifiedAttr = new AttributeType().withName("phone_number_verified")
                     .withValue("true");
-            AttributeType nricAttr = new AttributeType().withName("custom:NRIC")
-                    .withValue(userSignUpRequest.getNric());
             AdminCreateUserRequest userRequest = new AdminCreateUserRequest()
                     .withUserPoolId(userPoolId).withUsername(userSignUpRequest.getUsername())
                     .withTemporaryPassword(userSignUpRequest.getPassword())
                     .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr, givenNameAttr,
                             familyNameAttr,
-                            birthDateAttr, phoneNumberAttr, phoneNumberVerifiedAttr,
-                            nricAttr)
+                            birthDateAttr, phoneNumberAttr, phoneNumberVerifiedAttr)
                     .withMessageAction(MessageActionType.SUPPRESS)
                     .withDesiredDeliveryMediums(DeliveryMediumType.EMAIL);
 
@@ -93,8 +90,6 @@ public class UserController {
             System.out.println("User Family name is " + userSignUpRequest.getFamilyName());
             System.out.println("User Date of Birth is " + userSignUpRequest.getBirthDate());
             System.out.println("User phone number is " + userSignUpRequest.getPhoneNumber());
-            System.out.println("User NRIC is " + userSignUpRequest.getNric());
-            // Disable force change password during first login
             AdminSetUserPasswordRequest adminSetUserPasswordRequest = new AdminSetUserPasswordRequest()
                     .withUsername(userSignUpRequest.getUsername())
                     .withUserPoolId(userPoolId)
