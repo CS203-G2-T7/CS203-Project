@@ -113,39 +113,37 @@ public class DistanceSorterList {
         return answer;
     }
 
-    //TODO: need to implement the add and remove methods for any parituclar distance in the linkedlist
-
     //this method sorts the linked list from smallest to largest distance
-    public void sortList()
-    {
-        // Node current will point to head
-        DistanceSorter current = head;
-        DistanceSorter index = null;
+    // public void sortList()
+    // {
+    //     // Node current will point to head
+    //     DistanceSorter current = head;
+    //     DistanceSorter index = null;
 
-        double temp;
+    //     double temp;
 
-        if (head == null) {
-            return;
-        }
-        else {
-            while (current != null) {
-                // Node index will point to node next to current
-                index = current.next;
+    //     if (head == null) {
+    //         return;
+    //     }
+    //     else {
+    //         while (current != null) {
+    //             // Node index will point to node next to current
+    //             index = current.next;
 
-                while (index != null) {
-                    // If current node's distance is greater than index's node distance, swap the distance between them
-                    if (current.distance > index.distance) {
-                        temp = current.distance;
-                        current.distance = index.distance;
-                        index.distance = temp;
-                    }
+    //             while (index != null) {
+    //                 // If current node's distance is greater than index's node distance, swap the distance between them
+    //                 if (current.distance > index.distance) {
+    //                     temp = current.distance;
+    //                     current.distance = index.distance;
+    //                     index.distance = temp;
+    //                 }
 
-                    index = index.next;
-                }
-                current = current.next;
-            }
-        }
-    }
+    //                 index = index.next;
+    //             }
+    //             current = current.next;
+    //         }
+    //     }
+    // }
 
     public void add(double distance) {
         DistanceSorter new_node = new DistanceSorter(distance, null);
@@ -156,41 +154,61 @@ public class DistanceSorterList {
             return;
         }
 
-        //Else traverse till the last node
-        DistanceSorter current = head;
-        while (current.next != null) {
-            current = current.next;
+        //check is is smallest
+        if (head.getDistance() > distance) {
+            addFirst(distance);
+            return;
         }
 
-        //Change the next of last node
-        current.next = new_node;
+        if (tail.getDistance() < distance) {
+            addLast(distance);
+            return;
+        }
+
+        //Else traverse till the last node
+        DistanceSorter current = head.getNext();
+        DistanceSorter previous = head;
+        while (current != null) {
+            if (distance < current.getDistance()) {
+                previous.setNext(new_node);
+                new_node.setNext(current);
+                break;
+            }
+            current = current.getNext();
+            previous = previous.getNext();
+        }
+
         size++;
     }
 
     public void remove(double distance) {
 
-        DistanceSorter temp = head;
-        DistanceSorter prev = null;
-
-        // Delete head node
-        if (temp != null && temp.distance == distance) {
-            head = temp.next; // Changed head
+        if (head == null) {
             return;
         }
 
-        //delete node that is not head or tail
-        while (temp != null && temp.distance != distance) {
-            prev = temp;
-            temp = temp.next;
-        }
-
-        // If distance is not inside the linked list
-        if (temp == null) {
+        //delete head node
+        if (head.getDistance() == distance) {
+            removeFirst();
             return;
         }
-        // Unlink the node from linked list
-        prev.next = temp.next;
-        size--;
+
+        //delete tail node
+        if (tail.getDistance() == distance) {
+            removeLast();
+        }
+
+        DistanceSorter temp = head.getNext();
+        DistanceSorter prev = head;
+
+        while (temp != null) {
+            if (temp.getDistance() == distance) {
+                prev.setNext(temp.getNext());
+                break;
+            }
+            temp = temp.getNext();
+            prev = prev.getNext();
+        }
     }
 
 

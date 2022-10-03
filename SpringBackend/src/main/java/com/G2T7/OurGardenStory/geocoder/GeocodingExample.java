@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class GeocodingExample {
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public void distanceCalculator(String address1, String address2) throws IOException, InterruptedException {
         String lat1 = "";
         String lat2 = "";
         String lng1 = "";
@@ -16,11 +16,11 @@ public class GeocodingExample {
         ObjectMapper mapper = new ObjectMapper();
         Geocoder geocoder = new Geocoder();
 
-        String response = geocoder.GeocodeSync("39F West Coast Park, S 127717");
+        String response = geocoder.GeocodeSync(address1);
         JsonNode responseJsonNode = mapper.readTree(response);
         JsonNode items = responseJsonNode.get("items");
 
-        String response2 = geocoder.GeocodeSync("Blk 10 Stirling Road, S 148954");
+        String response2 = geocoder.GeocodeSync(address2);
         JsonNode responseJsonNode2 = mapper.readTree(response2);
         JsonNode items2 = responseJsonNode2.get("items");
 
