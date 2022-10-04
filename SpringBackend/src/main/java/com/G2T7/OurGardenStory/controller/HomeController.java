@@ -2,8 +2,10 @@ package com.G2T7.OurGardenStory.controller;
 
 import com.G2T7.OurGardenStory.model.Ballot;
 import com.G2T7.OurGardenStory.model.Garden;
+import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.repository.BallotRepo;
 import com.G2T7.OurGardenStory.repository.GardenRepo;
+import com.G2T7.OurGardenStory.repository.WindowRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,9 @@ public class HomeController {
 
     @Autowired
     private BallotRepo ballotRepo;
+
+    @Autowired
+    private WindowRepo windowRepo;
 
     @PostMapping(path = "/home")
     public Garden saveGarden(@RequestBody Garden garden) {
@@ -28,5 +33,10 @@ public class HomeController {
     @PostMapping(path = "/ballot")
     public Ballot saveBallot(@RequestBody Ballot ballot) {
         return ballotRepo.save(ballot);
+    }
+
+    @PostMapping(path = "/window")
+    public Window saveWindow(@RequestBody Window window) {
+        return windowRepo.save(window);
     }
 }
