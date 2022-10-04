@@ -3,6 +3,8 @@ import com.G2T7.OurGardenStory.geocoder.DistanceSorterList;
 import com.G2T7.OurGardenStory.geocoder.GeocodingExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
@@ -12,7 +14,7 @@ public class GeocodeController {
 
     private DistanceSorterList distancesorterlist;
 
-    @PostMapping(path = "/geocode")
+    @PutMapping (path = "/geocode")
     public DistanceSorterList saveDistance(String address1, String address2) {
         double distance = 0.0;
         try {

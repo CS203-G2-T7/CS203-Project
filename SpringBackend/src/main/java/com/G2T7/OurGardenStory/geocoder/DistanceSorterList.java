@@ -1,28 +1,28 @@
 package com.G2T7.OurGardenStory.geocoder;
 
 public class DistanceSorterList {
-    
+
     private static class DistanceSorter {
         private double distance;
         private DistanceSorter next;
-    
+
         public DistanceSorter(double distance, DistanceSorter next) {
             this.distance = distance;
             this.next = next;
         }
-    
+
         public double getDistance() {
             return distance;
         }
-    
+
         public DistanceSorter getNext() {
             return next;
         }
-    
+
         public void setNext(DistanceSorter n) {
             next = n;
         }
-    
+
     }
 
     private DistanceSorter head = null;
