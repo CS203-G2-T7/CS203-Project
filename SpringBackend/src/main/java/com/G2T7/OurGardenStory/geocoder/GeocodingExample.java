@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class GeocodingExample {
 
-    public void distanceCalculator(String address1, String address2) throws IOException, InterruptedException {
+    public static double distanceCalculator(String address1, String address2) throws IOException, InterruptedException {
         String lat1 = "";
         String lat2 = "";
         String lng1 = "";
@@ -46,6 +46,7 @@ public class GeocodingExample {
 
         double result = distanceBetweenTwoPoints(lat1, lng1, lat2, lng2);
         System.out.println("The distance between the two addresses is " + result + "km");
+        return result;
 
     }
 
