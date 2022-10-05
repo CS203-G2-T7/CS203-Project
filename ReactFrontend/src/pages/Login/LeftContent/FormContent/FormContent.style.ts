@@ -8,7 +8,7 @@ export const FormContentStyle = styled.div`
   z-index: 10;
 
   h1 {
-    font-size: 48px;
+    font-size: 3rem;
     font-weight: 500;
     font-family: "Montserrat", sans-serif;
     color: #00131e;

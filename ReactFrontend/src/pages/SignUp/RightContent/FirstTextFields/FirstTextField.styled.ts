@@ -5,9 +5,9 @@ export const StyledFirstTextFields = styled.div`
   flex-direction: column;
   width: 50%;
   padding-top: 5%;
-  gap: 30px;
+  gap: 1.875rem;
   margin: auto;
   fieldset {
-    border-radius: 16px;
+    border-radius: 1rem;
   }
 `;

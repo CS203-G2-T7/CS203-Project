@@ -2,6 +2,6 @@ import styled from "styled-components";
 
 export const SharpLeafStyled = styled.span`
   position: absolute;
-  right: 50px;
-  bottom: 250px;
+  right: 3.125rem;
+  bottom: 15.625rem;
 `;
