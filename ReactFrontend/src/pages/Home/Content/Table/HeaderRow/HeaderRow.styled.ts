@@ -18,12 +18,12 @@ export const HeaderRowStyled = styled.div`
     width: 36.378%;
   }
   span:nth-child(2) {
-    width: 15%;
+    width: 20%;
   }
   span:nth-child(3) {
-    width: 15%;
+    width: 20%;
   }
   span:nth-child(4) {
-    width: 18%;
+    width: 20%;
   }
 `;
