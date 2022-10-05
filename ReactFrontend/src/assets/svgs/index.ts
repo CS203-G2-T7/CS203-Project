@@ -8,3 +8,4 @@ export { ReactComponent as ViewPWIcon } from "./ViewPWIcon.svg";
 export { ReactComponent as RedErrorCircle } from "./RedErrorCircle.svg";
 export { ReactComponent as LogoMain } from "./LogoMain.svg";
 export { ReactComponent as AccountButton } from "./AccountButton.svg";
+export { ReactComponent as WindowOptionArrow } from "./WindowOptionArrow.svg";
