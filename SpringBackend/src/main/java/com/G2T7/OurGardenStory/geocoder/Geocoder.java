@@ -16,11 +16,6 @@ public class Geocoder {
 
     @Value(value = "${geocoder.api-key}")
     private static String API_KEY;
-    // @Value(value = "${Geocoding_Resource}")
-    private String GEOCODING_RESOURCE = "https://geocode.search.hereapi.com/v1/geocode";
-
-    // @Value(value = "${aws.access-key}")
-    // private String accessKey;
 
     public String GeocodeSync(String query) throws IOException, InterruptedException {
         System.out.println("API_KEY = " + API_KEY);
