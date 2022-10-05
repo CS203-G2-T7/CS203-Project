@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/ballot").permitAll() // combine to line 43, permitAllEndpointList?
                 .antMatchers(HttpMethod.POST, "/window").permitAll()
                 .antMatchers(HttpMethod.GET, "/geocode").permitAll()
-                .anyRequest().authenticated().and() // all other routes, including undefined ones must be authenticated.
+                .anyRequest().permitAll().and() // all other routes, including undefined ones must be authenticated.
                 .authenticationManager(authenticationManager)
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
