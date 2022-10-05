@@ -11,18 +11,12 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class Geocoder {
 
-    @Value(value = "${geocoder.resource}")
-    private static String GEOCODING_RESOURCE;
-
-    @Value(value = "${geocoder.api-key}")
-    private static String API_KEY;
-
-    public String GeocodeSync(String query) throws IOException, InterruptedException {
-        System.out.println("API_KEY = " + API_KEY);
+    public String GeocodeSync(String query, String resource, String apiKey) throws IOException, InterruptedException {
+        // System.out.println("API_KEY = " + API_KEY);
         HttpClient httpClient = HttpClient.newHttpClient();
 
         String encodedQuery = URLEncoder.encode(query,"UTF-8");
-        String requestUri = GEOCODING_RESOURCE + "?apiKey=" + API_KEY + "&q=" + encodedQuery;
+        String requestUri = resource + "?apiKey=" + apiKey + "&q=" + encodedQuery;
         URI uri = URI.create(requestUri);
         System.out.println("request uri = " + requestUri);
         System.out.println("uri = " + uri);

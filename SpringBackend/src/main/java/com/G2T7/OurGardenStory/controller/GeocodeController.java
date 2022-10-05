@@ -41,7 +41,10 @@
 package com.G2T7.OurGardenStory.controller;
 //import com.G2T7.OurGardenStory.geocoder.DistanceSorterList;
 import com.G2T7.OurGardenStory.geocoder.GeocodingExample;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,6 +55,12 @@ import java.io.IOException;
 @RestController
 public class GeocodeController {
 
+    @Value("${geocoder.resource}")
+    private String GEOCODING_RESOURCE;
+    
+    @Value("${geocoder.api-key}")
+    private String API_KEY;
+
     //private DistanceSorterList distancesorterlist = new DistanceSorterList();
     TreeSet<Double> tree = new TreeSet<>();
 
@@ -59,7 +68,7 @@ public class GeocodeController {
     public TreeSet<Double> saveDistance(String address1, String address2) {
         double distance = 0.0;
         try {
-            distance = GeocodingExample.distanceCalculator(address1, address2);
+            distance = GeocodingExample.distanceCalculator(address1, address2, GEOCODING_RESOURCE, API_KEY);
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
         }

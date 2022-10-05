@@ -52,7 +52,6 @@ public class UserController {
 
     @PostMapping(path = "/sign-up")
     public ResponseEntity<?> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
-
         try {
 
             AttributeType emailAttr = new AttributeType().withName("email")
