@@ -1,13 +1,13 @@
 package com.G2T7.OurGardenStory.geocoder;
 
 import java.io.IOException;
-
+import java.util.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class GeocodingExample {
 
-    public static double distanceCalculator(String address1, String address2) throws IOException, InterruptedException {
+    public static double distanceCalculator(String address1, String address2, String resource, String apiKey) throws IOException, InterruptedException {
         String lat1 = "";
         String lat2 = "";
         String lng1 = "";
@@ -16,11 +16,11 @@ public class GeocodingExample {
         ObjectMapper mapper = new ObjectMapper();
         Geocoder geocoder = new Geocoder();
 
-        String response = geocoder.GeocodeSync(address1);
+        String response = geocoder.GeocodeSync(address1, resource, apiKey);
         JsonNode responseJsonNode = mapper.readTree(response);
         JsonNode items = responseJsonNode.get("items");
 
-        String response2 = geocoder.GeocodeSync(address2);
+        String response2 = geocoder.GeocodeSync(address2, resource, apiKey);
         JsonNode responseJsonNode2 = mapper.readTree(response2);
         JsonNode items2 = responseJsonNode2.get("items");
 
