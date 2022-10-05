@@ -30,8 +30,10 @@ export default function RightContent({}: Props) {
 
   return (
     <RightContentStyled>
-      <h1>Create Account</h1>
-      {CurrentPageComponent}
+      <div>
+        <h1>Create Account</h1>
+        {CurrentPageComponent}
+      </div>
       <FixedBottom>
         <ButtonGroup pageSetter={setPage} />
         <LoginLink />

@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const StyledFirstTextFields = styled.div`
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 40rem;
   padding-top: 5%;
   gap: 1.875rem;
   margin: auto;

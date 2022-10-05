@@ -1,8 +1,12 @@
 import styled from "styled-components";
 
 export const RightContentStyled = styled.div`
-  position: relative;
   flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* align-items: center; */
   height: 100vh;
   background-color: #fefefe;
 
@@ -11,7 +15,7 @@ export const RightContentStyled = styled.div`
     font-weight: 500;
     font-size: 3rem;
     color: #00131e;
-    margin: 16% 0 0 0;
+    margin-top: 7rem;
     text-align: center;
   }
 `;
