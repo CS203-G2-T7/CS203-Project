@@ -61,7 +61,6 @@ public class GeocodeController {
     @Value("${geocoder.api-key}")
     private String API_KEY;
 
-    //private DistanceSorterList distancesorterlist = new DistanceSorterList();
     TreeSet<Double> tree = new TreeSet<>();
 
     @PostMapping (path = "/geocode")
@@ -72,8 +71,7 @@ public class GeocodeController {
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
         }
-        // distancesorterlist.add(distance);
-        // return distancesorterlist.getDistances();
+        
         tree.add(distance);
         return tree;
     }
