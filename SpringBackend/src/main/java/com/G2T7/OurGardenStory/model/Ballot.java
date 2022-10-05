@@ -23,7 +23,7 @@ public class Ballot {
     private LocalDateTime submitDateTime;
 
     @DynamoDBAttribute
-    private int ballotWindow;
+    private String postCode;
 
 //    private enum status{
 //        FAIL,PENDING,SUCCESS,INVALID;

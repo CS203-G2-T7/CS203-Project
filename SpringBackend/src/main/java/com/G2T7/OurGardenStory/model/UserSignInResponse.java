@@ -7,9 +7,11 @@ import lombok.Setter;
 @Setter
 public class UserSignInResponse {
     private String accessToken;
-    private String idToken;
+    @Getter
+    @Setter
+    private static String idToken;
     private String refreshToken;
     private String tokenType;
     private Integer expiresIn;
-
+    private String address;
 }

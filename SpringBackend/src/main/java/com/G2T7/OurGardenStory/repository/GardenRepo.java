@@ -19,6 +19,7 @@ public class GardenRepo {
     }
 
     public Garden getGardenById(String gardenId) {
+        System.out.println();
         return dynamoDBMapper.load(Garden.class, gardenId);
     }
 

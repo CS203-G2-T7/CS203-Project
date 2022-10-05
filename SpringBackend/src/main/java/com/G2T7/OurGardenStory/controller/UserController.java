@@ -145,8 +145,7 @@ public class UserController {
                                 userSignInRequest.getNewPassword());
 
                         final AdminRespondToAuthChallengeRequest request = new AdminRespondToAuthChallengeRequest()
-                                .withChallengeName(
-                                        ChallengeNameType.NEW_PASSWORD_REQUIRED)
+                                .withChallengeName(ChallengeNameType.NEW_PASSWORD_REQUIRED)
                                 .withChallengeResponses(challengeResponses)
                                 .withClientId(clientId).withUserPoolId(userPoolId)
                                 .withSession(result.getSession());
@@ -155,18 +154,15 @@ public class UserController {
                                 .adminRespondToAuthChallenge(request);
                         authenticationResult = resultChallenge.getAuthenticationResult();
 
-                        userSignInResponse
-                                .setAccessToken(authenticationResult.getAccessToken());
+                        userSignInResponse.setAccessToken(authenticationResult.getAccessToken());
                         userSignInResponse.setIdToken(authenticationResult.getIdToken());
-                        userSignInResponse.setRefreshToken(
-                                authenticationResult.getRefreshToken());
+                        userSignInResponse.setRefreshToken(authenticationResult.getRefreshToken());
                         userSignInResponse.setExpiresIn(authenticationResult.getExpiresIn());
                         userSignInResponse.setTokenType(authenticationResult.getTokenType());
                     }
 
                 } else {
-                    throw new CustomException(
-                            "User has other challenge " + result.getChallengeName());
+                    throw new CustomException("User has other challenge " + result.getChallengeName());
                 }
             } else {
 
