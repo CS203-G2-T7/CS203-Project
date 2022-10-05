@@ -61,10 +61,10 @@ public class GeocodeController {
     @Value("${geocoder.api-key}")
     private String API_KEY;
 
-    TreeSet<Double> tree = new TreeSet<>();
+    HashMap<String, Double> map = new HashMap<>();
 
     @PostMapping (path = "/geocode")
-    public TreeSet<Double> saveDistance(String address1, String address2) {
+    public HashMap<String, Double> saveDistance(String address1, String address2) {
         double distance = 0.0;
         try {
             distance = GeocodingExample.distanceCalculator(address1, address2, GEOCODING_RESOURCE, API_KEY);
@@ -72,7 +72,8 @@ public class GeocodeController {
             System.out.println(e.getMessage());
         }
 
-        tree.add(distance);
-        return tree;
+        //TODO: link username
+        map.put(username, distance);
+        return map;
     }
 }
