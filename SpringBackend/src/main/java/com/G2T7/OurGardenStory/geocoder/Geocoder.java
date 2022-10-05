@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class Geocoder {
 
-    @Value(value = "${Geocoding_Resource}")
+    @Value(value = "${geocoder.resource}")
     private static String GEOCODING_RESOURCE;
 
-    @Value(value = "${Geocoder_API_KEY}")
+    @Value(value = "${geocoder.api-key}")
     private static String API_KEY;
 
     public String GeocodeSync(String query) throws IOException, InterruptedException {
