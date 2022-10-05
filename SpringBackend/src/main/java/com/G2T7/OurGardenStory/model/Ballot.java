@@ -23,7 +23,10 @@ public class Ballot {
     private LocalDateTime submitDateTime;
 
     @DynamoDBAttribute
-    private String postCode;
+    private String username;
+
+    @DynamoDBAttribute
+    private String leaseDuration = "3Y";
 
 //    private enum status{
 //        FAIL,PENDING,SUCCESS,INVALID;

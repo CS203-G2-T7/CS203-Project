@@ -17,7 +17,7 @@ public class BallotRepo {
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
 
-    protected String findPostCodeByIdToken() {
+    protected String[] getPayloadAttributes() {
         String idToken = UserSignInResponse.getIdToken();
         String[] chunks = idToken.split("\\."); // chunk 0 is header, chunk 1 is payload
 
@@ -26,20 +26,33 @@ public class BallotRepo {
         String payload = new String(decoder.decode(chunks[1])); // gets payload from idToken
         String[] payload_attr = payload.split(",");
 
+        return payload_attr;
+    }
+
+    protected String findPostCodeByIdToken(String[] payload_attr) {
         for (String elem : payload_attr) {
             if (elem.contains("address")) {
                 return elem.substring(elem.indexOf(":\"") + 2, elem.indexOf("\"}")); // address is returned
             }
         }
-
         return null;
     }
 
+    protected String findUsernameByIdToken(String[] payload_attr) {
+        for (String elem : payload_attr) {
+            if (elem.contains("username")) {
+                System.out.println(elem);
+                return elem.substring(elem.indexOf(":\"") + 2, elem.length() - 2); // username is returned
+            }
+        }
+        return null;
+    }
 
     public Ballot save(Ballot ballot) {
         ballot.setSubmitDateTime(LocalDateTime.now());
-        String postCode = "Singapore " + findPostCodeByIdToken(); // add Singapore prefix to address
-        ballot.setPostCode(postCode);
+        String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to address
+        String username = findUsernameByIdToken(getPayloadAttributes());
+        ballot.setUsername(username);
         dynamoDBMapper.save(ballot);
         return ballot;
     }

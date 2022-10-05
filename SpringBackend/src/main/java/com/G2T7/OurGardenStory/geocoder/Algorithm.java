@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Algorithm {
     
-    public ArrayList<String> getBallotSucess(HashMap<String,Double> ballotters, int numSuccess) {
+    public ArrayList<String> getBallotSuccess(HashMap<String,Double> ballotters, int numSuccess) {
         ArrayList<String> list = new ArrayList<>(ballotters.keySet());
         for (String key : ballotters.keySet()) {
             if (ballotters.get(key) <= 2) {

@@ -73,7 +73,7 @@ public class GeocodeController {
         }
 
         //TODO: link username
-        map.put(username, distance);
+        // map.put(username, distance);
         return map;
     }
 }

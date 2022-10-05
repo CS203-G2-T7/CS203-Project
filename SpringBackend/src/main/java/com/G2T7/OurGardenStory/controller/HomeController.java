@@ -9,6 +9,8 @@ import com.G2T7.OurGardenStory.repository.WindowRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class HomeController {
     @Autowired
@@ -39,4 +41,7 @@ public class HomeController {
     public Window saveWindow(@RequestBody Window window) {
         return windowRepo.save(window);
     }
+
+    @GetMapping(path = "/window")
+    public List<Window> getWindows() {return  windowRepo.listWindows();}
 }
