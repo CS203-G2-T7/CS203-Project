@@ -25,7 +25,7 @@ public class WindowRepo {
     }
 
     public List<Window> listWindows() {
-        List<Window> scanResult = dynamoDBMapper.scan(Window.class, new DynamoDBScanExpression());
-        return scanResult;
+        List<Window> windowList = dynamoDBMapper.scan(Window.class, new DynamoDBScanExpression());
+        return windowList;
     }
 }

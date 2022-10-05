@@ -23,6 +23,9 @@ public class Ballot {
     private LocalDateTime submitDateTime;
 
     @DynamoDBAttribute
+    private LocalDateTime startDateTime;
+
+    @DynamoDBAttribute
     private String username;
 
     @DynamoDBAttribute
@@ -31,11 +34,12 @@ public class Ballot {
 //    private enum status{
 //        FAIL,PENDING,SUCCESS,INVALID;
 //    }
-//
-//    private Garden garden;
 
     @DynamoDBTypeConverted( converter = LocalDateTimeConverter.class )
     public LocalDateTime getSubmitDateTime() { return submitDateTime;}
+
+    @DynamoDBTypeConverted( converter = LocalDateTimeConverter.class )
+    public LocalDateTime getStartDateTime() { return startDateTime;}
 
     static public class LocalDateTimeConverter implements DynamoDBTypeConverter<String, LocalDateTime> {
 

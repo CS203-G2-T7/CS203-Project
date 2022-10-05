@@ -43,5 +43,5 @@ public class HomeController {
     }
 
     @GetMapping(path = "/window")
-    public List<Window> getWindows() {return  windowRepo.listWindows();}
+    public List<Window> getWindows() {return windowRepo.listWindows();}
 }
