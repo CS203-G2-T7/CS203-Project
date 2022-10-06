@@ -28,15 +28,14 @@ public class Ballot {
     @DynamoDBAttribute
     private String leaseDuration = "3Y";
 
+    @DynamoDBAttribute
+    private String status = "PENDING";
+
     @DynamoDBTypeConverted( converter = LocalDateTimeConverter.class )
     private LocalDateTime startDateTime;
 
     @DynamoDBAttribute
     private String username;
-
-//    private enum status{
-//        FAIL,PENDING,SUCCESS,INVALID;
-//    }
 
     static public class LocalDateTimeConverter implements DynamoDBTypeConverter<String, LocalDateTime> {
 
