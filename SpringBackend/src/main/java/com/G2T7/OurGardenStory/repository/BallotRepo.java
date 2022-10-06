@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.Base64;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class BallotRepo {
@@ -76,6 +77,10 @@ public class BallotRepo {
         ballot.setStartDateTime(window.getStartDateTime());
         ballot.setLeaseStart(findLeaseStart(window));
         String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to address
+        Set<String> gardenSet = window.getGardenSet();
+        if (!gardenSet.contains(ballot.getGarden())) {
+            return null;
+        }
         String username = findUsernameByIdToken(getPayloadAttributes());
         ballot.setUsername(username);
         dynamoDBMapper.save(ballot);

@@ -31,6 +31,9 @@ public class Ballot {
     @DynamoDBAttribute
     private String status = "PENDING";
 
+    @DynamoDBAttribute
+    private String garden;
+
     @DynamoDBTypeConverted( converter = LocalDateTimeConverter.class )
     private LocalDateTime startDateTime;
 
