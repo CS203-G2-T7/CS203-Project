@@ -54,6 +54,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/ballot").permitAll() // combine to line 43, permitAllEndpointList?
                 .antMatchers(HttpMethod.PUT, "/geocode").permitAll()
                 .antMatchers(HttpMethod.POST, "/window").permitAll()
+                .antMatchers(HttpMethod.GET, "/windows").permitAll()
                 .antMatchers(HttpMethod.GET, "/window").permitAll()
                 .antMatchers(HttpMethod.PUT, "/window/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/geocode").permitAll()

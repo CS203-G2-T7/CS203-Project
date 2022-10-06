@@ -32,6 +32,22 @@ public class WindowRepo {
         return windowList;
     }
 
+    public Window findLatestWindow() {
+        List<Window> windowList = listWindows();
+        int latestWindowNum = 0;
+        Window returnWindow = null;
+        for (Window window : windowList) {
+            int windowNum = window.getWindowNum();
+
+            if (windowNum > latestWindowNum) {
+                latestWindowNum = windowNum;
+                returnWindow = window;
+            }
+        }
+
+        return returnWindow;
+    }
+
     public Window update(int windowNum, Window updateWindow) {
         List<Window> windowList = listWindows(); // very inefficient way to update :(
         for (Window window : windowList) {

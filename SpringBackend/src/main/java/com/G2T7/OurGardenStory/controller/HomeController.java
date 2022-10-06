@@ -37,13 +37,16 @@ public class HomeController {
         return ballotRepo.save(ballot);
     }
 
+    @GetMapping(path = "/windows")
+    public List<Window> getWindows() {return windowRepo.listWindows();}
+
+    @GetMapping(path = "/window")
+    public Window getLatestWindow() {return windowRepo.findLatestWindow();}
+
     @PostMapping(path = "/window")
     public Window saveWindow(@RequestBody Window window) {
         return windowRepo.save(window);
     }
-
-    @GetMapping(path = "/window")
-    public List<Window> getWindows() {return windowRepo.listWindows();}
 
     @PutMapping(path = "/window/{windowNum}") // should windowNum be parsed in the endpoint?
     public Window updateWindows(@PathVariable("windowNum") int windowNum, @RequestBody Window window) {
