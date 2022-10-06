@@ -51,22 +51,30 @@ public class BallotRepo {
         return null;
     }
 
-    protected LocalDateTime findWindow(List<Window> windowList, Ballot ballot) {
+    protected Window findWindow(List<Window> windowList, Ballot ballot) {
         for (Window window : windowList) {
             LocalDateTime startDateTime = window.getStartDateTime();
             LocalDateTime submitDateTime = ballot.getSubmitDateTime();
             int days = submitDateTime.getDayOfYear() - startDateTime.getDayOfYear(); // just handle day diff for now
-            if (days <= 30) {return startDateTime;}
+            if (days <= 30) {
+                return window;
+            }
         }
 
         return null;
     }
 
+    protected LocalDateTime findLeaseStart(Window window) {
+        int duration = Character.getNumericValue(window.getDuration().charAt(0));
+        return window.getStartDateTime().plusMonths(duration);
+    }
+
     public Ballot save(Ballot ballot) {
         ballot.setSubmitDateTime(LocalDateTime.now());
-        LocalDateTime startDateTime = findWindow
+        Window window = findWindow
                 (dynamoDBMapper.scan(Window.class, new DynamoDBScanExpression()), ballot); // I do not know how to call listWindows in WindowRepo
-        ballot.setStartDateTime(startDateTime);
+        ballot.setStartDateTime(window.getStartDateTime());
+        ballot.setLeaseStart(findLeaseStart(window));
         String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to address
         String username = findUsernameByIdToken(getPayloadAttributes());
         ballot.setUsername(username);
