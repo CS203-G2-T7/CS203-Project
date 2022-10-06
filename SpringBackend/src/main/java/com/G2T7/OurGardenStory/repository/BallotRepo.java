@@ -45,7 +45,7 @@ public class BallotRepo {
     protected String findUsernameByIdToken(String[] payload_attr) {
         for (String payload : payload_attr) {
             if (payload.contains("username")) {
-                return payload.substring(payload.indexOf(":\"") + 2, payload.length() - 2); // username is returned
+                return payload.substring(payload.indexOf(":\"") + 2, payload.length() - 1); // username is returned
             }
         }
         return null;

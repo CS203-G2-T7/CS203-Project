@@ -4,6 +4,8 @@ import javax.validation.constraints.NotNull;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import java.time.*;
+import java.util.Set;
+
 import lombok.*;
 
 @Getter
@@ -19,13 +21,16 @@ public class Window {
     private String windowId;
 
     @DynamoDBAttribute
+    private int windowNum;
+
+    @DynamoDBTypeConverted( converter = Window.LocalDateTimeConverter.class )
     private LocalDateTime startDateTime;
 
     @DynamoDBAttribute
     private String duration;
 
-    @DynamoDBTypeConverted( converter = Window.LocalDateTimeConverter.class )
-    public LocalDateTime getStartDateTime() { return startDateTime;}
+    @DynamoDBAttribute
+    private Set<String> gardenSet;
 
     static public class LocalDateTimeConverter implements DynamoDBTypeConverter<String, LocalDateTime> {
 
