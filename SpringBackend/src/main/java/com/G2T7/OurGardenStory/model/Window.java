@@ -29,6 +29,9 @@ public class Window {
     @DynamoDBAttribute
     private String duration;
 
+    @DynamoDBTypeConverted( converter = Ballot.LocalDateTimeConverter.class )
+    private LocalDateTime leaseStart;
+
     @DynamoDBAttribute
     private Set<String> gardenSet;
 

@@ -65,17 +65,12 @@ public class BallotRepo {
         return null;
     }
 
-    protected LocalDateTime findLeaseStart(Window window) {
-        int duration = Character.getNumericValue(window.getDuration().charAt(0));
-        return window.getStartDateTime().plusMonths(duration);
-    }
-
     public Ballot save(Ballot ballot) {
         ballot.setSubmitDateTime(LocalDateTime.now());
         Window window = findWindow
                 (dynamoDBMapper.scan(Window.class, new DynamoDBScanExpression()), ballot); // I do not know how to call listWindows in WindowRepo
         ballot.setStartDateTime(window.getStartDateTime());
-        ballot.setLeaseStart(findLeaseStart(window));
+        ballot.setLeaseStart(window.getLeaseStart());
         String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to address
         Set<String> gardenSet = window.getGardenSet();
         if (!gardenSet.contains(ballot.getGarden())) {
