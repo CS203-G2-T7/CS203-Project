@@ -65,6 +65,7 @@ public class WindowRepo {
         List<Garden> gardenList = window.getGardenList();
         gardenList.add(gardenRepo.getGardenByGardenName(updateWindow.getGardenName()));
         window.setGardenList(gardenList);
+        dynamoDBMapper.save(window);
         return window;
     }
 
