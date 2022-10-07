@@ -26,6 +26,18 @@ public class GardenRepo {
         return dynamoDBMapper.load(Garden.class, gardenId);
     }
 
+    public Garden getGardenByGardenName(String gardenName) {
+        List<Garden> gardenList = listGardens();
+
+        for (Garden garden : gardenList) {
+            if (garden.getName().equals(gardenName)) {
+                return garden;
+            }
+        }
+
+        return null;
+    }
+
     public List<Garden> listGardens() {
         List<Garden> gardenList = dynamoDBMapper.scan(Garden.class, new DynamoDBScanExpression());
         return gardenList;

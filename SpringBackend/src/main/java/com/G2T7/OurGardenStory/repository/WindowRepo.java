@@ -25,13 +25,8 @@ public class WindowRepo {
 
     public Window save(Window window) {
         window.setLeaseStart(findLeaseStart(window));
-        List<Garden> returnedGardenList = gardenRepo.listGardens();
         List<Garden> gardenList = new ArrayList<>();
-        for (Garden garden : returnedGardenList) {
-            if (garden.getName().equals(window.getGardenName())) {
-                gardenList.add(garden);
-            }
-        }
+        gardenList.add(gardenRepo.getGardenByGardenName(window.getGardenName()));
         window.setGardenList(gardenList);
         dynamoDBMapper.save(window);
         return window;
@@ -53,24 +48,24 @@ public class WindowRepo {
         return windowMap.lastEntry().getValue();
     }
 
-    public Window update(Window updateWindow) {
-        List<Window> windowList = listWindows(); // very inefficient way to update :(
+    public Window findWindowByStartDateTime(LocalDateTime startDateTime) {
+        List<Window> windowList = listWindows();
+
         for (Window window : windowList) {
-            if (window.getWindowNum() == updateWindow.getWindowNum()) {
-                List<Garden> updateGardenList = updateWindow.getGardenList();
-                List<Garden> gardenList = window.getGardenList();
-
-                for (Garden garden : updateGardenList) {
-                    gardenList.add(garden);
-                    window.setGardenList(gardenList);
-                }
-
-                dynamoDBMapper.save(window);
+            if (window.getStartDateTime().equals(startDateTime)) {
                 return window;
             }
         }
 
         return null;
+    }
+
+    public Window update(Window updateWindow) {
+        Window window = findWindowByStartDateTime(updateWindow.getStartDateTime());
+        List<Garden> gardenList = window.getGardenList();
+        gardenList.add(gardenRepo.getGardenByGardenName(updateWindow.getGardenName()));
+        window.setGardenList(gardenList);
+        return window;
     }
 
     protected LocalDateTime findLeaseStart(Window window) {
