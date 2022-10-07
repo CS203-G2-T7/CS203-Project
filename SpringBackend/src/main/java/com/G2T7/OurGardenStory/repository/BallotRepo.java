@@ -86,4 +86,9 @@ public class BallotRepo {
         dynamoDBMapper.save(ballot);
         return ballot;
     }
+
+    public List<Ballot> listBallots() {
+        List<Ballot> ballotList = dynamoDBMapper.scan(Ballot.class, new DynamoDBScanExpression());
+        return ballotList;
+    }
 }
