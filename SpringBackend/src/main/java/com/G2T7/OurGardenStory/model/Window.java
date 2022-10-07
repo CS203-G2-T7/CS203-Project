@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import java.time.*;
+import java.util.List;
 import java.util.Set;
 
 import lombok.*;
@@ -33,7 +34,10 @@ public class Window {
     private LocalDateTime leaseStart;
 
     @DynamoDBAttribute
-    private Set<String> gardenSet;
+    private String gardenName;
+
+    @DynamoDBAttribute
+    private List<Garden> gardenList;
 
     static public class LocalDateTimeConverter implements DynamoDBTypeConverter<String, LocalDateTime> {
 

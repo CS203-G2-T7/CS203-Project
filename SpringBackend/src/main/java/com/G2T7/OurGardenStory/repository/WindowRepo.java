@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 @Repository
 public class WindowRepo {
@@ -23,8 +20,19 @@ public class WindowRepo {
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
 
+    @Autowired
+    private GardenRepo gardenRepo;
+
     public Window save(Window window) {
         window.setLeaseStart(findLeaseStart(window));
+        List<Garden> returnedGardenList = gardenRepo.listGardens();
+        List<Garden> gardenList = new ArrayList<>();
+        for (Garden garden : returnedGardenList) {
+            if (garden.getName().equals(window.getGardenName())) {
+                gardenList.add(garden);
+            }
+        }
+        window.setGardenList(gardenList);
         dynamoDBMapper.save(window);
         return window;
     }
@@ -49,12 +57,12 @@ public class WindowRepo {
         List<Window> windowList = listWindows(); // very inefficient way to update :(
         for (Window window : windowList) {
             if (window.getWindowNum() == updateWindow.getWindowNum()) {
-                Set<String> updateGardenSet = updateWindow.getGardenSet();
-                Set<String> gardenSet = window.getGardenSet();
+                List<Garden> updateGardenList = updateWindow.getGardenList();
+                List<Garden> gardenList = window.getGardenList();
 
-                for (String garden : updateGardenSet) {
-                    gardenSet.add(garden);
-                    window.setGardenSet(gardenSet);
+                for (Garden garden : updateGardenList) {
+                    gardenList.add(garden);
+                    window.setGardenList(gardenList);
                 }
 
                 dynamoDBMapper.save(window);

@@ -1,12 +1,16 @@
 package com.G2T7.OurGardenStory.repository;
 
 import com.G2T7.OurGardenStory.model.Garden;
+import com.G2T7.OurGardenStory.model.Window;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class GardenRepo {
@@ -20,6 +24,11 @@ public class GardenRepo {
 
     public Garden getGardenById(String gardenId) {
         return dynamoDBMapper.load(Garden.class, gardenId);
+    }
+
+    public List<Garden> listGardens() {
+        List<Garden> gardenList = dynamoDBMapper.scan(Garden.class, new DynamoDBScanExpression());
+        return gardenList;
     }
 
     public String delete(String gardenId) {

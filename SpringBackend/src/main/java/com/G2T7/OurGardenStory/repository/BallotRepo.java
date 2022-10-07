@@ -1,6 +1,7 @@
 package com.G2T7.OurGardenStory.repository;
 
 import com.G2T7.OurGardenStory.model.Ballot;
+import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.UserSignInResponse;
 import com.G2T7.OurGardenStory.model.Window;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
@@ -76,8 +77,8 @@ public class BallotRepo {
         ballot.setStartDateTime(window.getStartDateTime());
         ballot.setLeaseStart(window.getLeaseStart());
         String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to address
-        Set<String> gardenSet = window.getGardenSet();
-        if (!gardenSet.contains(ballot.getGarden())) {
+        List<Garden> gardenList = window.getGardenList();
+        if (!gardenList.contains(ballot.getGarden())) {
             return null;
         }
         String username = findUsernameByIdToken(getPayloadAttributes());
