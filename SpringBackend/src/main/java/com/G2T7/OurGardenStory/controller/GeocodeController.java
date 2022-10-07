@@ -41,7 +41,7 @@
 package com.G2T7.OurGardenStory.controller;
 //import com.G2T7.OurGardenStory.geocoder.DistanceSorterList;
 import com.G2T7.OurGardenStory.geocoder.GeocodingExample;
-
+import com.G2T7.OurGardenStory.repository.BallotRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,6 +55,9 @@ import java.io.IOException;
 @RestController
 public class GeocodeController {
 
+    @Autowired
+    private BallotRepo ballotRepo;
+
     @Value("${geocoder.resource}")
     private String GEOCODING_RESOURCE;
 
@@ -64,16 +67,15 @@ public class GeocodeController {
     HashMap<String, Double> map = new HashMap<>();
 
     @PostMapping (path = "/geocode")
-    public HashMap<String, Double> saveDistance(String address1, String address2) {
+    public HashMap<String, Double> saveDistance(String username, String userAddress, String gardenLat, String gardenLng) {
         double distance = 0.0;
         try {
-            distance = GeocodingExample.distanceCalculator(address1, address2, GEOCODING_RESOURCE, API_KEY);
+            distance = GeocodingExample.distanceCalculator(userAddress, gardenLat, gardenLng, GEOCODING_RESOURCE, API_KEY);
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
         }
 
-        //TODO: link username
-        // map.put(username, distance);
+        map.put(username, distance);
         return map;
     }
 }

@@ -7,44 +7,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class GeocodingExample {
 
-    public static double distanceCalculator(String address1, String address2, String resource, String apiKey) throws IOException, InterruptedException {
-        String lat1 = "";
-        String lat2 = "";
-        String lng1 = "";
-        String lng2 = "";
+    public static double distanceCalculator(String userAddress, String gardenLat, String gardenLng, String resource, String apiKey) throws IOException, InterruptedException {
+        String userLat = "";
+        String userLng = "";
 
         ObjectMapper mapper = new ObjectMapper();
         Geocoder geocoder = new Geocoder();
 
-        String response = geocoder.GeocodeSync(address1, resource, apiKey);
+        String response = geocoder.GeocodeSync(userAddress, resource, apiKey);
         JsonNode responseJsonNode = mapper.readTree(response);
         JsonNode items = responseJsonNode.get("items");
-
-        String response2 = geocoder.GeocodeSync(address2, resource, apiKey);
-        JsonNode responseJsonNode2 = mapper.readTree(response2);
-        JsonNode items2 = responseJsonNode2.get("items");
 
         for (JsonNode item : items) {
             JsonNode address = item.get("address");
             String label = address.get("label").asText();
             JsonNode position = item.get("position");
 
-            lat1 = position.get("lat").asText();
-            lng1 = position.get("lng").asText();
-            System.out.println(label + " is located at " + lat1 + "," + lng1 + ".");
+            userLat = position.get("lat").asText();
+            userLng = position.get("lng").asText();
+            System.out.println(label + " is located at " + userLat + "," + userLng + ".");
         }
 
-        for (JsonNode item : items2) {
-            JsonNode address = item.get("address");
-            String label = address.get("label").asText();
-            JsonNode position = item.get("position");
-
-            lat2 = position.get("lat").asText();
-            lng2 = position.get("lng").asText();
-            System.out.println(label + " is located at " + lat2 + "," + lng2 + ".");
-        }
-
-        double result = distanceBetweenTwoPoints(lat1, lng1, lat2, lng2);
+        double result = distanceBetweenTwoPoints(userLat, userLng, gardenLat, gardenLng);
         System.out.println("The distance between the two addresses is " + result + "km");
         return result;
 
