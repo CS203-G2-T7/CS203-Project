@@ -23,10 +23,9 @@ public class WindowRepo {
     @Autowired
     private GardenRepo gardenRepo;
 
-    public Window save(Window window) {
+    public Window save(Window window, String gardenName) {
         window.setLeaseStart(findLeaseStart(window));
-        List<Garden> gardenList = new ArrayList<>();
-        gardenList.add(gardenRepo.getGardenByGardenName(window.getGardenName()));
+        List<Garden> gardenList = new ArrayList<>(List.of(gardenRepo.getGardenByGardenName(gardenName)));
         window.setGardenList(gardenList);
         dynamoDBMapper.save(window);
         return window;
@@ -60,10 +59,10 @@ public class WindowRepo {
         return null;
     }
 
-    public Window update(Window updateWindow) {
+    public Window update(Window updateWindow, String gardenName) {
         Window window = findWindowByStartDateTime(updateWindow.getStartDateTime());
         List<Garden> gardenList = window.getGardenList();
-        gardenList.add(gardenRepo.getGardenByGardenName(updateWindow.getGardenName()));
+        gardenList.add(gardenRepo.getGardenByGardenName(gardenName));
         window.setGardenList(gardenList);
         dynamoDBMapper.save(window);
         return window;

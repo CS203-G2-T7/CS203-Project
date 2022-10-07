@@ -31,9 +31,6 @@ public class Window {
     private LocalDateTime leaseStart;
 
     @DynamoDBAttribute
-    private String gardenName;
-
-    @DynamoDBAttribute
     private List<Garden> gardenList;
 
     static public class LocalDateTimeConverter implements DynamoDBTypeConverter<String, LocalDateTime> {

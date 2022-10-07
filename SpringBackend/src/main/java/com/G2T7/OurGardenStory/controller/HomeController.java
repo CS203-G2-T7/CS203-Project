@@ -9,6 +9,7 @@ import com.G2T7.OurGardenStory.repository.WindowRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -54,12 +55,19 @@ public class HomeController {
     public Window getLatestWindow() {return windowRepo.findLatestWindow();}
 
     @PostMapping(path = "/window")
-    public Window saveWindow(@RequestBody Window window) {
-        return windowRepo.save(window);
+    public Window saveWindow(@RequestBody com.fasterxml.jackson.databind.JsonNode payload) {
+        Window window = new Window();
+        window.setStartDateTime(LocalDateTime.parse(payload.get("startDateTime").asText()));
+        window.setDuration(payload.get("duration").asText());
+        String gardenName = payload.get("gardenName").asText();
+        return windowRepo.save(window, gardenName);
     }
 
     @PutMapping(path = "/window")
-    public Window updateWindows(@RequestBody Window window) {
-        return windowRepo.update(window);
+    public Window updateWindow(@RequestBody com.fasterxml.jackson.databind.JsonNode payload) {
+        Window window = new Window();
+        window.setStartDateTime(LocalDateTime.parse(payload.get("startDateTime").asText()));
+        String gardenName = payload.get("gardenName").asText();
+        return windowRepo.update(window, gardenName);
     }
 }
