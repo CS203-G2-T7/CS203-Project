@@ -3,8 +3,8 @@ package com.G2T7.OurGardenStory.geocoder;
 import java.util.*;
 
 public class Algorithm {
-    
-    public ArrayList<String> getBallotSucess(HashMap<String,Double> ballotters, int numSuccess) {
+
+    public static ArrayList<String> getBallotSuccess(HashMap<String,Double> ballotters, int numSuccess) {
         ArrayList<String> list = new ArrayList<>(ballotters.keySet());
         for (String key : ballotters.keySet()) {
             if (ballotters.get(key) <= 2) {
