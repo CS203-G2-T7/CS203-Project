@@ -48,10 +48,10 @@ public class WindowRepo {
         return returnWindow;
     }
 
-    public Window update(int windowNum, Window updateWindow) {
+    public Window update(Window updateWindow) {
         List<Window> windowList = listWindows(); // very inefficient way to update :(
         for (Window window : windowList) {
-            if (window.getWindowNum() == windowNum) {
+            if (window.getWindowNum() == updateWindow.getWindowNum()) {
                 Set<String> updateGardenSet = updateWindow.getGardenSet();
                 Set<String> gardenSet = window.getGardenSet();
 

@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/window").permitAll()
                 .antMatchers(HttpMethod.GET, "/windows").permitAll()
                 .antMatchers(HttpMethod.GET, "/window").permitAll()
-                .antMatchers(HttpMethod.PUT, "/window/*").permitAll()
+                .antMatchers(HttpMethod.PUT, "/window").permitAll()
                 .antMatchers(HttpMethod.GET, "/geocode").permitAll()
                 .anyRequest().permitAll().and() // all other routes, including undefined ones must be authenticated.
                 .authenticationManager(authenticationManager)

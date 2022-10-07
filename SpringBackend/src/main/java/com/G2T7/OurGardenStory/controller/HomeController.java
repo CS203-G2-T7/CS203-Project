@@ -48,8 +48,8 @@ public class HomeController {
         return windowRepo.save(window);
     }
 
-    @PutMapping(path = "/window/{windowNum}") // should windowNum be parsed in the endpoint?
-    public Window updateWindows(@PathVariable("windowNum") int windowNum, @RequestBody Window window) {
-        return windowRepo.update(windowNum, window);
+    @PutMapping(path = "/window")
+    public Window updateWindows(@RequestBody Window window) {
+        return windowRepo.update(window);
     }
 }
