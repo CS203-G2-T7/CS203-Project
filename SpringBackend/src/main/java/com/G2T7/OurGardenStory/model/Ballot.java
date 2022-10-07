@@ -6,6 +6,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import lombok.*;
 
 import java.time.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,14 +32,22 @@ public class Ballot {
     @DynamoDBAttribute
     private String status = "PENDING";
 
-    @DynamoDBAttribute
-    private String garden;
+    @DynamoDBTypeConverted( converter = GardenConverter.class )
+    private Garden garden;
 
     @DynamoDBTypeConverted( converter = LocalDateTimeConverter.class )
     private LocalDateTime startDateTime;
 
     @DynamoDBAttribute
     private String username;
+
+    static public class GardenConverter implements DynamoDBTypeConverter<String, Garden> {
+        @Override
+        public String convert(final Garden garden) { return garden.toString();}
+
+        @Override
+        public Garden unconvert(final String stringValue) { return new Garden();} // this is rubbish, but we won't use it
+    }
 
     static public class LocalDateTimeConverter implements DynamoDBTypeConverter<String, LocalDateTime> {
 

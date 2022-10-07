@@ -10,6 +10,7 @@ import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -41,6 +42,14 @@ public class GardenRepo {
     public List<Garden> listGardens() {
         List<Garden> gardenList = dynamoDBMapper.scan(Garden.class, new DynamoDBScanExpression());
         return gardenList;
+    }
+
+    public List<String> listGardenNames() {
+        List<String> gardenListNames = new ArrayList<>();
+        for (Garden garden : listGardens()) {
+            gardenListNames.add(garden.getName());
+        }
+        return gardenListNames;
     }
 
     public String delete(String gardenId) {

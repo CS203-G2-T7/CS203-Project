@@ -27,6 +27,9 @@ public class BallotRepo {
     @Autowired
     private WindowRepo windowRepo;
 
+    @Autowired
+    private GardenRepo gardenRepo;
+
     protected String[] getPayloadAttributes() {
         String idToken = UserSignInResponse.getIdToken();
         String[] chunks = idToken.split("\\."); // chunk 0 is header, chunk 1 is payload
@@ -57,32 +60,20 @@ public class BallotRepo {
         return null;
     }
 
-    protected Window findWindow(List<Window> windowList, Ballot ballot) {
-        for (Window window : windowList) {
-            LocalDateTime startDateTime = window.getStartDateTime();
-            LocalDateTime submitDateTime = ballot.getSubmitDateTime();
-            int days = submitDateTime.getDayOfYear() - startDateTime.getDayOfYear(); // just handle day diff for now
-            if (days <= 30) {
-                return window;
-            }
-        }
-
-        return null;
-    }
-
-    public Ballot save(Ballot ballot) {
+    public Ballot save(String gardenName) {
+        Ballot ballot = new Ballot();
         ballot.setSubmitDateTime(LocalDateTime.now());
-        Window window = findWindow
-                (dynamoDBMapper.scan(Window.class, new DynamoDBScanExpression()), ballot); // I do not know how to call listWindows in WindowRepo
+        Window window = windowRepo.findLatestWindow();
         ballot.setStartDateTime(window.getStartDateTime());
         ballot.setLeaseStart(window.getLeaseStart());
         String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to address
-        List<Garden> gardenList = window.getGardenList();
-        if (!gardenList.contains(ballot.getGarden())) {
+        List<String> gardenListNames = gardenRepo.listGardenNames();
+        if (!gardenListNames.contains(gardenName)) {
             return null;
         }
         String username = findUsernameByIdToken(getPayloadAttributes());
         ballot.setUsername(username);
+        ballot.setGarden(gardenRepo.getGardenByGardenName(gardenName));
         dynamoDBMapper.save(ballot);
         return ballot;
     }

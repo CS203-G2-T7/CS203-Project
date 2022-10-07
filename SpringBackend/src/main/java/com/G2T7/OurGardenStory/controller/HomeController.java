@@ -44,8 +44,8 @@ public class HomeController {
     }
 
     @PostMapping(path = "/ballot")
-    public Ballot saveBallot(@RequestBody Ballot ballot) {
-        return ballotRepo.save(ballot);
+    public Ballot saveBallot(@RequestBody com.fasterxml.jackson.databind.JsonNode payload) {
+        return ballotRepo.save(payload.get("gardenName").asText());
     }
 
     @GetMapping(path = "/windows")
