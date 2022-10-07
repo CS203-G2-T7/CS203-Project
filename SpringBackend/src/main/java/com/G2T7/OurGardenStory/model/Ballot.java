@@ -46,7 +46,17 @@ public class Ballot {
         public String convert(final Garden garden) { return garden.toString();}
 
         @Override
-        public Garden unconvert(final String stringValue) { return new Garden();} // this is rubbish, but we won't use it
+        public Garden unconvert(final String stringValue) {
+            String[] stringValueList = stringValue.split(",");
+            Garden garden = new Garden();
+            garden.setGardenId(stringValueList[0].substring(stringValueList[0].indexOf("=") + 1));
+            garden.setLocation(stringValueList[1].substring(stringValueList[1].indexOf("=") + 1));
+            garden.setName(stringValueList[2].substring(stringValueList[2].indexOf("=") + 1));
+            garden.setNumPlots(Integer.parseInt(stringValueList[3].substring(stringValueList[3].indexOf("=") + 1)));
+            garden.setLongitude(stringValueList[4].substring(stringValueList[4].indexOf("=") + 1));
+            garden.setLatitude(stringValueList[5].substring(stringValueList[5].indexOf("=") + 1, stringValueList[5].length() - 1));
+            return garden;
+        }
     }
 
     static public class LocalDateTimeConverter implements DynamoDBTypeConverter<String, LocalDateTime> {
@@ -56,8 +66,6 @@ public class Ballot {
             return time.toString();
         }
         @Override
-        public LocalDateTime unconvert( final String stringValue ) {
-            return LocalDateTime.parse(stringValue);
-        }
+        public LocalDateTime unconvert( final String stringValue ) { return LocalDateTime.parse(stringValue);}
     }
 }
