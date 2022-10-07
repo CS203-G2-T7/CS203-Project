@@ -24,6 +24,10 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeMap;
 
 @Repository
 public class WindowRepo {
@@ -32,6 +36,7 @@ public class WindowRepo {
     private DynamoDBMapper dynamoDBMapper;
 
     public Window save(Window window) {
+        window.setLeaseStart(findLeaseStart(window));
         dynamoDBMapper.save(window);
         return window;
     }
@@ -43,18 +48,13 @@ public class WindowRepo {
 
     public Window findLatestWindow() {
         List<Window> windowList = listWindows();
-        int latestWindowNum = 0;
-        Window returnWindow = null;
-        for (Window window : windowList) {
-            int windowNum = window.getWindowNum();
+        TreeMap<LocalDateTime, Window> windowMap = new TreeMap<>();
 
-            if (windowNum > latestWindowNum) {
-                latestWindowNum = windowNum;
-                returnWindow = window;
-            }
+        for (Window window : windowList) {
+            windowMap.put(window.getStartDateTime(), window);
         }
 
-        return returnWindow;
+        return windowMap.lastEntry().getValue();
     }
 
     public Window update(Window updateWindow) {
@@ -101,6 +101,10 @@ public class WindowRepo {
             }
             LocalDateTime doAlgo = 
             new Timer().schedule(task, doAlgo);
-        };
+        }
+
+    protected LocalDateTime findLeaseStart(Window window) {
+        int duration = Character.getNumericValue(window.getDuration().charAt(0));
+        return window.getStartDateTime().plusMonths(duration);
     }
 }
