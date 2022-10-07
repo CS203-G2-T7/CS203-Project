@@ -28,4 +28,10 @@ public class Garden {
     @NotNull(message = "Number of plots should not be null")
     @DynamoDBAttribute
     private int numPlots;
+
+    @DynamoDBAttribute
+    private String longitude;
+
+    @DynamoDBAttribute
+    private String latitude;
 }

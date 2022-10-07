@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/home").permitAll()
                 .antMatchers(HttpMethod.GET, "/home/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/ballots").permitAll()
                 .antMatchers(HttpMethod.GET, "/ballot").permitAll()
                 .antMatchers(HttpMethod.POST, "/ballot").permitAll() // combine to line 43, permitAllEndpointList?
                 .antMatchers(HttpMethod.PUT, "/geocode").permitAll()

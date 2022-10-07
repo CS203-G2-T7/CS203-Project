@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,9 @@ import java.util.Set;
 public class BallotRepo {
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
+
+    @Autowired
+    private WindowRepo windowRepo;
 
     protected String[] getPayloadAttributes() {
         String idToken = UserSignInResponse.getIdToken();
@@ -85,5 +89,21 @@ public class BallotRepo {
     public List<Ballot> listBallots() {
         List<Ballot> ballotList = dynamoDBMapper.scan(Ballot.class, new DynamoDBScanExpression());
         return ballotList;
+    }
+
+    public List<Ballot> listBallotsFromLatestWindow() {
+        Window window = windowRepo.findLatestWindow();
+        List<Ballot> ballotList = listBallots();
+        List<Ballot> returnBallotList = new ArrayList<>();
+        for (Ballot ballot : ballotList) {
+            try {
+                if (ballot.getStartDateTime().equals(window.getStartDateTime())) {
+                    returnBallotList.add(ballot);
+                }
+            } catch (NullPointerException e) {
+                continue;
+            }
+        }
+        return returnBallotList;
     }
 }
