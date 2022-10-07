@@ -32,9 +32,14 @@ public class HomeController {
         return gardenRepo.getGardenById(gardenId);
     }
 
-    @GetMapping(path = "/ballot")
+    @GetMapping(path = "/ballots")
     public List<Ballot> getBallots() {
         return ballotRepo.listBallots();
+    }
+
+    @GetMapping(path = "/ballot")
+    public List<Ballot> getBallot() {
+        return ballotRepo.listBallotsFromLatestWindow();
     }
 
     @PostMapping(path = "/ballot")
