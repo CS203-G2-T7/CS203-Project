@@ -67,7 +67,7 @@ public class GeocodeController {
     HashMap<String, Double> map = new HashMap<>();
 
     @PostMapping (path = "/geocode")
-    public HashMap<String, Double> saveDistance(String username, String userAddress, String gardenLat, String gardenLng) {
+    public void saveDistance(String username, String userAddress, String gardenLat, String gardenLng) {
         double distance = 0.0;
         try {
             distance = GeocodingExample.distanceCalculator(userAddress, gardenLat, gardenLng, GEOCODING_RESOURCE, API_KEY);
@@ -76,6 +76,5 @@ public class GeocodeController {
         }
 
         map.put(username, distance);
-        return map;
     }
 }

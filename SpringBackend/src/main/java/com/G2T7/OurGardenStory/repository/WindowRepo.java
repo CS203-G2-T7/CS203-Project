@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.*;
 
 @Repository
 public class WindowRepo {
@@ -41,8 +42,13 @@ public class WindowRepo {
     @Autowired
     private BallotRepo ballotRepo;
 
-    public Window save(Window window) {
+    @Autowired
+    private GardenRepo gardenRepo;
+
+    public Window save(Window window, String gardenName) {
         window.setLeaseStart(findLeaseStart(window));
+        List<Garden> gardenList = new ArrayList<>(List.of(gardenRepo.getGardenByGardenName(gardenName)));
+        window.setGardenList(gardenList);
         dynamoDBMapper.save(window);
         return window;
     }
@@ -63,19 +69,11 @@ public class WindowRepo {
         return windowMap.lastEntry().getValue();
     }
 
-    public Window update(Window updateWindow) {
-        List<Window> windowList = listWindows(); // very inefficient way to update :(
+    public Window findWindowByStartDateTime(LocalDateTime startDateTime) {
+        List<Window> windowList = listWindows();
+
         for (Window window : windowList) {
-            if (window.getWindowNum() == updateWindow.getWindowNum()) {
-                Set<String> updateGardenSet = updateWindow.getGardenSet();
-                Set<String> gardenSet = window.getGardenSet();
-
-                for (String garden : updateGardenSet) {
-                    gardenSet.add(garden);
-                    window.setGardenSet(gardenSet);
-                }
-
-                dynamoDBMapper.save(window);
+            if (window.getStartDateTime().equals(startDateTime)) {
                 return window;
             }
         }
@@ -113,17 +111,19 @@ public class WindowRepo {
                 for (Ballot ballot : ballotListForWindow) {
                     for (String success : output) {
                         if (success.equals(ballot.getUsername())) {
-                            UpdateItemRequest updateItemRequest = new UpdateItemRequest()
-                                                                    .withTableName("Ballot")
-                                                                    .addAttributeUpdatesEntry("username", new AttributeValueUpdate().withValue(new AttributeValue().withS("SUCCESS")));
-                            UpdateItemResult updateItemResult = new AmazonDynamoDB().updateItem(updateItemRequest);
+                            // UpdateItemRequest updateItemRequest = new UpdateItemRequest()
+                            //                                         .withTableName("Ballot")
+                            //                                         .addAttributeUpdatesEntry("username", new AttributeValueUpdate().withValue(new AttributeValue().withS("SUCCESS")));
+                            // UpdateItemResult updateItemResult = new AmazonDynamoDB().updateItem(updateItemRequest);
+                            //Update PENDING to SUCCESS
                             break;
                         } 
                     }
-                    UpdateItemRequest updateItemRequest = new UpdateItemRequest()
-                                                                    .withTableName("Ballot")
-                                                                    .addAttributeUpdatesEntry("username", new AttributeValueUpdate().withValue(new AttributeValue().withS("FAIL")));
-                    UpdateItemResult updateItemResult = client.updateItem(updateItemRequest);
+                    // UpdateItemRequest updateItemRequest = new UpdateItemRequest()
+                    //                                                 .withTableName("Ballot")
+                    //                                                 .addAttributeUpdatesEntry("username", new AttributeValueUpdate().withValue(new AttributeValue().withS("FAIL")));
+                    // UpdateItemResult updateItemResult = client.updateItem(updateItemRequest);
+                    //Update PENDING to FAIL
                 }
             }
         };
@@ -133,9 +133,18 @@ public class WindowRepo {
 
 }
 
-protected LocalDateTime findLeaseStart(Window window) {
-    int duration = Character.getNumericValue(window.getDuration().charAt(0));
-    return window.getStartDateTime().plusMonths(duration);
-}
 
+    public Window update(Window updateWindow, String gardenName) {
+        Window window = findWindowByStartDateTime(updateWindow.getStartDateTime());
+        List<Garden> gardenList = window.getGardenList();
+        gardenList.add(gardenRepo.getGardenByGardenName(gardenName));
+        window.setGardenList(gardenList);
+        dynamoDBMapper.save(window);
+        return window;
+    }
+
+    protected LocalDateTime findLeaseStart(Window window) {
+        int duration = Character.getNumericValue(window.getDuration().charAt(0));
+        return window.getStartDateTime().plusMonths(duration);
+    }
 }
