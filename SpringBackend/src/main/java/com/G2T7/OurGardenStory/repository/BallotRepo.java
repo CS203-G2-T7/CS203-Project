@@ -1,5 +1,6 @@
 package com.G2T7.OurGardenStory.repository;
 
+import com.G2T7.OurGardenStory.controller.GeocodeController;
 import com.G2T7.OurGardenStory.geocoder.Algorithm;
 import com.G2T7.OurGardenStory.model.Ballot;
 import com.G2T7.OurGardenStory.model.Garden;
@@ -35,6 +36,9 @@ public class BallotRepo {
 
     @Autowired
     private GardenRepo gardenRepo;
+
+    @Autowired
+    private GeocodeController geocodeController;
 
     protected String[] getPayloadAttributes() {
         String idToken = UserSignInResponse.getIdToken();
@@ -84,8 +88,11 @@ public class BallotRepo {
         ballot.setLeaseStart(window.getLeaseStart());
         ballot.setNumBidsPlaced(getBidsPlaced(gardenName));
         String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to address
+        Garden garden = gardenRepo.getGardenByGardenName(gardenName);
+        Double distance = geocodeController.saveDistance(username, postCode, garden.getLongitude(), garden.getLatitude());
+        ballot.setDistance(distance);
         ballot.setUsername(username);
-        ballot.setGarden(gardenRepo.getGardenByGardenName(gardenName));
+        ballot.setGarden(garden);
 
         dynamoDBMapper.save(ballot);
         return ballot;
@@ -128,38 +135,63 @@ public class BallotRepo {
 
         return count + 1;
     }
-    public void callAlgo(Garden garden, HashMap<String, Double> ballotters) {
-        TimerTask task = new TimerTask() {
-            public void run() {
-                Algorithm algo = new Algorithm();
-                ArrayList<String> output = new ArrayList<>();
-                output = algo.getBallotSuccess(ballotters, garden.getNumPlots());
-                List<Ballot> ballotListForWindow = listBallotsFromLatestWindow();
-                List<Ballot> ballotListForWindowForGarden = new ArrayList<>();
-                for (Ballot ballot : ballotListForWindow) {
-                    try {
-                        if (ballot.getGarden().equals(garden)) {
-                            ballotListForWindowForGarden.add(ballot);
-                        }
-                    }
-                    catch(Exception e) {
-                        e.printStackTrace();
-                    }
+    public List<Ballot> doMagic() {
+        List<Ballot> returnBallotList = new ArrayList<>();
+
+        for (Garden garden : windowRepo.findLatestWindow().getGardenList()) {
+            System.out.println(garden);
+            List<Ballot> ballotList = callAlgo(garden);
+            for (Ballot ballot : ballotList) {
+                System.out.println(ballot);
+                returnBallotList.add(ballot);
+            }
+        }
+
+        return returnBallotList;
+    }
+
+    public List<Ballot> callAlgo(Garden garden) {
+        Algorithm algo = new Algorithm();
+        HashMap<String, Double> ballotters = new HashMap<>();
+            for (Ballot ballot : listBallotsFromLatestWindow()) {
+                if (ballot.getGarden().getName().equals(garden.getName())) {
+                    ballotters.put(ballot.getUsername(), ballot.getDistance());
                 }
-                for (Ballot ballot : ballotListForWindow) {
-                    for (String success : output) {
-                        if (success.equals(ballot.getUsername())) {
-                            //Update PENDING to SUCCESS
-                            break;
-                        } 
-                    }
-                    //Update PENDING to FAIL
+        }
+        ArrayList<String> output = new ArrayList<>();
+        output = algo.getBallotSuccess(ballotters, 1);
+        List<Ballot> ballotListForWindow = listBallotsFromLatestWindow();
+        List<Ballot> ballotListForWindowForGarden = new ArrayList<>();
+        List<Ballot> returnBallotList = new ArrayList<>();
+        for (Ballot ballot : ballotListForWindow) {
+            try {
+                if (ballot.getGarden().getName().equals(garden.getName())) {
+                    ballotListForWindowForGarden.add(ballot);
                 }
             }
-        };
-        LocalDateTime doAlgo = windowRepo.findLatestWindow().getLeaseStart();
-        Date date = Date.from(doAlgo.atZone(ZoneId.systemDefault()).toInstant());
-        new Timer().schedule(task, date);
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        for (Ballot ballot : ballotListForWindowForGarden) {
+            System.out.println(ballot.getStatus() + " " + ballot.getUsername());
+            for (String success : output) {
+                if (success.equals(ballot.getUsername())) {
+                    ballot.setStatus("Successful :)");
+                    dynamoDBMapper.save(ballot);
+                    returnBallotList.add(ballot);
+                }
+            }
+        }
 
+        for (Ballot ballot : ballotListForWindowForGarden) {
+            if (ballot.getStatus().equals("PENDING")) {
+                ballot.setStatus("Unsuccessful :(");
+                dynamoDBMapper.save(ballot);
+                returnBallotList.add(ballot);
+            }
+        }
+
+        return returnBallotList;
     }
 }

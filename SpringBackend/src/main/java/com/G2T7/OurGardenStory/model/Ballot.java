@@ -44,6 +44,9 @@ public class Ballot {
     @DynamoDBAttribute
     private String username;
 
+    @DynamoDBAttribute
+    private double distance;
+
     static public class GardenConverter implements DynamoDBTypeConverter<String, Garden> {
         @Override
         public String convert(final Garden garden) { return garden.toString();}

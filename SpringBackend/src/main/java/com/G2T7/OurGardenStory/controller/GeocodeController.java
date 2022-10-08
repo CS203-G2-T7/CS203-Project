@@ -55,9 +55,6 @@ import java.io.IOException;
 @RestController
 public class GeocodeController {
 
-    @Autowired
-    private BallotRepo ballotRepo;
-
     @Value("${geocoder.resource}")
     private String GEOCODING_RESOURCE;
 
@@ -67,7 +64,7 @@ public class GeocodeController {
     HashMap<String, Double> map = new HashMap<>();
 
     @PostMapping (path = "/geocode")
-    public void saveDistance(String username, String userAddress, String gardenLat, String gardenLng) {
+    public double saveDistance(String username, String userAddress, String gardenLng, String gardenLat) {
         double distance = 0.0;
         try {
             distance = GeocodingExample.distanceCalculator(userAddress, gardenLat, gardenLng, GEOCODING_RESOURCE, API_KEY);
@@ -76,5 +73,7 @@ public class GeocodeController {
         }
 
         map.put(username, distance);
+
+        return distance;
     }
 }

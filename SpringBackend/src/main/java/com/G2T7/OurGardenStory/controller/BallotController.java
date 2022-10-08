@@ -26,4 +26,7 @@ public class BallotController {
     public Ballot saveBallot(@RequestBody com.fasterxml.jackson.databind.JsonNode payload) {
         return ballotRepo.save(payload.get("gardenName").asText());
     }
+
+    @GetMapping(path = "/magic")
+    public List<Ballot>callAlgo() { return ballotRepo.doMagic(); }
 }
