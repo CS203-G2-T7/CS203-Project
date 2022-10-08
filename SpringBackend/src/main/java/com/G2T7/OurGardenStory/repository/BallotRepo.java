@@ -68,10 +68,17 @@ public class BallotRepo {
         ballot.setLeaseStart(window.getLeaseStart());
         String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to address
         List<String> gardenListNames = gardenRepo.listGardenNames();
+
         if (!gardenListNames.contains(gardenName)) {
             return null;
         }
+
         String username = findUsernameByIdToken(getPayloadAttributes());
+
+        if (checkIfBalloted(listBallotsFromLatestWindow(), username)) {
+            return null;
+        }
+
         ballot.setUsername(username);
         ballot.setGarden(gardenRepo.getGardenByGardenName(gardenName));
         dynamoDBMapper.save(ballot);
@@ -97,5 +104,15 @@ public class BallotRepo {
             }
         }
         return returnBallotList;
+    }
+
+    public boolean checkIfBalloted(List<Ballot> ballotList, String username) {
+        for (Ballot ballot : ballotList) {
+            if (ballot.getUsername().equals(username)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
