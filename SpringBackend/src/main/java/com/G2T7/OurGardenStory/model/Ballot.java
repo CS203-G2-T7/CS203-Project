@@ -32,6 +32,9 @@ public class Ballot {
     @DynamoDBAttribute
     private String status = "PENDING";
 
+    @DynamoDBAttribute
+    private int numBidsPlaced;
+
     @DynamoDBTypeConverted( converter = GardenConverter.class )
     private Garden garden;
 

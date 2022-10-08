@@ -1,9 +1,6 @@
 package com.G2T7.OurGardenStory.repository;
 
-import com.G2T7.OurGardenStory.model.Ballot;
-import com.G2T7.OurGardenStory.model.Garden;
-import com.G2T7.OurGardenStory.model.UserSignInResponse;
-import com.G2T7.OurGardenStory.model.Window;
+import com.G2T7.OurGardenStory.model.*;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
@@ -13,11 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 public class BallotRepo {
@@ -61,26 +54,26 @@ public class BallotRepo {
     }
 
     public Ballot save(String gardenName) {
-        Ballot ballot = new Ballot();
-        ballot.setSubmitDateTime(LocalDateTime.now());
-        Window window = windowRepo.findLatestWindow();
-        ballot.setStartDateTime(window.getStartDateTime());
-        ballot.setLeaseStart(window.getLeaseStart());
-        String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to address
         List<String> gardenListNames = gardenRepo.listGardenNames();
-
         if (!gardenListNames.contains(gardenName)) {
             return null;
         }
 
         String username = findUsernameByIdToken(getPayloadAttributes());
-
-        if (checkIfBalloted(listBallotsFromLatestWindow(), username)) {
+        if (checkIfBalloted(username)) {
             return null;
         }
 
+        Ballot ballot = new Ballot();
+        ballot.setSubmitDateTime(LocalDateTime.now());
+        Window window = windowRepo.findLatestWindow();
+        ballot.setStartDateTime(window.getStartDateTime());
+        ballot.setLeaseStart(window.getLeaseStart());
+        ballot.setNumBidsPlaced(getBidsPlaced(gardenName));
+        String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to address
         ballot.setUsername(username);
         ballot.setGarden(gardenRepo.getGardenByGardenName(gardenName));
+
         dynamoDBMapper.save(ballot);
         return ballot;
     }
@@ -95,24 +88,31 @@ public class BallotRepo {
         List<Ballot> ballotList = listBallots();
         List<Ballot> returnBallotList = new ArrayList<>();
         for (Ballot ballot : ballotList) {
-            try {
-                if (ballot.getStartDateTime().equals(window.getStartDateTime())) {
-                    returnBallotList.add(ballot);
-                }
-            } catch (NullPointerException e) {
-                continue;
+            if (ballot.getStartDateTime().equals(window.getStartDateTime())) {
+                returnBallotList.add(ballot);
             }
         }
         return returnBallotList;
     }
 
-    public boolean checkIfBalloted(List<Ballot> ballotList, String username) {
-        for (Ballot ballot : ballotList) {
+    public boolean checkIfBalloted(String username) {
+        for (Ballot ballot : listBallotsFromLatestWindow()) {
             if (ballot.getUsername().equals(username)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public int getBidsPlaced(String gardenName) {
+        int count = 0;
+        for (Ballot ballot : listBallotsFromLatestWindow()) {
+            if (ballot.getGarden().getName().equals(gardenName)) {
+                count += 1;
+            }
+        }
+
+        return count + 1;
     }
 }
