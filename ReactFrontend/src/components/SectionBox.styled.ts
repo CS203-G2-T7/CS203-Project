@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const SummaryStyled = styled.div`
+export const SectionBoxStyled = styled.section`
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 2rem;
 
