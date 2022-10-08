@@ -1,6 +1,10 @@
 package com.G2T7.OurGardenStory.repository;
 
-import com.G2T7.OurGardenStory.model.*;
+import com.G2T7.OurGardenStory.geocoder.Algorithm;
+import com.G2T7.OurGardenStory.model.Ballot;
+import com.G2T7.OurGardenStory.model.Garden;
+import com.G2T7.OurGardenStory.model.UserSignInResponse;
+import com.G2T7.OurGardenStory.model.Window;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
@@ -10,7 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.time.Period;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Repository
 public class BallotRepo {
@@ -114,5 +127,39 @@ public class BallotRepo {
         }
 
         return count + 1;
+    }
+    public void callAlgo(Garden garden, HashMap<String, Double> ballotters) {
+        TimerTask task = new TimerTask() {
+            public void run() {
+                Algorithm algo = new Algorithm();
+                ArrayList<String> output = new ArrayList<>();
+                output = algo.getBallotSuccess(ballotters, garden.getNumPlots());
+                List<Ballot> ballotListForWindow = listBallotsFromLatestWindow();
+                List<Ballot> ballotListForWindowForGarden = new ArrayList<>();
+                for (Ballot ballot : ballotListForWindow) {
+                    try {
+                        if (ballot.getGarden().equals(garden)) {
+                            ballotListForWindowForGarden.add(ballot);
+                        }
+                    }
+                    catch(Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                for (Ballot ballot : ballotListForWindow) {
+                    for (String success : output) {
+                        if (success.equals(ballot.getUsername())) {
+                            //Update PENDING to SUCCESS
+                            break;
+                        } 
+                    }
+                    //Update PENDING to FAIL
+                }
+            }
+        };
+        LocalDateTime doAlgo = windowRepo.findLatestWindow().getLeaseStart();
+        Date date = Date.from(doAlgo.atZone(ZoneId.systemDefault()).toInstant());
+        new Timer().schedule(task, date);
+
     }
 }
