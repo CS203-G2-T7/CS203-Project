@@ -49,8 +49,8 @@ public class SecurityConfig {
         http.csrf().disable().cors().disable().authorizeHttpRequests()
                 .antMatchers(permitAllEndpointList.toArray(new String[permitAllEndpointList.size()]))
                 .permitAll()
-                .antMatchers(HttpMethod.POST, "/home").permitAll()
-                .antMatchers(HttpMethod.GET, "/home/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/garden").permitAll()
+                .antMatchers(HttpMethod.POST, "/garden").permitAll()
                 .antMatchers(HttpMethod.GET, "/ballots").permitAll()
                 .antMatchers(HttpMethod.GET, "/ballot").permitAll()
                 .antMatchers(HttpMethod.POST, "/ballot").permitAll() // combine to line 43, permitAllEndpointList?
