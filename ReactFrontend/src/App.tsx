@@ -3,6 +3,7 @@ import Home from "pages/Home/Home";
 import NotFound from "pages/404";
 import Login from "pages/Login/Login";
 import SignUp from "pages/SignUp/SignUp";
+import Garden from "pages/Garden/Garden";
 
 function App() {
   const location = useLocation();
@@ -14,6 +15,7 @@ function App() {
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/sign-up" element={<SignUp />} />
+      <Route path="/garden" element={<Garden />} />
 
       {/* Accessible to NOT logged in users */}
 
