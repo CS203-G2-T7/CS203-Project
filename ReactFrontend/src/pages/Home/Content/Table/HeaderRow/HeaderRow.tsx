@@ -6,10 +6,10 @@ type Props = {};
 export default function HeaderRow({}: Props) {
   return (
     <HeaderRowStyled>
-      <span>Garden</span>
-      <span>Available plots</span>
-      <span>Ballots placed</span>
-      <span>Status</span>
+      <div>Garden</div>
+      <div>Number of plots</div>
+      <div>Ballots placed</div>
+      <div>Status</div>
     </HeaderRowStyled>
   );
 }

@@ -3,27 +3,26 @@ import styled from "styled-components";
 export const HeaderRowStyled = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
 
-  height: 4rem;
   font-size: 1.5rem;
   color: #00131e;
   border-bottom: 2px solid #c7c7c7;
 
-  span {
-    padding: 0 1.923%;
+  div {
+    padding: 1rem;
   }
-  span:nth-child(1) {
-    width: 36.378%;
+  div:nth-child(1) {
+    flex: 10;
   }
-  span:nth-child(2) {
-    width: 20%;
+  div:nth-child(2) {
+    flex: 5;
   }
-  span:nth-child(3) {
-    width: 20%;
+  div:nth-child(3) {
+    flex: 5;
   }
-  span:nth-child(4) {
-    width: 20%;
+  div:nth-child(4) {
+    flex: 5;
   }
 `;

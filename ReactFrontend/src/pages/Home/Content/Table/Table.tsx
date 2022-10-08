@@ -1,4 +1,5 @@
 import React from "react";
+import { Garden } from "../Content";
 import HeaderRow from "./HeaderRow/HeaderRow";
 import Row from "./Row/Row";
 import { TableStyled } from "./Table.styled";
@@ -43,14 +44,17 @@ const fakeDatabase: rowObject[] = [
   },
 ];
 
-type Props = {};
 
-export default function Table({}: Props) {
+type Props = {
+  gardenList: Garden[];
+};
+
+export default function Table({ gardenList }: Props) {
   return (
     <>
       <HeaderRow />
-      {fakeDatabase.map((rowObject) => (
-        <Row rowObject={rowObject} />
+      {gardenList.map((gardenObject, index) => (
+        <Row gardenObject={gardenObject} key={index} />
       ))}
     </>
   );

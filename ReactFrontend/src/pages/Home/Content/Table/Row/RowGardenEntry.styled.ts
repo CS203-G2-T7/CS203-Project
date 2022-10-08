@@ -5,8 +5,8 @@ export const RowGardenEntryStyled = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 2.8125rem 1.923% 1.5rem;
-  width: 36.378%;
+  padding: 2.8125rem 1rem 1.5rem;
+  flex: 10;
   gap: 0.625rem;
   span:nth-child(2) {
     color: #9f9f9f;
