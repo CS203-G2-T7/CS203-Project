@@ -1,12 +1,19 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-export const RowStyled = styled.div`
+export const RowStyled = styled(Link)`
   display: flex;
   flex-direction: row;
   align-items: center;
   font-size: 1.25rem;
   color: #00131e;
   border-bottom: solid 1px #cccccc;
+  text-decoration: none;
+
+  &:hover {
+    background-color: rgb(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+  }
 
   p {
     margin: 0;

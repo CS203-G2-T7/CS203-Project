@@ -12,7 +12,7 @@ export default function WindowLabel({ windowDate }: Props) {
       <div>
         <h1>Window</h1>
       </div>
-      <p>{windowDate}</p>
+      <p>{windowDate || "loading..."}</p>
     </WindowLabelStyled>
   );
 }

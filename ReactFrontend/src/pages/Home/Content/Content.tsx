@@ -3,48 +3,57 @@ import Table from "./Table/Table";
 import { ContentStyled } from "./Content.styled";
 import WindowLabel from "./WindowLabel/WindowLabel";
 import homeService from "service/homeService";
-import { AxiosResponse } from "axios";
+import { defaultWindow, Window } from "models/Window";
 import formatDateTimeToDate from "utils/formatDateTimeToDate";
+import { Ballot, defaultBallot } from "models/Ballot";
+import CircularProgress from "@mui/material/CircularProgress";
+import { Box } from "@mui/material";
 
 type Props = {};
 
-export type Garden = {
-  gardenId: string;
-  latitude: string;
-  location: string;
-  longitude: string;
-  name: string;
-  numPlots: number;
-};
-
 export default function Content({}: Props) {
-  //get data from backend
-  let [homeData, setHomeData] = useState<AxiosResponse<any, any>>();
+  //get latest window
+  const [windowData, setWindowData] = useState<Window>(defaultWindow);
+  const [latestWindowBallotList, setLatestWindowBallotList] = useState<
+    Ballot[]
+  >([defaultBallot]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    homeService
-      .getHomeData()
-      .then((res) => {
-        console.log(res.data);
-        setHomeData(res);
+    Promise.all([
+      homeService.getLatestWindow(),
+      homeService.getBallotsLatestWindow(),
+    ])
+      .then((resArr) => {
+        console.log(resArr);
+        setWindowData(resArr[0].data);
+        setLatestWindowBallotList(resArr[1].data);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [setWindowData, setLatestWindowBallotList]);
 
   //get formatted window date
   const windowDate: string =
-    formatDateTimeToDate(homeData?.data.startDateTime ?? "") +
+    formatDateTimeToDate(windowData.startDateTime ?? "") +
     " - " +
-    formatDateTimeToDate(homeData?.data.leaseStart ?? "");
-
-  const gardenList: Garden[] = homeData?.data.gardenList ?? [];
-  console.log(gardenList);
+    formatDateTimeToDate(windowData.leaseStart ?? "");
 
   return (
     <ContentStyled>
       <WindowLabel windowDate={windowDate} />
-      <Table gardenList={gardenList}/>
+      {loading ? (
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Table
+          gardenList={windowData.gardenList ?? []}
+          ballotList={latestWindowBallotList ?? []}
+        />
+      )}
     </ContentStyled>
   );
 }

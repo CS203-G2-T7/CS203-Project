@@ -54,7 +54,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
       try {
         decodedToken = JWT.decode(jwtToken);
       } catch (JWTDecodeException e) {
-        System.out.println(e);
+        // System.out.println(e);
         valid = false;
       }
       System.out.println();
@@ -86,12 +86,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
       Verification verifier = JWT.require(algorithm);
       verifier.build().verify(decodedToken); // check if signature match
     } catch (JWTVerificationException | JwkException | MalformedURLException e) {
-      System.out.println("Verification error. JWT token is invalid.");
-      System.out.println(e);
+      // System.out.println("Verification error. JWT token is invalid.");
+      // System.out.println(e);
       valid = false;
     }
     if (!valid)
-      System.out.println("JWT not valid.");
+      System.out.println("");
     else {
       // TODO: From here means JWT verified. Provide logic to authenticate route.
       System.out.println(username + " authentication successful!");

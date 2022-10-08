@@ -1,60 +1,44 @@
 import React from "react";
-import { Garden } from "../Content";
+import { Garden } from "models/Garden";
 import HeaderRow from "./HeaderRow/HeaderRow";
 import Row from "./Row/Row";
-import { TableStyled } from "./Table.styled";
-
-export type rowObject = {
-  name: string;
-  address: string;
-  availablePlots: number;
-  ballotsPlaced: number;
-  status: string;
-};
-
-const fakeDatabase: rowObject[] = [
-  {
-    name: "Ang Mo Kio Garden",
-    address: "609 Ang Mo Kio Ave 1, Singapore 569973",
-    availablePlots: 3,
-    ballotsPlaced: 20,
-    status: "Open",
-  },
-  {
-    name: "Bishan Allotment Garden",
-    address: "609 Bishan Ave 1, Singapore 569973",
-    availablePlots: 3,
-    ballotsPlaced: 20,
-    status: "Closed",
-  },
-  {
-    name: "Toa Payoh Allotment Garden",
-    address: "609 Toa Payoh Ave 1, Singapore 569973",
-    availablePlots: 3,
-    ballotsPlaced: 20,
-    status: "Open",
-  },
-  {
-    name: "Some very very long name so it will overflow Allotment Garden",
-    address:
-      "609 Ang Mo Kio Ave 1 Some very long address so it will overflow, Singapore 569973",
-    availablePlots: 3,
-    ballotsPlaced: 20,
-    status: "Closed",
-  },
-];
-
+import { Ballot } from "models/Ballot";
 
 type Props = {
   gardenList: Garden[];
+  ballotList: Ballot[];
 };
 
-export default function Table({ gardenList }: Props) {
+export default function Table({ gardenList, ballotList }: Props) {
+  //loop through gardenList, use gardenId as key in gardenMap.
+  //loop through ballots, get garden.gardenId and increment value in gardenMap.
+  const gardenMap = new Map<string, number>();
+  gardenList.forEach((garden) => {
+    gardenMap.set(garden.gardenId, 0);
+  });
+  ballotList.forEach((ballot) => {
+    const gardenId = ballot.garden.gardenId;
+    const prevValue = gardenMap.get(ballot.garden.gardenId);
+    if (
+      gardenId !== "" &&
+      gardenId !== null &&
+      gardenId !== undefined &&
+      prevValue !== undefined
+    ) {
+      gardenMap.set(gardenId, prevValue + 1);
+    }
+  });
+  // console.log(gardenMap);
+
   return (
     <>
       <HeaderRow />
       {gardenList.map((gardenObject, index) => (
-        <Row gardenObject={gardenObject} key={index} />
+        <Row
+          gardenObject={gardenObject}
+          numBallotsPlaced={gardenMap.get(gardenObject.gardenId) ?? 0}
+          key={index}
+        />
       ))}
     </>
   );

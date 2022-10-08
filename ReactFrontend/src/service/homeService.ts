@@ -1,10 +1,15 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
-const HOME_BASE_URL = "http://localhost:5000/window";
+const LATEST_WINDOW_URL = "http://localhost:5000/window";
+const BALLOTS_LATEST_WINDOW_URL = "http://localhost:5000/ballot";
 
 class Home {
-  getHomeData() {
-    return axios.get(HOME_BASE_URL);
+  //gets Window, which contains array of Gardens
+  getLatestWindow(): Promise<AxiosResponse<any, any>> {
+    return axios.get(LATEST_WINDOW_URL);
+  }
+  getBallotsLatestWindow(): Promise<AxiosResponse<any, any>> {
+    return axios.get(BALLOTS_LATEST_WINDOW_URL);
   }
 }
 
