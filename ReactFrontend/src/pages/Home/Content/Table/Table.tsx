@@ -3,13 +3,15 @@ import { Garden } from "models/Garden";
 import HeaderRow from "./HeaderRow/HeaderRow";
 import Row from "./Row/Row";
 import { Ballot } from "models/Ballot";
+import { Window } from "models/Window";
 
 type Props = {
   gardenList: Garden[];
   ballotList: Ballot[];
+  windowData: Window;
 };
 
-export default function Table({ gardenList, ballotList }: Props) {
+export default function Table({ gardenList, ballotList, windowData }: Props) {
   //loop through gardenList, use gardenId as key in gardenMap.
   //loop through ballots, get garden.gardenId and increment value in gardenMap.
   const gardenMap = new Map<string, number>();
@@ -36,6 +38,7 @@ export default function Table({ gardenList, ballotList }: Props) {
       {gardenList.map((gardenObject, index) => (
         <Row
           gardenObject={gardenObject}
+          windowData={windowData}
           numBallotsPlaced={gardenMap.get(gardenObject.gardenId) ?? 0}
           key={index}
         />

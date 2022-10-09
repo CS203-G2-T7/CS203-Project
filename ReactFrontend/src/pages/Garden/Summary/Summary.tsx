@@ -7,10 +7,13 @@ import { HorizontalContainerStyled } from "./HorizontalContainer.styled";
 import { SectionBoxStyled } from "components/SectionBox.styled";
 import Carousel from "./Carousel/Carousel";
 import Details from "./Details/Details";
+import { LinkStateType } from "../Garden";
 
-type Props = {};
+type Props = {
+  linkState: LinkStateType;
+};
 
-export default function Summary({}: Props) {
+export default function Summary({linkState}: Props) {
   return (
     <SectionBoxStyled>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -20,7 +23,7 @@ export default function Summary({}: Props) {
       </Box>
       <HorizontalContainerStyled>
         <Carousel />
-        <Details />
+        <Details linkState={linkState}/>
       </HorizontalContainerStyled>
     </SectionBoxStyled>
   );

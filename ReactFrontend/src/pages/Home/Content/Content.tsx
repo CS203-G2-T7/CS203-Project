@@ -54,6 +54,7 @@ export default function Content({}: Props) {
         <Table
           gardenList={windowData.gardenList ?? []}
           ballotList={latestWindowBallotList ?? []}
+          windowData={windowData}
         />
       )}
     </ContentStyled>

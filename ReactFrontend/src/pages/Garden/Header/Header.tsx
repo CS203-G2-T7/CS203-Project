@@ -2,14 +2,17 @@ import Navbar from "components/Navbar/Navbar";
 import React from "react";
 import { HeaderStyled } from "./Header.styled";
 
-type Props = {};
+type Props = {
+  name: string;
+  address: string;
+};
 
-export default function Header({}: Props) {
+export default function Header({ name, address }: Props) {
   return (
     <HeaderStyled>
       <Navbar />
-      <h1>{"Ang Mo Kio Allotment Garden"}</h1>
-      <h2>{"609 Ang Mo Kio Ave 1, Singapore 569973"}</h2>
+      <h1>{name}</h1>
+      <h2>{address}</h2>
     </HeaderStyled>
   );
 }
