@@ -13,4 +13,20 @@ class loginUser {
   }
 }
 
+// TODO: Something like this to store JWT
+// axios
+// .post('http://localhost:8000/logIn', {
+//   email: email,
+//   password: password,
+// })
+// .then((response) => {
+//   const users = response.data
+//     dispatch(loginSuccess(users))
+//     localStorage.setItem('jwt', users.auth_token)
+//     localStorage.setItem('user', JSON.stringify(users))
+//     console.log('users', users) // undefined
+// })
+// .catch((error) => {
+//   dispatch(fetchLoginFailure(error.message))
+// })
 export default new loginUser();

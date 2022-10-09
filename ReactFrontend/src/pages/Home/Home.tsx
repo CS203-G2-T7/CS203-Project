@@ -1,9 +1,16 @@
-import React from 'react'
+import React from "react";
+import Header from "./Header/Header";
+import Content from "./Content/Content";
 
-type Props = {}
+import { HomeStyled } from "./Home.styled";
+
+type Props = {};
 
 export default function Home({}: Props) {
   return (
-    <div>Home</div>
-  )
+    <HomeStyled>
+      <Header />
+      <Content />
+    </HomeStyled>
+  );
 }

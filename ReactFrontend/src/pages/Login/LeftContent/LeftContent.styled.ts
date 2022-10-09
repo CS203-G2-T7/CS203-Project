@@ -5,6 +5,6 @@ export const LeftContentStyled = styled.div`
   /* width: 70%; */
   flex-grow: 1;
   height: 100vh;
-  filter: drop-shadow(8px 0px 30px #000);
+  filter: drop-shadow(0.5rem 0px 1.875rem #000);
   background-color: #fefefe;
 `;

@@ -18,25 +18,23 @@ export default function FirstTextFields({}: Props) {
   };
 
   return (
-    <>
-      <StyledFirstTextFields>
-        <StyledNameTextFieldsRow>
-          <StyledNameTextFields label="First name" />
-          <StyledNameTextFields label="Last name" />
-        </StyledNameTextFieldsRow>
-        <TextField label="Email" />
-        {/* <TextField label="Date of Birth" /> */}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label="Date of Birth"
-            value={value}
-            onChange={(newValue) => {
-              handleChange(newValue);
-            }}
-            renderInput={(params) => <StyledNameTextFields {...params} />}
-          />
-        </LocalizationProvider>
-      </StyledFirstTextFields>
-    </>
+    <StyledFirstTextFields>
+      <StyledNameTextFieldsRow>
+        <StyledNameTextFields label="First name" />
+        <StyledNameTextFields label="Last name" />
+      </StyledNameTextFieldsRow>
+      <TextField label="Email" />
+      {/* <TextField label="Date of Birth" /> */}
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label="Date of Birth"
+          value={value}
+          onChange={(newValue) => {
+            handleChange(newValue);
+          }}
+          renderInput={(params) => <StyledNameTextFields {...params} />}
+        />
+      </LocalizationProvider>
+    </StyledFirstTextFields>
   );
 }

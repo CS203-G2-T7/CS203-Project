@@ -4,12 +4,12 @@ export const FormNavButtonGroup = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 32px;
-  width: 492px;
+  gap: 2rem;
+  width: 30.75rem;
   margin: auto;
-  padding-top: 125px;
+  padding-top: 7.8125rem;
 
   .MuiButton-root {
-    border-radius: 16px;
+    border-radius: 1rem;
   }
 `;

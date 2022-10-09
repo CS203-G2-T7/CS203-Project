@@ -2,6 +2,7 @@ package com.G2T7.OurGardenStory.repository;
 
 import com.G2T7.OurGardenStory.model.Garden;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
@@ -32,6 +33,21 @@ public class GardenRepo {
         }
 
         return null;
+    }
+
+    public Garden findGardenById(String gardenId) {
+        Garden hashKObject = new Garden();
+        hashKObject.setGardenId(gardenId);
+        DynamoDBQueryExpression<Garden> queryExpression = new DynamoDBQueryExpression<Garden>()
+                .withHashKeyValues(hashKObject);
+        List<Garden> gardenList = dynamoDBMapper.query(Garden.class, queryExpression);
+        if (gardenList.size() == 0) {
+            // Throw some error. Return 404.
+            // System.out.println("Garden with id: " + gardenId + " not found.");
+            return null;
+        }
+        // System.out.println(gardenList.get(0).getName());
+        return gardenList.get(0);
     }
 
     public List<Garden> listGardens() {
