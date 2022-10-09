@@ -2,6 +2,8 @@ package com.G2T7.OurGardenStory.controller;
 
 import com.G2T7.OurGardenStory.model.Ballot;
 import com.G2T7.OurGardenStory.repository.BallotRepo;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +25,7 @@ public class BallotController {
     }
 
     @PostMapping(path = "/ballot")
-    public Ballot saveBallot(@RequestBody com.fasterxml.jackson.databind.JsonNode payload) {
+    public Ballot saveBallot(@RequestBody JsonNode payload) {
         return ballotRepo.save(payload.get("gardenName").asText());
     }
 
