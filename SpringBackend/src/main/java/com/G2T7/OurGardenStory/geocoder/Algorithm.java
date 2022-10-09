@@ -4,16 +4,16 @@ import java.util.*;
 
 public class Algorithm {
     
-    public ArrayList<String> getBallotSuccess(HashMap<String,Double> ballotters, int numSuccess) {
-        ArrayList<String> list = new ArrayList<>(ballotters.keySet());
-        for (String key : ballotters.keySet()) {
-            if (ballotters.get(key) <= 2) {
+    public ArrayList<String> getBallotSuccess(HashMap<String,Double> balloters, int numSuccess) {
+        ArrayList<String> list = new ArrayList<>(balloters.keySet());
+        for (String key : balloters.keySet()) {
+            if (balloters.get(key) <= 2) {
                 list.add(key);
                 list.add(key);
                 list.add(key);
                 list.add(key);
             }
-            if (ballotters.get(key) <= 5 && ballotters.get(key) > 2) {
+            if (balloters.get(key) <= 5 && balloters.get(key) > 2) {
                 list.add(key);
                 list.add(key);
             }
