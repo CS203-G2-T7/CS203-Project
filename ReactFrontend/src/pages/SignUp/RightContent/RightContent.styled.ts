@@ -1,12 +1,11 @@
 import styled from "styled-components";
 
-export const RightContentStyled = styled.div`
-  flex-grow: 1;
+export const RightContentStyled = styled.form`
+  flex: 2;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* align-items: center; */
   height: 100vh;
   background-color: #fefefe;
 

@@ -39,7 +39,11 @@ export default function LoginForm({}: Props) {
         password: data.password,
       })
       .then((res) => {
-        console.log(res);
+        console.log(res); //JH: very bad practice to store jwt tokens in local storage. Backend has to send it as HTTPOnly cookie.
+        localStorage.setItem(
+          "jwtAccessToken",
+          JSON.stringify(res.data.accessToken)
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -52,14 +56,10 @@ export default function LoginForm({}: Props) {
         name={"email"}
         control={control}
         rules={{
-          required: "Email is required.",
-          // pattern: {
-          //   value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-          //   message: "Not a valid email.",
-          // }, //no validation for username
+          required: "Username is required.",
           max: {
             value: 320,
-            message: "Maximimum number of characters 320.",
+            message: "Maximum number of characters 320.",
           },
         }}
         render={({
@@ -70,11 +70,11 @@ export default function LoginForm({}: Props) {
             error={error != null}
             onChange={onChange}
             value={value}
-            label={"Email"}
+            label={"Username"}
             inputRef={ref}
             fullWidth
             margin="normal"
-            placeholder="name@email.com"
+            placeholder="John Tan"
           />
         )}
       />

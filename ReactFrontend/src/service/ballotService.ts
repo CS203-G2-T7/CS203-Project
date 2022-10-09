@@ -3,10 +3,10 @@ import axios, { AxiosResponse } from "axios";
 const PLACE_BALLOT_URL = "http://localhost:5000/ballot";
 const CHOOSE_BALLOT_URL = "http://localhost:5000/magic";
 
-const mockJWTAccessToken = "";
-
 const config = {
-  headers: { Authorization: `Bearer ${mockJWTAccessToken}` },
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("jwtAccessToken")}`,
+  },
 };
 
 class Ballot {

@@ -4,9 +4,12 @@ import { StyledButton } from "./Button.styled";
 
 type Props = {
   pageSetter: React.Dispatch<React.SetStateAction<number>>;
+  page: number;
 };
 
-export default function ButtonGroup({ pageSetter }: Props) {
+export default function ButtonGroup({ pageSetter, page }: Props) {
+  const submitState: boolean = page === 3;
+
   const backHandler = () => {
     pageSetter((prevPage: number) => {
       if (prevPage > 1) return --prevPage;
@@ -29,18 +32,26 @@ export default function ButtonGroup({ pageSetter }: Props) {
         onClick={() => {
           backHandler();
         }}
+        disabled={page === 1}
       >
         Back
       </StyledButton>
       <StyledButton
-        disableElevation
         size="large"
-        variant="contained"
+        variant="outlined"
         onClick={() => {
           nextHandler();
         }}
       >
         Next
+      </StyledButton>
+      <StyledButton
+        disableElevation
+        size="large"
+        variant="contained"
+        type="submit"
+      >
+        Submit
       </StyledButton>
     </FormNavButtonGroup>
   );
