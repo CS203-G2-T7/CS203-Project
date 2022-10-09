@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
 export const HelperTextStyled = styled.div`
-  width: 360px;
-  height: 18px;
-  font-size: 11px;
+  width: 22.5rem;
+  height: 1.125rem;
+  font-size: 0.6875rem;
 
-  padding: 0 16px 0;
-  margin-top: 8px;
+  padding: 0 1rem 0;
+  margin-top: 0.5rem;
 
   display: flex;
   justify-content: space-between;
@@ -17,7 +17,7 @@ export const HelperTextStyled = styled.div`
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      gap: 4px;
+      gap: 0.25rem;
       color: #b73b3b;
     }
 

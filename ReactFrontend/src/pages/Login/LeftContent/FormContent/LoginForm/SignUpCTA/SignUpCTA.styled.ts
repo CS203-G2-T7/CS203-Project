@@ -5,9 +5,9 @@ export const SignUpCTAStyled = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 0.25rem;
   span {
-    font-size: 12px;
+    font-size: 0.75rem;
   }
   a:hover,
   a:visited,

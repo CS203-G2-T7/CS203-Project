@@ -4,10 +4,10 @@ export const LoginLinkStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 4px;
+  gap: 0.25rem;
 
-  font-size: 12px;
-  margin-top: 32px;
+  font-size: 0.75rem;
+  margin-top: 2rem;
 
   a:last-child:hover,
   a:last-child:visited,

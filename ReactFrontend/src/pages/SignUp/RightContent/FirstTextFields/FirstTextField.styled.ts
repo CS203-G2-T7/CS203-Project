@@ -3,11 +3,11 @@ import styled from "styled-components";
 export const StyledFirstTextFields = styled.div`
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 40rem;
   padding-top: 5%;
-  gap: 30px;
+  gap: 1.875rem;
   margin: auto;
   fieldset {
-    border-radius: 16px;
+    border-radius: 1rem;
   }
 `;

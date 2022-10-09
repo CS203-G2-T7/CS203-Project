@@ -7,24 +7,15 @@ import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.UserSignInResponse;
 import com.G2T7.OurGardenStory.model.Window;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
-import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
 @Repository
 public class BallotRepo {
@@ -38,16 +29,15 @@ public class BallotRepo {
     private GardenRepo gardenRepo;
 
     @Autowired
-    private GeocodeController geocodeController;
+    private GeocodeController geocodeController; // JH: why is controller here?
 
     protected String[] getPayloadAttributes() {
         String idToken = UserSignInResponse.getIdToken();
-        String[] chunks = idToken.split("\\."); // chunk 0 is header, chunk 1 is payload
-
+        String[] chunks = idToken.split("\\."); // chunk 0 is header, chunk 1 is payload, chunk 2 is signature
+        
         Base64.Decoder decoder = Base64.getUrlDecoder(); // Decode via Base64
-
-        String payload = new String(decoder.decode(chunks[1])); // gets payload from idToken
-        String[] payload_attr = payload.split(",");
+        String decodedPayload = new String(decoder.decode(chunks[1])); // gets payload from idToken
+        String[] payload_attr = decodedPayload.split(",");
 
         return payload_attr;
     }
@@ -87,9 +77,11 @@ public class BallotRepo {
         ballot.setStartDateTime(window.getStartDateTime());
         ballot.setLeaseStart(window.getLeaseStart());
         ballot.setNumBidsPlaced(getBidsPlaced(gardenName));
-        String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to address
+        String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to
+                                                                                        // address
         Garden garden = gardenRepo.getGardenByGardenName(gardenName);
-        Double distance = geocodeController.saveDistance(username, postCode, garden.getLongitude(), garden.getLatitude());
+        Double distance = geocodeController.saveDistance(username, postCode, garden.getLongitude(),
+                garden.getLatitude()); // JH: very very bad
         ballot.setDistance(distance);
         ballot.setUsername(username);
         ballot.setGarden(garden);
@@ -135,6 +127,7 @@ public class BallotRepo {
 
         return count + 1;
     }
+
     public List<Ballot> doMagic() {
         List<Ballot> returnBallotList = new ArrayList<>();
 
@@ -153,10 +146,10 @@ public class BallotRepo {
     public List<Ballot> callAlgo(Garden garden) {
         Algorithm algo = new Algorithm();
         HashMap<String, Double> ballotters = new HashMap<>();
-            for (Ballot ballot : listBallotsFromLatestWindow()) {
-                if (ballot.getGarden().getName().equals(garden.getName())) {
-                    ballotters.put(ballot.getUsername(), ballot.getDistance());
-                }
+        for (Ballot ballot : listBallotsFromLatestWindow()) {
+            if (ballot.getGarden().getName().equals(garden.getName())) {
+                ballotters.put(ballot.getUsername(), ballot.getDistance());
+            }
         }
         ArrayList<String> output = new ArrayList<>();
         output = algo.getBallotSuccess(ballotters, 1);
@@ -168,8 +161,7 @@ public class BallotRepo {
                 if (ballot.getGarden().getName().equals(garden.getName())) {
                     ballotListForWindowForGarden.add(ballot);
                 }
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

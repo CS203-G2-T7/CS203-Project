@@ -6,9 +6,9 @@ export const StyledThirdTextFields = styled.div`
   justify-content: center;
   width: 30%;
   padding-top: 5%;
-  gap: 30px;
+  gap: 1.875rem;
   margin: auto;
   fieldset {
-    border-radius: 16px;
+    border-radius: 1rem;
   }
 `;
