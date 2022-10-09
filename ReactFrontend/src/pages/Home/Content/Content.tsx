@@ -33,7 +33,7 @@ export default function Content({}: Props) {
       .catch((err) => {
         console.log(err);
       });
-  }, [setWindowData, setLatestWindowBallotList]);
+  }, []);
 
   //get formatted window date
   const windowDate: string =
@@ -43,7 +43,9 @@ export default function Content({}: Props) {
 
   return (
     <ContentStyled>
-      <WindowLabel windowDate={windowDate} />
+      <WindowLabel
+        windowDate={windowDate.length <= 12 ? "Loading..." : windowDate}
+      />
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />

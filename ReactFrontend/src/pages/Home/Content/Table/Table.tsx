@@ -18,7 +18,7 @@ export default function Table({ gardenList, ballotList }: Props) {
   });
   ballotList.forEach((ballot) => {
     const gardenId = ballot.garden.gardenId;
-    const prevValue = gardenMap.get(ballot.garden.gardenId);
+    const prevValue = gardenMap.get(gardenId);
     if (
       gardenId !== "" &&
       gardenId !== null &&
