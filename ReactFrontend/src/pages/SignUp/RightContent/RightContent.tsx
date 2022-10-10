@@ -58,7 +58,7 @@ export default function RightContent({}: Props) {
       email: data.email,
       username: data.username,
       password: data.password,
-      address: data.addressLine1.concat(data.addressLine2, data.postalCode),
+      address: data.postalCode,
       givenName: data.firstName,
       familyName: data.lastName,
       birthDate: data.dateOfBirth,
