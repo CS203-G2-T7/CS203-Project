@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 import React from "react";
 import { StyledFirstTextFields } from "./FirstTextField.styled";
 import { StyledNameTextFields } from "./NameTextField.styled";
@@ -63,6 +63,27 @@ export default function FirstTextFields({}: Props) {
       </StyledNameTextFieldsRow>
 
       <Controller
+        name={"username"}
+        control={control}
+        rules={{
+          required: "Username is required.", //could check for duplicates in backend
+        }}
+        render={({
+          field: { onChange, onBlur, value, name, ref },
+          fieldState: { isTouched, isDirty, error },
+        }) => (
+          <StyledNameTextFields
+            label="Username"
+            onChange={onChange}
+            value={value}
+            inputRef={ref}
+            error={!!error}
+            helperText={error?.message}
+          />
+        )}
+      />
+
+      <Controller
         name={"email"}
         control={control}
         rules={{
@@ -87,29 +108,63 @@ export default function FirstTextFields({}: Props) {
           />
         )}
       />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <StyledNameTextFieldsRow>
         <Controller
-          name={"dateOfBirth"}
+          name={"phoneNumber"}
           control={control}
           rules={{
-            required: "Date of birth is required.",
+            required: "Phone number is required.",
+            pattern: {
+              value: /^[0-9]+$/,
+              message: "Not a valid phone number.",
+            },
           }}
           render={({
-            field: { onChange, onBlur, name, ref },
+            field: { onChange, onBlur, value, name, ref },
             fieldState: { isTouched, isDirty, error },
           }) => (
-            <DatePicker
-              label="Date of Birth"
-              value={dateValue}
+            <StyledNameTextFields
+              label="Phone Number"
+              onChange={onChange}
+              value={value}
               inputRef={ref}
-              onChange={(newValue) => {
-                handleChange(newValue);
+              error={!!error}
+              helperText={error?.message}
+              type="text"
+              inputMode="numeric"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">+65</InputAdornment>
+                ),
               }}
-              renderInput={(params) => <StyledNameTextFields {...params} />}
+              inputProps={{ maxLength: 8 }}
             />
           )}
         />
-      </LocalizationProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Controller
+            name={"dateOfBirth"}
+            control={control}
+            rules={{
+              required: "Date of birth is required.",
+            }}
+            render={({
+              field: { onChange, onBlur, name, ref },
+              fieldState: { isTouched, isDirty, error },
+            }) => (
+              <DatePicker
+                label="Date of Birth"
+                value={dateValue}
+                inputRef={ref}
+                onChange={(newValue) => {
+                  handleChange(newValue);
+                }}
+                renderInput={(params) => <StyledNameTextFields {...params} />}
+              />
+            )}
+          />
+        </LocalizationProvider>
+      </StyledNameTextFieldsRow>
     </StyledFirstTextFields>
   );
 }

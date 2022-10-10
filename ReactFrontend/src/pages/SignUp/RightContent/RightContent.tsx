@@ -8,10 +8,12 @@ import SecondTextFields from "./SecondTextFields/SecondTextFields";
 import ThirdTextFields from "./ThirdTextFields/ThirdTextFields";
 import { FixedBottom } from "./FixedBottom.styled";
 import { FormProvider, useForm } from "react-hook-form";
+import { Navigate, useNavigate } from "react-router-dom";
 import signUpService, {
   defaultSignUpData,
   signUpData,
 } from "service/signUpService";
+import loginService from "service/loginService";
 
 type Props = {};
 
@@ -19,8 +21,10 @@ type SignUpForm = {
   firstName: string;
   lastName: string;
   email: string;
+  username: string;
   password: string;
   confirmPassword: string;
+  phoneNumber: string;
   addressLine1: string;
   addressLine2: string;
   postalCode: string;
@@ -31,8 +35,10 @@ const defaultSignUpForm: SignUpForm = {
   firstName: "",
   lastName: "",
   email: "",
+  username: "",
   password: "",
   confirmPassword: "",
+  phoneNumber: "",
   addressLine1: "",
   addressLine2: "",
   postalCode: "",
@@ -40,6 +46,7 @@ const defaultSignUpForm: SignUpForm = {
 };
 
 export default function RightContent({}: Props) {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const methods = useForm({
     defaultValues: defaultSignUpForm,
@@ -48,23 +55,45 @@ export default function RightContent({}: Props) {
 
   const submitHandler = async (data: SignUpForm) => {
     // console.log(data);
-    let signUpData: signUpData = defaultSignUpData;
-    signUpData.address = data.addressLine1.concat(" ", data.addressLine2);
-    signUpData.email = data.email;
-    signUpData.password = data.password;
-    signUpData.username = data.firstName.concat(" ", data.lastName);
-    // console.log(signUpData);
+    const signUpData: signUpData = {
+      email: data.email,
+      username: data.username,
+      password: data.password,
+      address: data.addressLine1.concat(
+        data.addressLine2,
+        ", singapore ",
+        data.postalCode
+      ),
+      givenName: data.firstName,
+      familyName: data.lastName,
+      birthDate: data.dateOfBirth,
+      phoneNumber: data.phoneNumber,
+    };
 
-    signUpService
-      .signUpUser(signUpData)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    // const signUpResponse = await signUpService.signUpUser(signUpData);
-    // console.log(signUpResponse);
+    try {
+      //check if sign up is successful
+      const signUpResponse = await signUpService.signUpUser(signUpData);
+      console.log(signUpResponse);
+      
+      //sign up no issue, then login
+      if (signUpResponse.status === 200) {
+        const loginResponse = await loginService.loginUser({
+          username: signUpData.username,
+          password: signUpData.password,
+        });
+        console.log(loginResponse);
+        if (loginResponse.status === 200) {
+          localStorage.setItem(
+            "jwtAccessToken",
+            JSON.stringify(loginResponse.data.accessToken) //JH: bad practice.
+          );
+          navigate("/home"); //redirect to home page after sign-up.
+        }
+      }
+    } catch (e) {
+      console.log(e);
+      alert(e);
+    }
   };
 
   let CurrentPageComponent: ReactNode = <FirstTextFields />;
