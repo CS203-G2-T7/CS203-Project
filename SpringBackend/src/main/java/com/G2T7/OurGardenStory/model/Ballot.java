@@ -42,9 +42,6 @@ public class Ballot {
     private String username;
 
     @DynamoDBAttribute
-    private String email;
-
-    @DynamoDBAttribute
     private double distance;
 
     static public class GardenConverter implements DynamoDBTypeConverter<String, Garden> {

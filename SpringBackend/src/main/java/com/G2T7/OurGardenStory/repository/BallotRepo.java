@@ -6,7 +6,6 @@ import com.G2T7.OurGardenStory.model.Ballot;
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.UserSignInResponse;
 import com.G2T7.OurGardenStory.model.Window;
-import com.G2T7.OurGardenStory.service.MailService;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +31,7 @@ public class BallotRepo {
     @Autowired
     private GeocodeController geocodeController; // JH: why is controller here?
 
-    @Autowired
-    private MailService mailService;
-
-    public String[] getPayloadAttributes() {
+    protected String[] getPayloadAttributes() {
         String idToken = UserSignInResponse.getIdToken();
         String[] chunks = idToken.split("\\."); // chunk 0 is header, chunk 1 is payload, chunk 2 is signature
         
@@ -46,7 +42,7 @@ public class BallotRepo {
         return payload_attr;
     }
 
-    public String findPostCodeByIdToken(String[] payload_attr) {
+    protected String findPostCodeByIdToken(String[] payload_attr) {
         for (String payload : payload_attr) {
             if (payload.contains("address")) {
                 return payload.substring(payload.indexOf(":\"") + 2, payload.indexOf("\"}")); // address is returned
@@ -55,19 +51,10 @@ public class BallotRepo {
         return null;
     }
 
-    public String findUsernameByIdToken(String[] payload_attr) {
+    protected String findUsernameByIdToken(String[] payload_attr) {
         for (String payload : payload_attr) {
             if (payload.contains("username")) {
                 return payload.substring(payload.indexOf(":\"") + 2, payload.length() - 1); // username is returned
-            }
-        }
-        return null;
-    }
-
-    public String findEmailByIdToken(String[] payload_attr) {
-        for (String payload : payload_attr) {
-            if (payload.contains("email\"")) {
-                return payload.substring(payload.indexOf(":\"") + 2, payload.length() - 2); // email is returned
             }
         }
         return null;
@@ -97,8 +84,8 @@ public class BallotRepo {
                 garden.getLatitude()); // JH: very very bad
         ballot.setDistance(distance);
         ballot.setUsername(username);
-        ballot.setEmail(findEmailByIdToken(getPayloadAttributes()));
         ballot.setGarden(garden);
+
         dynamoDBMapper.save(ballot);
         return ballot;
     }
@@ -183,11 +170,6 @@ public class BallotRepo {
             for (String success : output) {
                 if (success.equals(ballot.getUsername())) {
                     ballot.setStatus("Successful :)");
-                    try {
-                        mailService.sendSuccessTextEmail(ballot.getEmail());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     dynamoDBMapper.save(ballot);
                     returnBallotList.add(ballot);
                 }
@@ -197,11 +179,6 @@ public class BallotRepo {
         for (Ballot ballot : ballotListForWindowForGarden) {
             if (ballot.getStatus().equals("PENDING")) {
                 ballot.setStatus("Unsuccessful :(");
-                try {
-                    mailService.sendFailureTextEmail(ballot.getEmail());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 dynamoDBMapper.save(ballot);
                 returnBallotList.add(ballot);
             }
