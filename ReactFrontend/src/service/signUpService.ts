@@ -7,12 +7,20 @@ export type signUpData = {
   username: string;
   password: string;
   address: string;
+  givenName: string;
+  familyName: string;
+  birthDate: string;
+  phoneNumber: string;
 };
 export const defaultSignUpData = {
   email: "",
   username: "",
   password: "",
   address: "",
+  givenName: "",
+  familyName: "",
+  birthDate: "",
+  phoneNumber: "",
 };
 
 class signUpUser {
