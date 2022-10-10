@@ -7,6 +7,7 @@ import SignUpCTA from "./SignUpCTA/SignUpCTA";
 import { SubmitInputStyled } from "./SubmitInput.styled";
 import { ViewPWIconStyled } from "./ViewPWIcon.styled";
 import loginService, { LoginData } from "service/loginService";
+import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
@@ -22,7 +23,7 @@ const defaultFormData: FormDataType = {
 
 export default function LoginForm({}: Props) {
   const [showPass, setShowPass] = useState("password");
-
+  const navigate = useNavigate();
   const {
     handleSubmit,
     control,
@@ -40,10 +41,9 @@ export default function LoginForm({}: Props) {
       })
       .then((res) => {
         console.log(res); //JH: very bad practice to store jwt tokens in local storage. Backend has to send it as HTTPOnly cookie.
-        localStorage.setItem(
-          "jwtAccessToken",
-          JSON.stringify(res.data.accessToken)
-        );
+        localStorage.setItem("jwtAccessToken", res.data.accessToken);
+        navigate("/home");
+        console.log(res.data.accessToken);
       })
       .catch((err) => {
         console.log(err);

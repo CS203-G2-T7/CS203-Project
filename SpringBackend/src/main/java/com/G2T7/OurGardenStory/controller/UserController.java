@@ -100,7 +100,8 @@ public class UserController {
             System.out.println(e.getErrorMessage());
             return new ResponseEntity<>(e.getErrorMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            System.out.println("Setting user password");
+            System.out.println("Error: ");
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 

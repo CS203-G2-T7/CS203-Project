@@ -27,9 +27,12 @@ public class BallotController {
 
     @PostMapping(path = "/ballot")
     public Ballot saveBallot(@RequestBody JsonNode payload) {
+        System.out.println("Ballot posted for " + payload.get("gardenName") + ".");
         return ballotRepo.save(payload.get("gardenName").asText());
     }
 
     @GetMapping(path = "/magic")
-    public List<Ballot>callAlgo() { return ballotRepo.doMagic(); }
+    public List<Ballot> callAlgo() {
+        return ballotRepo.doMagic();
+    }
 }

@@ -54,27 +54,23 @@ export default function RightContent({}: Props) {
   });
 
   const submitHandler = async (data: SignUpForm) => {
-    // console.log(data);
     const signUpData: signUpData = {
       email: data.email,
       username: data.username,
       password: data.password,
-      address: data.addressLine1.concat(
-        data.addressLine2,
-        ", singapore ",
-        data.postalCode
-      ),
+      address: data.addressLine1.concat(data.addressLine2, data.postalCode),
       givenName: data.firstName,
       familyName: data.lastName,
       birthDate: data.dateOfBirth,
-      phoneNumber: data.phoneNumber,
+      phoneNumber: "+65" + data.phoneNumber, //must have +65 at the front.
     };
+    console.log(signUpData);
 
     try {
       //check if sign up is successful
       const signUpResponse = await signUpService.signUpUser(signUpData);
       console.log(signUpResponse);
-      
+
       //sign up no issue, then login
       if (signUpResponse.status === 200) {
         const loginResponse = await loginService.loginUser({
@@ -85,8 +81,9 @@ export default function RightContent({}: Props) {
         if (loginResponse.status === 200) {
           localStorage.setItem(
             "jwtAccessToken",
-            JSON.stringify(loginResponse.data.accessToken) //JH: bad practice.
+            loginResponse.data.accessToken //JH: bad practice.
           );
+          console.log(loginResponse.data.accessToken);
           navigate("/home"); //redirect to home page after sign-up.
         }
       }

@@ -11,12 +11,17 @@ const config = {
 
 class Ballot {
   placeBallot(gardenName: String): Promise<AxiosResponse<any, any>> {
+    // console.log(config.headers.Authorization);
     return axios.post(
       PLACE_BALLOT_URL,
       {
         gardenName: gardenName,
       },
-      config
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('jwtAccessToken'),
+        },
+      }
     );
   }
   chooseBallot(): Promise<AxiosResponse<any, any>> {
