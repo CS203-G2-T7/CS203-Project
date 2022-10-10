@@ -26,7 +26,7 @@ export default function ThirdTextFields({}: Props) {
           fieldState: { isTouched, isDirty, error },
         }) => (
           <TextField
-            label="Choose Password"
+            label="Password"
             onChange={onChange}
             value={value}
             inputRef={ref}

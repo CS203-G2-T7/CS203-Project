@@ -7,7 +7,7 @@ import com.G2T7.OurGardenStory.model.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -98,8 +98,10 @@ public class UserController {
 
         } catch (AWSCognitoIdentityProviderException e) {
             System.out.println(e.getErrorMessage());
+            return new ResponseEntity<>(e.getErrorMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             System.out.println("Setting user password");
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
         return ResponseEntity.ok("User registered successfully!");
@@ -144,7 +146,8 @@ public class UserController {
                                 userSignInRequest.getNewPassword());
 
                         final AdminRespondToAuthChallengeRequest request = new AdminRespondToAuthChallengeRequest()
-                                .withChallengeName(ChallengeNameType.NEW_PASSWORD_REQUIRED)
+                                .withChallengeName(
+                                        ChallengeNameType.NEW_PASSWORD_REQUIRED)
                                 .withChallengeResponses(challengeResponses)
                                 .withClientId(clientId).withUserPoolId(userPoolId)
                                 .withSession(result.getSession());
@@ -153,15 +156,18 @@ public class UserController {
                                 .adminRespondToAuthChallenge(request);
                         authenticationResult = resultChallenge.getAuthenticationResult();
 
-                        userSignInResponse.setAccessToken(authenticationResult.getAccessToken());
+                        userSignInResponse
+                                .setAccessToken(authenticationResult.getAccessToken());
                         userSignInResponse.setIdToken(authenticationResult.getIdToken());
-                        userSignInResponse.setRefreshToken(authenticationResult.getRefreshToken());
+                        userSignInResponse.setRefreshToken(
+                                authenticationResult.getRefreshToken());
                         userSignInResponse.setExpiresIn(authenticationResult.getExpiresIn());
                         userSignInResponse.setTokenType(authenticationResult.getTokenType());
                     }
 
                 } else {
-                    throw new CustomException("User has other challenge " + result.getChallengeName());
+                    throw new CustomException(
+                            "User has other challenge " + result.getChallengeName());
                 }
             } else {
 

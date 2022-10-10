@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FormNavButtonGroup } from "./FormNavButtonGroup.styled";
 import { StyledButton } from "./Button.styled";
 
@@ -8,7 +8,11 @@ type Props = {
 };
 
 export default function ButtonGroup({ pageSetter, page }: Props) {
-  const submitState: boolean = page === 3;
+  const [submitState, setSubmitState] = useState(false);
+
+  useEffect(() => {
+    setSubmitState(page === 3);
+  }, [page]);
 
   const backHandler = () => {
     pageSetter((prevPage: number) => {
@@ -36,23 +40,26 @@ export default function ButtonGroup({ pageSetter, page }: Props) {
       >
         Back
       </StyledButton>
-      <StyledButton
-        size="large"
-        variant="outlined"
-        onClick={() => {
-          nextHandler();
-        }}
-      >
-        Next
-      </StyledButton>
-      <StyledButton
-        disableElevation
-        size="large"
-        variant="contained"
-        type="submit"
-      >
-        Submit
-      </StyledButton>
+      {submitState ? (
+        <StyledButton
+          disableElevation
+          size="large"
+          variant="contained"
+          type="submit"
+        >
+          Submit
+        </StyledButton>
+      ) : (
+        <StyledButton
+          size="large"
+          variant="outlined"
+          onClick={() => {
+            nextHandler();
+          }}
+        >
+          Next
+        </StyledButton>
+      )}
     </FormNavButtonGroup>
   );
 }
