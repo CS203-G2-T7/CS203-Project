@@ -5,6 +5,7 @@ export const SignUpCTAStyled = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin-top: 1.5rem;
   gap: 0.25rem;
   span {
     font-size: 0.75rem;

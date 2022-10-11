@@ -16,10 +16,9 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/garden" element={<Garden />} />
-
       {/* Accessible to NOT logged in users */}
 
-      <Route path="*" element={<NotFound />} />
+      <Route path="*" element={<Login />} />
     </Routes>
   );
 }

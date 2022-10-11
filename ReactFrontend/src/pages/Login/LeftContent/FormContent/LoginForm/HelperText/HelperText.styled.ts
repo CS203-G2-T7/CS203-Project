@@ -7,6 +7,7 @@ export const HelperTextStyled = styled.div`
 
   padding: 0 1rem 0;
   margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
 
   display: flex;
   justify-content: space-between;

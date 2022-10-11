@@ -111,7 +111,9 @@ export default function LoginForm({}: Props) {
         )}
       />
       <HelperText validPass={errors.password == null} />
-      <SubmitInputStyled type="submit" />
+      <SubmitInputStyled type="submit" variant="contained" disableElevation>
+        Login
+      </SubmitInputStyled>
       <SignUpCTA />
     </LoginFormStyled>
   );

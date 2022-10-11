@@ -7,4 +7,7 @@ export const LoginFormStyled = styled.form`
   fieldset {
     border-radius: 1rem;
   }
+  .MuiButton-root {
+    border-radius: 1rem;
+  }
 `;

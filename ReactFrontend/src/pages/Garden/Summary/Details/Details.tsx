@@ -6,12 +6,15 @@ import { DetailsRowStyled } from "./DetailRow.styled";
 import { DetailsGroupStyled } from "./DetailsGroup.styled";
 import { DetailsRightStyled } from "./DetailsRight.styled";
 import { SummaryButtonStyled } from "./SummaryButton.styled";
+import { Alert, Button, IconButton, Snackbar } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 type Props = {
   linkState: LinkStateType;
 };
 
 export default function Details({ linkState }: Props) {
+  const [open, setOpen] = React.useState(false); //open state of snackbar
   //Format data to display
   let leaseStartDate: string = formatDateTimeToDate(
     linkState.windowData.leaseStart
@@ -30,6 +33,7 @@ export default function Details({ linkState }: Props) {
   //Place ballot
   const submitBallotHandler = () => {
     console.log("Submitted");
+    setOpen(true);
     ballotService
       .placeBallot(linkState.gardenObject.name)
       .then((res) => {
@@ -39,6 +43,21 @@ export default function Details({ linkState }: Props) {
         console.log(err);
       });
   };
+
+  const action = (
+    <>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={() => {
+          setOpen(false);
+        }}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
 
   return (
     <DetailsRightStyled>
@@ -78,6 +97,25 @@ export default function Details({ linkState }: Props) {
       >
         Place Ballot
       </SummaryButtonStyled>
+      <Snackbar
+        open={open}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        autoHideDuration={6000}
+        onClose={() => {
+          setOpen(false);
+        }}
+        action={action}
+      >
+        <Alert
+          onClose={() => {
+            setOpen(false);
+          }}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Ballot Placed
+        </Alert>
+      </Snackbar>
     </DetailsRightStyled>
   );
 }
