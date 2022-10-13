@@ -65,14 +65,14 @@ export default function BasicTabs() {
       <TabPanel value={value} index={0}>
         <ul>
           <li>
-            What is allotment garden?
+            What is an allotment garden?
             <p>
               Allotment gardens are areas located within parks and gardens that house gardening plots available for lease to the community to grow their own plants. With most of the population living in high-rise flats with minimal space for gardening within their household footprint, these allotment garden plots provide them with further opportunities to garden. To date, more than 2000 allotment garden plots have been made available to the community with plans for further expansion. In tandem, NParks is working with Town Councils and Grassroot Organisations to provide advice on setting up of allotment gardens in public housing estates so that residents can garden closer to their homes. 
             </p>
           </li>
 
           <li>
-            How to maintain an allotment garden plot?
+            How should I maintain an allotment garden plot?
             <ul>
               <p></p>
               <li>regularly pruning plants to keep the plot tidy</li>
@@ -86,7 +86,7 @@ export default function BasicTabs() {
           </li>
 
           <li>
-            What are the recommend plants to grow?
+            What are some recommended plants I can grow?
               <p>Here is a list of suggested edible plants you can grow:</p>
               <p>Bayam, Cai Xin, Kang Kong, Kailan, Kale, Lettuce, Okinawa Spinach, Sweet Potato, Ulam Raja, Brinjal, Chilli, Lady’s-Finger, Long Bean, Tomato, Basil, Cekur, Chives, Cincau, Indian Borage, Laska, Mint, Oyster Plant, Pandan, Saw Tooth Coriander, Tumeric</p>
               <p>All plants and gardening structures should not exceed 1 metre in standing height
@@ -105,7 +105,11 @@ export default function BasicTabs() {
           </li>
         </ul>
 
-        <p>Have more questions about the Allotment Gardens Scheme? Please refer to the <a href="https://www.nparks.gov.sg/-/media/nparks-real-content/gardening/allotment-gardening/allotment-gardens-faqs_mar-2022.ashx?la=en&hash=2955B790F8BA94458309D0E575D130EEB6BEA661&hash=2955B790F8BA94458309D0E575D130EEB6BEA661" target="blank"> FAQs</a> here. </p>
+        <p>Have more questions about the Allotment Gardens Scheme? 
+          Please refer to the 
+          <a href="https://www.nparks.gov.sg/-/media/nparks-real-content/gardening/allotment-gardening/allotment-gardens-faqs_mar-2022.ashx?la=en&hash=2955B790F8BA94458309D0E575D130EEB6BEA661&hash=2955B790F8BA94458309D0E575D130EEB6BEA661" target="blank"> FAQs</a> 
+          here. 
+        </p>
         
 
       </TabPanel>
