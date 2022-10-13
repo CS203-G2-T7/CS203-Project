@@ -110,7 +110,10 @@ export default function BasicTabs() {
 
             <p>Have more questions about the Allotment Gardens Scheme? 
               Please refer to the 
-              <a href="https://www.nparks.gov.sg/-/media/nparks-real-content/gardening/allotment-gardening/allotment-gardens-faqs_mar-2022.ashx?la=en&hash=2955B790F8BA94458309D0E575D130EEB6BEA661&hash=2955B790F8BA94458309D0E575D130EEB6BEA661" target="blank"> FAQs</a> 
+              <a 
+              href="https://www.nparks.gov.sg/-/media/nparks-real-content/gardening/allotment-gardening/allotment-gardens-faqs_mar-2022.ashx?la=en&hash=2955B790F8BA94458309D0E575D130EEB6BEA661&hash=2955B790F8BA94458309D0E575D130EEB6BEA661" target="blank"> 
+              FAQs 
+              </a>
               here. 
             </p>
             
