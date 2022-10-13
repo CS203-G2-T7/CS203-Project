@@ -90,12 +90,13 @@ export default function BasicTabs() {
               <p>Here is a list of suggested edible plants you can grow:</p>
               <p>Bayam, Cai Xin, Kang Kong, Kailan, Kale, Lettuce, Okinawa Spinach, Sweet Potato, Ulam Raja, Brinjal, Chilli, Lady’s-Finger, Long Bean, Tomato, Basil, Cekur, Chives, Cincau, Indian Borage, Laska, Mint, Oyster Plant, Pandan, Saw Tooth Coriander, Tumeric</p>
               <p>All plants and gardening structures should not exceed 1 metre in standing height
-(measured from soil level in the planter bed). Gardeners are advised not to plant
-poisonous plants or those with sap as these plants can cause discomfort and are harmful
-to the public. Plants that are illegal are not allowed to be planted.
-Please also be mindful of the neighbouring plots when planting up your mini garden and
-ensure that your plants do not encroach into their space. Keep your space clean and tidy
-for the safety of all your fellow allotment gardeners.</p>
+                (measured from soil level in the planter bed). Gardeners are advised not to plant
+                poisonous plants or those with sap as these plants can cause discomfort and are harmful
+                to the public. Plants that are illegal are not allowed to be planted.
+                Please also be mindful of the neighbouring plots when planting up your mini garden and
+                ensure that your plants do not encroach into their space. Keep your space clean and tidy
+                for the safety of all your fellow allotment gardeners.
+              </p>
           </li>
 
           <li>
