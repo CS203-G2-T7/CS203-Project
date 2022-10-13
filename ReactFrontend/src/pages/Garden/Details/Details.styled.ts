@@ -10,9 +10,21 @@ export const DetailsStyled = styled.div`
                 font-weight: lighter;
                 font-size: 1rem;
             }
-            a{
+            /* a{
                 font-size: smaller;
-            }
+                color: 
+            } */
+
+        }
+        
+    }
+    a{
+        color: #1a5119;
+        text-decoration: none;
+        &:hover {
+            color: #1a5119;
+            text-decoration: underline;
         }
     }
+
 `;
