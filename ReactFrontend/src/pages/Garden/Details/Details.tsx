@@ -12,6 +12,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import { TabPanelStyled } from './TabPanelStyled';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -23,7 +24,7 @@ function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <TabPanelStyled
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -35,7 +36,7 @@ function TabPanel(props: TabPanelProps) {
           <Typography>{children}</Typography>
         </Box>
       )}
-    </div>
+    </TabPanelStyled>
   );
 }
 
