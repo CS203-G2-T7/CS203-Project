@@ -4,5 +4,5 @@ import React from "react";
 type Props = {};
 
 export default function Details({}: Props) {
-  return <SectionBoxStyled>Details</SectionBoxStyled>;
+  return <SectionBoxStyled>Detailsssss</SectionBoxStyled>;
 }
