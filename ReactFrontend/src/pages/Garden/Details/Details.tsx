@@ -102,9 +102,10 @@ for the safety of all your fellow allotment gardeners.</p>
             What is the lease duration of an allotment garden plot? 
             <p>The allotment garden plot is leased on a 3-year basis. You will need to pay for 3 years at the start of your leasing period.</p>
           </li>
-
-          
         </ul>
+
+        <p>Have more questions about the Allotment Gardens Scheme? Please refer to the <a href="https://www.nparks.gov.sg/-/media/nparks-real-content/gardening/allotment-gardening/allotment-gardens-faqs_mar-2022.ashx?la=en&hash=2955B790F8BA94458309D0E575D130EEB6BEA661&hash=2955B790F8BA94458309D0E575D130EEB6BEA661" target="blank"> FAQs</a> here. </p>
+        
 
       </TabPanel>
       <TabPanel value={value} index={1}>
