@@ -110,7 +110,33 @@ export default function BasicTabs() {
 
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Item Two
+        <ul>
+        <li>How to place ballot?
+          <p>NParks will continue to roll out new allotment garden plots in more parks across 
+            Singapore to provide the community with opportunities to garden near their homes. 
+            To date, more than 2000 allotment garden plots have been introduced in 23 parks and 
+            gardens across Singapore. We will also continue to provide more allotment gardens in 
+            the future.
+          </p>
+          <p>To place a ballot, simply click on the “Place bid” tab found on the details page 
+            of the garden you would like to ballot for. You will be notified about the outcome 
+            of your ballot via email. 
+          </p>
+        </li>
+
+        <li>Restrictions of balloting. One per household. One per window. Etc.
+          <p>Each household is allowed to apply for and lease only 1 allotment garden plot at 
+            any one time, regardless of the number of persons in the household. If there are 
+            multiple applications received from the same household address, only 1 entry will 
+            be considered for balloting. 
+          </p>
+        </li>
+
+        <li>
+          
+        </li>
+
+        </ul>
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three
