@@ -91,7 +91,9 @@ export default function BasicTabs() {
               <li>
                 What are some recommended plants I can grow?
                   <p>Here is a list of suggested edible plants you can grow:</p>
-                  <p>Bayam, Cai Xin, Kang Kong, Kailan, Kale, Lettuce, Okinawa Spinach, Sweet Potato, Ulam Raja, Brinjal, Chilli, Lady’s-Finger, Long Bean, Tomato, Basil, Cekur, Chives, Cincau, Indian Borage, Laska, Mint, Oyster Plant, Pandan, Saw Tooth Coriander, Tumeric</p>
+                  <p>Bayam, Cai Xin, Kang Kong, Kailan, Kale, Lettuce, Okinawa Spinach, Sweet Potato, 
+                    Ulam Raja, Brinjal, Chilli, Lady’s-Finger, Long Bean, Tomato, Basil, Cekur, Chives, 
+                    Cincau, Indian Borage, Laska, Mint, Oyster Plant, Pandan, Saw Tooth Coriander, Tumeric</p>
                   <p>All plants and gardening structures should not exceed 1 metre in standing height
                     (measured from soil level in the planter bed). Gardeners are advised not to plant
                     poisonous plants or those with sap as these plants can cause discomfort and are harmful
