@@ -132,10 +132,27 @@ export default function BasicTabs() {
           </p>
         </li>
 
-        <li>
-          
+        <li>Price.
+          <p>The lease period for these plots is up to 3 years at a charge of $57 per year (excluding GST).</p>
         </li>
 
+        <li>Balloting algorithm. Explain how it is allocated. Nearer to garden higher chance.
+          <p>Singaporeans and Permanent Residents are eligible to register for an allotment garden plot when 
+            registration exercises open on NParks website. Each household is allowed to apply for and lease only 
+            1 allotment garden plot at any one time across the island. The minimum age to apply for a plot is 
+            18 years old at the time of application. New allotment garden plots are allocated by computerised 
+            balloting. Priority is accorded to applicants by virtue of proximity of the allotment garden to the 
+            applicant’s address. This ensures fair opportunity for all applicants to secure a plot. 
+          </p>
+        </li>
+
+        <li>Will there be a waiting list?
+          <p>
+          We do not maintain a waiting list. If you are interested in an allotment plot in a particular 
+          park, please check our webpage regularly and submit an application when registration opens for 
+          that site.
+          </p>
+        </li>
         </ul>
       </TabPanel>
       <TabPanel value={value} index={2}>
