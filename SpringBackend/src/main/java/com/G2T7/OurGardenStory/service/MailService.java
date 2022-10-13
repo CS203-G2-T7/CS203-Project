@@ -1,8 +1,5 @@
 package com.G2T7.OurGardenStory.service;
 
-import com.G2T7.OurGardenStory.repository.BallotRepo;
-import com.G2T7.OurGardenStory.repository.WindowRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +10,6 @@ import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
-
-import com.G2T7.OurGardenStory.model.Ballot;
 
 import java.io.IOException;
 

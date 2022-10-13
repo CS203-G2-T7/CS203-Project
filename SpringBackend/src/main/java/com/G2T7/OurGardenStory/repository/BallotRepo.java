@@ -104,8 +104,7 @@ public class BallotRepo {
     }
 
     public List<Ballot> listBallots() {
-        List<Ballot> ballotList = dynamoDBMapper.scan(Ballot.class, new DynamoDBScanExpression());
-        return ballotList;
+        return dynamoDBMapper.scan(Ballot.class, new DynamoDBScanExpression());
     }
 
     public List<Ballot> listBallotsFromLatestWindow() {
