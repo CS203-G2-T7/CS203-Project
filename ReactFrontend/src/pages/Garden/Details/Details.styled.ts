@@ -19,10 +19,10 @@ export const DetailsStyled = styled.div`
         
     }
     a{
-        color: #1a5119;
+        color: #2E7D32;
         text-decoration: none;
         &:hover {
-            color: #1a5119;
+            color: #2E7D32;
             text-decoration: underline;
         }
     }
