@@ -111,20 +111,24 @@ export default function BasicTabs() {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <ul>
-        <li>How to place ballot?
-          <p>NParks will continue to roll out new allotment garden plots in more parks across 
+        <li>
+          How to place a ballot?
+          <p>
+            NParks will continue to roll out new allotment garden plots in more parks across 
             Singapore to provide the community with opportunities to garden near their homes. 
             To date, more than 2000 allotment garden plots have been introduced in 23 parks and 
             gardens across Singapore. We will also continue to provide more allotment gardens in 
             the future.
           </p>
-          <p>To place a ballot, simply click on the “Place bid” tab found on the details page 
+          <p>
+            To place a ballot, simply click on the “Place bid” tab found on the details page 
             of the garden you would like to ballot for. You will be notified about the outcome 
             of your ballot via email. 
           </p>
         </li>
 
-        <li>Restrictions of balloting. One per household. One per window. Etc.
+        <li>
+          What are the restrictions for balloting?
           <p>Each household is allowed to apply for and lease only 1 allotment garden plot at 
             any one time, regardless of the number of persons in the household. If there are 
             multiple applications received from the same household address, only 1 entry will 
@@ -132,12 +136,18 @@ export default function BasicTabs() {
           </p>
         </li>
 
-        <li>Price.
-          <p>The lease period for these plots is up to 3 years at a charge of $57 per year (excluding GST).</p>
+        <li>
+          How much does it cost to lease an allotment plot?
+          <p>
+            The lease period for these plots is up to 3 years at a charge of 
+            $57 per year (excluding GST).
+          </p>
         </li>
 
-        <li>Balloting algorithm. Explain how it is allocated. Nearer to garden higher chance.
-          <p>Singaporeans and Permanent Residents are eligible to register for an allotment garden plot when 
+        <li>
+          If I live close to the new allotment garden plot, do I stand a higher chance to secure a plot?
+          <p>
+            Singaporeans and Permanent Residents are eligible to register for an allotment garden plot when 
             registration exercises open on NParks website. Each household is allowed to apply for and lease only 
             1 allotment garden plot at any one time across the island. The minimum age to apply for a plot is 
             18 years old at the time of application. New allotment garden plots are allocated by computerised 
@@ -146,7 +156,8 @@ export default function BasicTabs() {
           </p>
         </li>
 
-        <li>Will there be a waiting list?
+        <li>
+          Will there be a waiting list?
           <p>
           We do not maintain a waiting list. If you are interested in an allotment plot in a particular 
           park, please check our webpage regularly and submit an application when registration opens for 
