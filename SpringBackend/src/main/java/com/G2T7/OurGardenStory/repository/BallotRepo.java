@@ -21,7 +21,7 @@ import java.util.List;
 @Repository
 public class BallotRepo {
     @Autowired
-    private static DynamoDBMapper dynamoDBMapper;
+    private DynamoDBMapper dynamoDBMapper;
 
     @Autowired
     private WindowRepo windowRepo;
@@ -33,7 +33,7 @@ public class BallotRepo {
     private GeocodeController geocodeController; // JH: why is controller here?
 
     @Autowired
-    private static MailService mailService;
+    private MailService mailService;
 
     public String[] getPayloadAttributes() {
         String idToken = UserSignInResponse.getIdToken();
@@ -192,7 +192,7 @@ public class BallotRepo {
         return returnBallotList;
     }
 
-    private static void changeStatusSuccess(List<Ballot> ballotListForWindowForGarden, List<String> output, List<Ballot> returnBallotList) {
+    private void changeStatusSuccess(List<Ballot> ballotListForWindowForGarden, List<String> output, List<Ballot> returnBallotList) {
         for (Ballot ballot : ballotListForWindowForGarden) {
             System.out.println(ballot.getStatus() + " " + ballot.getUsername());
             for (String success : output) {
@@ -210,7 +210,7 @@ public class BallotRepo {
         }
     }
 
-    private static void changeStatusFail(List<Ballot> ballotListForWindowForGarden, List<Ballot> returnBallotList) {
+    private void changeStatusFail(List<Ballot> ballotListForWindowForGarden, List<Ballot> returnBallotList) {
         for (Ballot ballot : ballotListForWindowForGarden) {
             if (ballot.getStatus().equals("PENDING")) {
                 ballot.setStatus("Unsuccessful :(");

@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class GeocodeDistance {
 
     //radius of earth in KM
-    static final double RADIUS = 6371;
+    final static double RADIUS = 6371;
     //converts miles to KM
-    static final double KILOMETER = 1.609344;
+    final static double KILOMETER = 1.609344;
 
     //calculates distance between garden and user address
     public static double distanceCalculator(String userAddress, String gardenLat, String gardenLng, String resource, String apiKey) throws IOException, InterruptedException {
