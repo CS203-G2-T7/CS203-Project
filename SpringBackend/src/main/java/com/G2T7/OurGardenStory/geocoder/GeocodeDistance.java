@@ -1,12 +1,17 @@
 package com.G2T7.OurGardenStory.geocoder;
 
 import java.io.IOException;
-import java.util.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class GeocodingExample {
+public class GeocodeDistance {
 
+    //radius of earth in KM
+    static final double RADIUS = 6371;
+    //converts miles to KM
+    static final double KILOMETER = 1.609344;
+
+    //calculates distance between garden and user address
     public static double distanceCalculator(String userAddress, String gardenLat, String gardenLng, String resource, String apiKey) throws IOException, InterruptedException {
         String userLat = "";
         String userLng = "";
@@ -34,7 +39,7 @@ public class GeocodingExample {
 
     }
 
-    public static double distanceBetweenTwoPoints(String lat1, String lng1, String lat2, String lng2) {
+    private static double distanceBetweenTwoPoints(String lat1, String lng1, String lat2, String lng2) {
         double latitude1 = Double.parseDouble(lat1);
         double longitude1 = Double.parseDouble(lng1);
         double latitude2 = Double.parseDouble(lat2);
@@ -49,19 +54,21 @@ public class GeocodingExample {
         latitude2 = Math.toRadians(latitude2);
 
         // Haversine formula
-        double dlon = longitude1 - longitude2;
-        double dlat = latitude1 - latitude2;
-        double a = Math.pow(Math.sin(dlat / 2), 2)
-                + Math.cos(latitude1) * Math.cos(latitude2)
-                * Math.pow(Math.sin(dlon / 2),2);
-
-        double c = 2 * Math.asin(Math.sqrt(a));
-
-        // Radius of earth in kilometers. Use 3956
-        // for miles
-        double r = 6371;
+        double c = haversineFormula(longitude1, longitude2, latitude1, latitude2);
 
         // calculate the result
-        return(c * r * 1.609344);
+        return(c * RADIUS * KILOMETER);
+    }
+
+    private static double haversineFormula (double lng1, double lng2, double lat1, double lat2) {
+        double dlon = lng1 - lng2;
+        double dlat = lat1 - lat2;
+        double a = Math.pow(Math.sin(dlat / 2), 2)
+                + Math.cos(lat1) * Math.cos(lat2)
+                * Math.pow(Math.sin(dlon / 2),2);
+
+        return 2 * Math.asin(Math.sqrt(a));
     }
 }
+
+    

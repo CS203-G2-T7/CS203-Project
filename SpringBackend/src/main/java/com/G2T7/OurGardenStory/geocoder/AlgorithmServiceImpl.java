@@ -2,8 +2,7 @@ package com.G2T7.OurGardenStory.geocoder;
 
 import java.util.*;
 
-public class Algorithm {
-    
+public class AlgorithmServiceImpl implements AlgorithmService {
     public ArrayList<String> getBallotSuccess(HashMap<String,Double> balloters, int numSuccess) {
         ArrayList<String> list = new ArrayList<>(balloters.keySet());
         for (String key : balloters.keySet()) {
@@ -30,5 +29,24 @@ public class Algorithm {
         }
 
         return output;
+    }
+
+    public String getNextInWaitList (List<String> waitList) {
+        String output = waitList.get(0);
+        waitList.remove(0);
+        return output;
+    }
+
+    public ArrayList<String> getWaitList (ArrayList<String> successes, HashMap<String,Double> balloters) {
+        for (String success : successes) {
+            balloters.remove(success);
+        }
+        int size = balloters.size();
+
+        if (size >= 10) {
+            return new AlgorithmServiceImpl().getBallotSuccess(balloters, 10);
+        } 
+
+        return new AlgorithmServiceImpl().getBallotSuccess(balloters, size);
     }
 }
