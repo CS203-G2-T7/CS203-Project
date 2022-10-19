@@ -1,15 +1,8 @@
 package com.G2T7.OurGardenStory.repository;
 
-import com.G2T7.OurGardenStory.geocoder.Algorithm;
-import com.G2T7.OurGardenStory.model.Ballot;
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.Window;
-import com.amazonaws.annotation.SdkTestInternalApi;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.G2T7.OurGardenStory.repository;
 
 import com.G2T7.OurGardenStory.controller.GeocodeController;
-import com.G2T7.OurGardenStory.geocoder.Algorithm;
+import com.G2T7.OurGardenStory.geocoder.AlgorithmServiceImpl;
 import com.G2T7.OurGardenStory.model.Ballot;
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.UserSignInResponse;
@@ -104,8 +104,7 @@ public class BallotRepo {
     }
 
     public List<Ballot> listBallots() {
-        List<Ballot> ballotList = dynamoDBMapper.scan(Ballot.class, new DynamoDBScanExpression());
-        return ballotList;
+        return dynamoDBMapper.scan(Ballot.class, new DynamoDBScanExpression());
     }
 
     public List<Ballot> listBallotsFromLatestWindow() {
@@ -141,6 +140,7 @@ public class BallotRepo {
         return count + 1;
     }
 
+    //this calls algo, updates status, send email
     public List<Ballot> doMagic() {
         List<Ballot> returnBallotList = new ArrayList<>();
 
@@ -157,18 +157,22 @@ public class BallotRepo {
     }
 
     public List<Ballot> callAlgo(Garden garden) {
-        Algorithm algo = new Algorithm();
+        AlgorithmServiceImpl algo = new AlgorithmServiceImpl();
         HashMap<String, Double> ballotters = new HashMap<>();
+        //get the hashmap for ballots from window from garden
         for (Ballot ballot : listBallotsFromLatestWindow()) {
             if (ballot.getGarden().getName().equals(garden.getName())) {
                 ballotters.put(ballot.getUsername(), ballot.getDistance());
             }
         }
         ArrayList<String> output = new ArrayList<>();
+        //gets the successful balloters
         output = algo.getBallotSuccess(ballotters, 1);
         List<Ballot> ballotListForWindow = listBallotsFromLatestWindow();
         List<Ballot> ballotListForWindowForGarden = new ArrayList<>();
         List<Ballot> returnBallotList = new ArrayList<>();
+        
+        //gets all the balloters for that window for that garden
         for (Ballot ballot : ballotListForWindow) {
             try {
                 if (ballot.getGarden().getName().equals(garden.getName())) {
@@ -178,6 +182,17 @@ public class BallotRepo {
                 e.printStackTrace();
             }
         }
+
+        //changes the status of successful ballots to success, sends email
+        changeStatusSuccess(ballotListForWindowForGarden, output, returnBallotList);
+
+        //changes the remaining balloters to fail, sends email
+        changeStatusFail(ballotListForWindowForGarden, returnBallotList);
+
+        return returnBallotList;
+    }
+
+    private void changeStatusSuccess(List<Ballot> ballotListForWindowForGarden, List<String> output, List<Ballot> returnBallotList) {
         for (Ballot ballot : ballotListForWindowForGarden) {
             System.out.println(ballot.getStatus() + " " + ballot.getUsername());
             for (String success : output) {
@@ -193,7 +208,9 @@ public class BallotRepo {
                 }
             }
         }
+    }
 
+    private void changeStatusFail(List<Ballot> ballotListForWindowForGarden, List<Ballot> returnBallotList) {
         for (Ballot ballot : ballotListForWindowForGarden) {
             if (ballot.getStatus().equals("PENDING")) {
                 ballot.setStatus("Unsuccessful :(");
@@ -206,7 +223,5 @@ public class BallotRepo {
                 returnBallotList.add(ballot);
             }
         }
-
-        return returnBallotList;
     }
 }

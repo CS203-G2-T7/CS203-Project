@@ -1,6 +1,6 @@
 package com.G2T7.OurGardenStory.controller;
 
-import com.G2T7.OurGardenStory.geocoder.GeocodingExample;
+import com.G2T7.OurGardenStory.geocoder.GeocodeDistance;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +24,7 @@ public class GeocodeController {
     public double saveDistance(String username, String userAddress, String gardenLng, String gardenLat) {
         double distance = 0.0;
         try {
-            distance = GeocodingExample.distanceCalculator(userAddress, gardenLat, gardenLng, GEOCODING_RESOURCE,
+            distance = GeocodeDistance.distanceCalculator(userAddress, gardenLat, gardenLng, GEOCODING_RESOURCE,
                     API_KEY);
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());

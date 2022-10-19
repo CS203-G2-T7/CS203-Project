@@ -19,5 +19,4 @@ public class User {
     private String password;
     private LocalDate DateCreated;
     private String given_name;
-
 }

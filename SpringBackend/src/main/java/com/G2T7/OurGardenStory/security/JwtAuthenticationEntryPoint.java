@@ -1,4 +1,4 @@
-package com.G2T7.OurGardenStory.config;
+package com.G2T7.OurGardenStory.security;
 
 import java.io.IOException;
 import java.io.Serializable;
