@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const DetailsStyled = styled.div`
+export const TabPanelStyled = styled.div`
     ul{
         li{
             font-family:"roboto", serif; //details page the garden details and ballot details is roboto not nunito
