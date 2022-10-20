@@ -3,28 +3,41 @@ package com.G2T7.OurGardenStory.model;
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import lombok.*;
 
-@Getter
-@Setter
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@Getter
+@Setter
 @DynamoDBTable(tableName = "User_Win_Garden_Ballot_JoinTable")
 public class Garden {
-    @DynamoDBAttribute(attributeName = "PK") // Should I do this? Or should I just name the attribute PK?
-    private String GardenName;
-
-    @DynamoDBAttribute
+    private String PK;
     private String SK;
 
     @DynamoDBAttribute
-    private String Address;
-
+    private String GardenAddress;
     @DynamoDBAttribute
-    private int NumPlots;
-
+    private String NumPlots;
     @DynamoDBAttribute
     private String Latitude;
-
     @DynamoDBAttribute
     private String Longitude;
+
+    // Strangely for PK and SK, can't use Lombok annotation.
+    @DynamoDBHashKey(attributeName = "PK")
+    public String getPK() {
+        return this.PK;
+    }
+
+    public void setPK(String PK) {
+        this.PK = PK;
+    }
+
+    @DynamoDBRangeKey(attributeName = "SK")
+    public String getSK() {
+        return SK;
+    }
+
+    public void setSK(String sK) {
+        SK = sK;
+    }
 }

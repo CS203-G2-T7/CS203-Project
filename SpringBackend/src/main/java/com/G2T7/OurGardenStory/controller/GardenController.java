@@ -20,11 +20,11 @@ public class GardenController {
     @GetMapping(path = "/garden")
     public List<Garden> findGardenById(@RequestParam(name = "id") Optional<String> id) {
         // if (id.isPresent()) {
-        //     List<Garden> result = new ArrayList<Garden>();
-        //     result.add(gardenRepo.findGardenById(id.get()));
-        //     return result;
+        // List<Garden> result = new ArrayList<Garden>();
+        // result.add(gardenRepo.findGardenById(id.get()));
+        // return result;
         // } else {
-        //     return gardenRepo.listGardens();
+        // return gardenRepo.listGardens();
         // }
         return new ArrayList<Garden>();
     }

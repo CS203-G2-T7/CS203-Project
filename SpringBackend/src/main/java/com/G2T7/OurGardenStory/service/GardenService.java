@@ -10,13 +10,11 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 @Service
 public class GardenService {
   @Autowired
-  private GardenRepo gardenRepository;
-
-  @Autowired
   private DynamoDBMapper dynamoDBMapper;
 
   public Garden createGarden(final Garden garden) {
     try{
+      System.out.println(garden);
       dynamoDBMapper.save(garden);
       return garden;
     }catch(Exception e) {
