@@ -8,14 +8,9 @@ import SecondTextFields from "./SecondTextFields/SecondTextFields";
 import ThirdTextFields from "./ThirdTextFields/ThirdTextFields";
 import { FixedBottom } from "./FixedBottom.styled";
 import { FormProvider, useForm } from "react-hook-form";
-import { Navigate, useNavigate } from "react-router-dom";
-import signUpService, {
-  defaultSignUpData,
-  signUpData,
-} from "service/signUpService";
+import { useNavigate } from "react-router-dom";
+import signUpService, { signUpData } from "service/signUpService";
 import loginService from "service/loginService";
-
-type Props = {};
 
 type SignUpForm = {
   firstName: string;
@@ -45,7 +40,7 @@ const defaultSignUpForm: SignUpForm = {
   dateOfBirth: "",
 };
 
-export default function RightContent({}: Props) {
+export default function SignUpFormComponent() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const methods = useForm({
@@ -58,7 +53,7 @@ export default function RightContent({}: Props) {
       email: data.email,
       username: data.username,
       password: data.password,
-      address: data.postalCode,
+      address: data.postalCode, //only postal code, not full address
       givenName: data.firstName,
       familyName: data.lastName,
       birthDate: data.dateOfBirth,
@@ -81,10 +76,10 @@ export default function RightContent({}: Props) {
         if (loginResponse.status === 200) {
           localStorage.setItem(
             "jwtAccessToken",
-            loginResponse.data.accessToken //JH: bad practice.
-          );
+            loginResponse.data.accessToken
+          ); //save JWT in local storage
           console.log(loginResponse.data.accessToken);
-          navigate("/home"); //redirect to home page after sign-up.
+          navigate("/home");
         }
       }
     } catch (e) {
