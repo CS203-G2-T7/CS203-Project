@@ -11,7 +11,7 @@ import lombok.*;
 @DynamoDBTable(tableName = "User_Win_Garden_Ballot_JoinTable")
 public class Garden {
     @DynamoDBAttribute(attributeName = "PK") // Should I do this? Or should I just name the attribute PK?
-    private String GardenName; // not needed. Identified by PK
+    private String GardenName;
 
     @DynamoDBAttribute
     private String SK;

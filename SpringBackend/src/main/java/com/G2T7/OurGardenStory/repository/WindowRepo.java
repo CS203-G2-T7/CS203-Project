@@ -23,10 +23,10 @@ public class WindowRepo {
     private GardenRepo gardenRepo;
 
     public Window save(Window window, String gardenName) {
-        window.setLeaseStart(findLeaseStart(window));
-        List<Garden> gardenList = new ArrayList<>(List.of(gardenRepo.getGardenByGardenName(gardenName)));
-        window.setGardenList(gardenList);
-        dynamoDBMapper.save(window);
+        // window.setLeaseStart(findLeaseStart(window));
+        // List<Garden> gardenList = new ArrayList<>(List.of(gardenRepo.getGardenByGardenName(gardenName)));
+        // window.setGardenList(gardenList);
+        // dynamoDBMapper.save(window);
         return window;
     }
 
@@ -59,12 +59,12 @@ public class WindowRepo {
     }
 
     public Window update(Window updateWindow, String gardenName) {
-        Window window = findWindowByStartDateTime(updateWindow.getStartDateTime());
-        List<Garden> gardenList = window.getGardenList();
-        gardenList.add(gardenRepo.getGardenByGardenName(gardenName));
-        window.setGardenList(gardenList);
-        dynamoDBMapper.save(window);
-        return window;
+        // Window window = findWindowByStartDateTime(updateWindow.getStartDateTime());
+        // List<Garden> gardenList = window.getGardenList();
+        // gardenList.add(gardenRepo.getGardenByGardenName(gardenName));
+        // window.setGardenList(gardenList);
+        // dynamoDBMapper.save(window);
+        return updateWindow;
     }
 
     protected LocalDateTime findLeaseStart(Window window) {

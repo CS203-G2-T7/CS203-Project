@@ -74,33 +74,33 @@ public class BallotRepo {
     }
 
     public Ballot save(String gardenName) {
-        List<String> gardenListNames = gardenRepo.listGardenNames();
-        if (!gardenListNames.contains(gardenName)) {
-            return null;
-        }
+        // List<String> gardenListNames = gardenRepo.listGardenNames();
+        // if (!gardenListNames.contains(gardenName)) {
+        //     return null;
+        // }
 
-        String username = findUsernameByIdToken(getPayloadAttributes());
-        if (checkIfBalloted(username)) {
-            return null;
-        }
+        // String username = findUsernameByIdToken(getPayloadAttributes());
+        // if (checkIfBalloted(username)) {
+        //     return null;
+        // }
 
-        Ballot ballot = new Ballot();
-        ballot.setSubmitDateTime(LocalDateTime.now());
-        Window window = windowRepo.findLatestWindow();
-        ballot.setStartDateTime(window.getStartDateTime());
-        ballot.setLeaseStart(window.getLeaseStart());
-        ballot.setNumBidsPlaced(getBidsPlaced(gardenName));
-        String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to
-                                                                                        // address
-        Garden garden = gardenRepo.getGardenByGardenName(gardenName);
-        Double distance = geocodeController.saveDistance(username, postCode, garden.getLongitude(),
-                garden.getLatitude()); // JH: very very bad
-        ballot.setDistance(distance);
-        ballot.setUsername(username);
-        ballot.setEmail(findEmailByIdToken(getPayloadAttributes()));
-        ballot.setGarden(garden);
-        dynamoDBMapper.save(ballot);
-        return ballot;
+        // Ballot ballot = new Ballot();
+        // ballot.setSubmitDateTime(LocalDateTime.now());
+        // Window window = windowRepo.findLatestWindow();
+        // ballot.setStartDateTime(window.getStartDateTime());
+        // ballot.setLeaseStart(window.getLeaseStart());
+        // ballot.setNumBidsPlaced(getBidsPlaced(gardenName));
+        // String postCode = "Singapore " + findPostCodeByIdToken(getPayloadAttributes()); // add Singapore prefix to
+        //                                                                                 // address
+        // Garden garden = gardenRepo.getGardenByGardenName(gardenName);
+        // Double distance = geocodeController.saveDistance(username, postCode, garden.getLongitude(),
+        //         garden.getLatitude()); // JH: very very bad
+        // ballot.setDistance(distance);
+        // ballot.setUsername(username);
+        // ballot.setEmail(findEmailByIdToken(getPayloadAttributes()));
+        // ballot.setGarden(garden);
+        // dynamoDBMapper.save(ballot);
+        return new Ballot();
     }
 
     public List<Ballot> listBallots() {
@@ -130,14 +130,14 @@ public class BallotRepo {
     }
 
     public int getBidsPlaced(String gardenName) {
-        int count = 0;
-        for (Ballot ballot : listBallotsFromLatestWindow()) {
-            if (ballot.getGarden().getName().equals(gardenName)) {
-                count += 1;
-            }
-        }
+        // int count = 0;
+        // for (Ballot ballot : listBallotsFromLatestWindow()) {
+        //     if (ballot.getGarden().getName().equals(gardenName)) {
+        //         count += 1;
+        //     }
+        // }
 
-        return count + 1;
+        return 1;
     }
 
     //this calls algo, updates status, send email
@@ -157,71 +157,71 @@ public class BallotRepo {
     }
 
     public List<Ballot> callAlgo(Garden garden) {
-        AlgorithmServiceImpl algo = new AlgorithmServiceImpl();
-        HashMap<String, Double> ballotters = new HashMap<>();
-        //get the hashmap for ballots from window from garden
-        for (Ballot ballot : listBallotsFromLatestWindow()) {
-            if (ballot.getGarden().getName().equals(garden.getName())) {
-                ballotters.put(ballot.getUsername(), ballot.getDistance());
-            }
-        }
-        ArrayList<String> output = new ArrayList<>();
-        //gets the successful balloters
-        output = algo.getBallotSuccess(ballotters, 1);
-        List<Ballot> ballotListForWindow = listBallotsFromLatestWindow();
-        List<Ballot> ballotListForWindowForGarden = new ArrayList<>();
-        List<Ballot> returnBallotList = new ArrayList<>();
+        // AlgorithmServiceImpl algo = new AlgorithmServiceImpl();
+        // HashMap<String, Double> ballotters = new HashMap<>();
+        // //get the hashmap for ballots from window from garden
+        // for (Ballot ballot : listBallotsFromLatestWindow()) {
+        //     if (ballot.getGarden().getName().equals(garden.getName())) {
+        //         ballotters.put(ballot.getUsername(), ballot.getDistance());
+        //     }
+        // }
+        // ArrayList<String> output = new ArrayList<>();
+        // //gets the successful balloters
+        // output = algo.getBallotSuccess(ballotters, 1);
+        // List<Ballot> ballotListForWindow = listBallotsFromLatestWindow();
+        // List<Ballot> ballotListForWindowForGarden = new ArrayList<>();
+        // List<Ballot> returnBallotList = new ArrayList<>();
         
-        //gets all the balloters for that window for that garden
-        for (Ballot ballot : ballotListForWindow) {
-            try {
-                if (ballot.getGarden().getName().equals(garden.getName())) {
-                    ballotListForWindowForGarden.add(ballot);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        // //gets all the balloters for that window for that garden
+        // for (Ballot ballot : ballotListForWindow) {
+        //     try {
+        //         if (ballot.getGarden().getName().equals(garden.getName())) {
+        //             ballotListForWindowForGarden.add(ballot);
+        //         }
+        //     } catch (Exception e) {
+        //         e.printStackTrace();
+        //     }
+        // }
 
-        //changes the status of successful ballots to success, sends email
-        changeStatusSuccess(ballotListForWindowForGarden, output, returnBallotList);
+        // //changes the status of successful ballots to success, sends email
+        // changeStatusSuccess(ballotListForWindowForGarden, output, returnBallotList);
 
-        //changes the remaining balloters to fail, sends email
-        changeStatusFail(ballotListForWindowForGarden, returnBallotList);
+        // //changes the remaining balloters to fail, sends email
+        // changeStatusFail(ballotListForWindowForGarden, returnBallotList);
 
-        return returnBallotList;
+        return new ArrayList<Ballot>(); //return returnBallotList;
     }
 
-    private void changeStatusSuccess(List<Ballot> ballotListForWindowForGarden, List<String> output, List<Ballot> returnBallotList) {
-        for (Ballot ballot : ballotListForWindowForGarden) {
-            System.out.println(ballot.getStatus() + " " + ballot.getUsername());
-            for (String success : output) {
-                if (success.equals(ballot.getUsername())) {
-                    ballot.setStatus("Successful :)");
-                    try {
-                        mailService.sendSuccessTextEmail(ballot.getEmail());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    dynamoDBMapper.save(ballot);
-                    returnBallotList.add(ballot);
-                }
-            }
-        }
-    }
+    // private void changeStatusSuccess(List<Ballot> ballotListForWindowForGarden, List<String> output, List<Ballot> returnBallotList) {
+    //     for (Ballot ballot : ballotListForWindowForGarden) {
+    //         System.out.println(ballot.getStatus() + " " + ballot.getUsername());
+    //         for (String success : output) {
+    //             if (success.equals(ballot.getUsername())) {
+    //                 ballot.setStatus("Successful :)");
+    //                 try {
+    //                     mailService.sendSuccessTextEmail(ballot.getEmail());
+    //                 } catch (Exception e) {
+    //                     e.printStackTrace();
+    //                 }
+    //                 dynamoDBMapper.save(ballot);
+    //                 returnBallotList.add(ballot);
+    //             }
+    //         }
+    //     }
+    // }
 
-    private void changeStatusFail(List<Ballot> ballotListForWindowForGarden, List<Ballot> returnBallotList) {
-        for (Ballot ballot : ballotListForWindowForGarden) {
-            if (ballot.getStatus().equals("PENDING")) {
-                ballot.setStatus("Unsuccessful :(");
-                try {
-                    mailService.sendFailureTextEmail(ballot.getEmail());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                dynamoDBMapper.save(ballot);
-                returnBallotList.add(ballot);
-            }
-        }
-    }
+    // private void changeStatusFail(List<Ballot> ballotListForWindowForGarden, List<Ballot> returnBallotList) {
+    //     for (Ballot ballot : ballotListForWindowForGarden) {
+    //         if (ballot.getStatus().equals("PENDING")) {
+    //             ballot.setStatus("Unsuccessful :(");
+    //             try {
+    //                 mailService.sendFailureTextEmail(ballot.getEmail());
+    //             } catch (Exception e) {
+    //                 e.printStackTrace();
+    //             }
+    //             dynamoDBMapper.save(ballot);
+    //             returnBallotList.add(ballot);
+    //         }
+    //     }
+    // }
 }
