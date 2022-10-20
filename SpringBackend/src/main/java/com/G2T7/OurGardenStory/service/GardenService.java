@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.G2T7.OurGardenStory.model.Garden;
-import com.G2T7.OurGardenStory.repository.GardenRepo;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 
 @Service
@@ -16,7 +15,7 @@ public class GardenService {
     try{
       System.out.println(garden);
       dynamoDBMapper.save(garden);
-      return garden;
+      return garden;    
     }catch(Exception e) {
       System.out.println(e);
     }
