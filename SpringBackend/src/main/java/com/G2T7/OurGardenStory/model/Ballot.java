@@ -57,9 +57,6 @@ public class Ballot {
         public Garden unconvert(final String stringValue) {
             String[] stringValueList = stringValue.split(",");
             Garden garden = new Garden();
-            garden.setGardenId(stringValueList[0].substring(stringValueList[0].indexOf("=") + 1));
-            garden.setLocation(stringValueList[1].substring(stringValueList[1].indexOf("=") + 1));
-            garden.setName(stringValueList[2].substring(stringValueList[2].indexOf("=") + 1));
             garden.setNumPlots(Integer.parseInt(stringValueList[3].substring(stringValueList[3].indexOf("=") + 1)));
             garden.setLongitude(stringValueList[4].substring(stringValueList[4].indexOf("=") + 1));
             garden.setLatitude(
