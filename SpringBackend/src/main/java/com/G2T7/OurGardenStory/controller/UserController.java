@@ -71,8 +71,8 @@ public class UserController {
             AttributeType phoneNumberVerifiedAttr = new AttributeType().withName("phone_number_verified")
                     .withValue("true");
             AdminCreateUserRequest userRequest = new AdminCreateUserRequest()
-                    .withUserPoolId(userPoolId).withUsername(userSignUpRequest.getUsername())
-                    .withTemporaryPassword(userSignUpRequest.getPassword())
+                    .withUserPoolId(userPoolId).withUsername(userSignUpRequest.getUsername()) //username
+                    .withTemporaryPassword(userSignUpRequest.getPassword()) //password
                     .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr, givenNameAttr,
                             familyNameAttr,
                             birthDateAttr, phoneNumberAttr, phoneNumberVerifiedAttr)
