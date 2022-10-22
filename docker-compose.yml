@@ -2,7 +2,7 @@ version: '3.0'
 services:
   springbackend:
     container_name: back-end
-    image: back-end:latest
+    image: haloxil/ourgardenstory-backend:latest
     build: ./SpringBackend
     restart: always
     ports:
@@ -10,7 +10,7 @@ services:
   
   reactfrontend:
     container_name: front-end
-    image: front-end:latest
+    image: haloxil/ourgardenstory-frontend:latest
     build: ./ReactFrontend
     ports:
       - 3000:3000
