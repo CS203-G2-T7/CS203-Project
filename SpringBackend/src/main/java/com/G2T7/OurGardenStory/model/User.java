@@ -1,22 +1,59 @@
 package com.G2T7.OurGardenStory.model;
 
-import java.time.*;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
+import lombok.*;
 
-import lombok.Getter;
-import lombok.Setter;
-
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Getter
 @Setter
+@DynamoDBTable(tableName = "User_Win_Garden_Ballot_JoinTable")
 public class User {
+    private String PK;
+    private String SK;
 
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String username;
-    private String address;
-    private String phoneNumber;
+    @DynamoDBAttribute
+    private String FirstName;
+
+    @DynamoDBAttribute
+    private String LastName;
+
+    @DynamoDBAttribute
     private String DOB;
-    private String password;
-    private LocalDate DateCreated;
-    private String given_name;
+
+    @DynamoDBAttribute
+    private String Email;
+
+    @DynamoDBAttribute
+    private String Password;
+
+    @DynamoDBAttribute
+    private String Address;
+
+    @DynamoDBAttribute
+    private String PhoneNumber;
+
+    @DynamoDBAttribute
+    private String AccountDateCreated;
+
+    @DynamoDBHashKey(attributeName = "PK")
+    public String getPK() {
+        return this.PK;
+    }
+    
+    public void setPK(String PK) {
+        this.PK = PK;
+    }
+
+    @DynamoDBRangeKey(attributeName = "SK")
+    public String getSK() {
+        return SK;
+    }
+
+    public void setSK(String sK) {
+        SK = sK;
+    }
+
+
 }

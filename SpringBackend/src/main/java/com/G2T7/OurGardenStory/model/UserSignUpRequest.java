@@ -6,13 +6,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserSignUpRequest {
-    private String username;
+    private String firstName;
+    private String lastName;
+    private String DOB;
     private String email;
     private String password;
     private String address;
-    private String birthDate;
     private String phoneNumber;
-    private String givenName;
-    private String familyName;
+    private String username;
+    
 
 }
