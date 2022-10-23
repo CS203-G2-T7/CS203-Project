@@ -1,7 +1,6 @@
 package com.G2T7.OurGardenStory.controller;
 
 import com.G2T7.OurGardenStory.model.Garden;
-import com.G2T7.OurGardenStory.repository.GardenRepo;
 import com.G2T7.OurGardenStory.service.GardenService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +16,24 @@ public class GardenController {
     @Autowired
     private GardenService gardenService;
 
+    // TODO: To implement
     @GetMapping(path = "/garden")
     public List<Garden> findGardenById(@RequestParam(name = "id") Optional<String> id) {
-        // if (id.isPresent()) {
-        // List<Garden> result = new ArrayList<Garden>();
-        // result.add(gardenRepo.findGardenById(id.get()));
-        // return result;
-        // } else {
-        // return gardenRepo.listGardens();
-        // }
         return new ArrayList<Garden>();
     }
 
+    // TODO: Check if garden already exists. Error handling.
     @PostMapping(path = "/garden")
     public Garden saveGarden(@RequestBody Garden garden) {
         return gardenService.createGarden(garden);
     }
+
+    /*
+     * TODO:
+     * Garden update. PUT mapping.
+     * Garden get. GET by gardenName(SK) and (PK) "Garden".
+     * Garden get all by PK
+     * 
+     * 
+     */
 }

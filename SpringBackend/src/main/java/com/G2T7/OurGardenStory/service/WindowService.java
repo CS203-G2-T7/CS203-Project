@@ -1,6 +1,5 @@
 package com.G2T7.OurGardenStory.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,7 @@ public class WindowService {
         return dynamoDBMapper.load(Window.class, pk, sk);
     }
 
-    public Window findWindowById(final String windowId) {
+    public List<Window> findWindowById(final String windowId) {
         String capWinId = StringUtils.capitalize(windowId);
 
         // Build query expression to Query GSI by windowID
@@ -40,24 +39,20 @@ public class WindowService {
         if (foundWindowList.size() == 0) {
             throw new ResourceNotFoundException("Window not found"); // might not be right exception
         }
-        return foundWindowList.get(0);
+        return foundWindowList;
     }
 
     public List<Window> findAllWindows() {
-        // System.out.println(dynamoDBMapper.load(Window.class, "Window"));
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
         eav.put(":WIN", new AttributeValue().withS("Window"));
         DynamoDBQueryExpression<Window> qe = new DynamoDBQueryExpression<Window>()
                 .withKeyConditionExpression("PK = :WIN").withExpressionAttributeValues(eav);
 
         PaginatedQueryList<Window> foundWindowList = dynamoDBMapper.query(Window.class, qe);
-        // foundWindowList.forEach(item -> {
-        // System.out.println(item);
-        // });
         if (foundWindowList.size() == 0) {
             throw new ResourceNotFoundException("There are no windows.");
         }
-        return new ArrayList<Window>(foundWindowList);
+        return foundWindowList;
     }
 
     public Window createWindow(final Window window) {
