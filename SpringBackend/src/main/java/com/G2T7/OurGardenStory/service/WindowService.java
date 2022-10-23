@@ -1,14 +1,20 @@
 package com.G2T7.OurGardenStory.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.G2T7.OurGardenStory.model.Window;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig.SaveBehavior;
+import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 @Service
 public class WindowService {
@@ -19,46 +25,71 @@ public class WindowService {
         return dynamoDBMapper.load(Window.class, pk, sk);
     }
 
-    // TODO Query by windowId. Need to use GSI.
+    public Window findWindowById(final String windowId) {
+        String capWinId = StringUtils.capitalize(windowId);
+
+        // Build query expression to Query GSI by windowID
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":WID", new AttributeValue().withS(capWinId));
+        DynamoDBQueryExpression<Window> qe = new DynamoDBQueryExpression<Window>().withIndexName("WindowId-index")
+                .withConsistentRead(false)
+                .withKeyConditionExpression("WindowId = :WID").withExpressionAttributeValues(eav);
+
+        PaginatedQueryList<Window> foundWindowList = dynamoDBMapper.query(Window.class, qe);
+        // Check if not found. Should only return a single value.
+        if (foundWindowList.size() == 0) {
+            throw new ResourceNotFoundException("Window not found"); // might not be right exception
+        }
+        return foundWindowList.get(0);
+    }
+
+    public List<Window> findAllWindows() {
+        // System.out.println(dynamoDBMapper.load(Window.class, "Window"));
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":WIN", new AttributeValue().withS("Window"));
+        DynamoDBQueryExpression<Window> qe = new DynamoDBQueryExpression<Window>()
+                .withKeyConditionExpression("PK = :WIN").withExpressionAttributeValues(eav);
+
+        PaginatedQueryList<Window> foundWindowList = dynamoDBMapper.query(Window.class, qe);
+        // foundWindowList.forEach(item -> {
+        // System.out.println(item);
+        // });
+        if (foundWindowList.size() == 0) {
+            throw new ResourceNotFoundException("There are no windows.");
+        }
+        return new ArrayList<Window>(foundWindowList);
+    }
 
     public Window createWindow(final Window window) {
         window.setPK("Window");
         window.setWindowId("Win" + ++Window.numInstance);
-        // System.out.println("Save window: " + window);
 
         // Find if already exist in table. Throw error.
         Window findWindow = findWindowByPkSk(window.getPK(), window.getSK());
-        // System.out.println("Find window: " + findWindow);
         if (findWindow != null && findWindow.getSK().equals(window.getSK())) {
             --Window.numInstance;
-            throw new RuntimeException("Window already exists."); // can make custom exceptions here, Then catch and
-                                                                  // throw appropriate status code. Error 400 bad
-                                                                  // request
+            throw new RuntimeException("Window already exists.");
+            // Can make custom exceptions here, Then catch and throw 400 bad req
         }
-
         dynamoDBMapper.save(window);
         return window;
     }
 
     public Window putWindow(final Window window) {
         window.setPK("Window");
-
-        // Find if doesn't exist in table. Throw error
         Window findWindow = findWindowByPkSk(window.getPK(), window.getSK());
         if (findWindow == null) {
-            throw new RuntimeException("Window not found.");
+            throw new ResourceNotFoundException("Window not found.");
         }
-
         window.setWindowId(findWindow.getWindowId());
         dynamoDBMapper.save(window);
         return window;
     }
 
     public void deleteWindowByPkSk(final String pk, final String sk) {
-        // check if window exists.
         Window toDeleteWindow = findWindowByPkSk(pk, sk);
         if (toDeleteWindow == null) {
-            throw new RuntimeException("Window not found.");
+            throw new ResourceNotFoundException("Window not found.");
         }
         dynamoDBMapper.delete(toDeleteWindow);
     }

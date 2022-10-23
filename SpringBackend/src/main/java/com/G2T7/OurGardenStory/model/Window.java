@@ -16,10 +16,7 @@ public class Window {
 
     private String PK = "Window"; // Window objects have a default PK of "Window"
     private String SK;
-
-    @DynamoDBIndexHashKey(attributeName = "WindowId")
     private String WindowId;
-
     @DynamoDBAttribute
     private String WindowDuration;
 
@@ -37,7 +34,16 @@ public class Window {
         return SK;
     }
 
-    public void setSK(String sK) {
-        SK = sK;
+    public void setSK(String SK) {
+        this.SK = SK;
+    }
+
+    @DynamoDBIndexHashKey(attributeName = "WindowId", globalSecondaryIndexName = "WindowId-index")
+    public String getWindowId() {
+        return this.WindowId;
+    }
+
+    public void setWindowId(String WindowId) {
+        this.WindowId = WindowId;
     }
 }
