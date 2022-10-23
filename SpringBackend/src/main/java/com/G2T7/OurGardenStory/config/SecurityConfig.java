@@ -33,7 +33,8 @@ public class SecurityConfig {
     private AwsCognitoJwtAuthFilter awsCognitoJwtAuthenticationFilter;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -42,7 +43,7 @@ public class SecurityConfig {
 
         List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL); // add "/home" etc.?
 
-        http.csrf().disable().cors().disable()//.authorizeHttpRequests()
+        http.csrf().disable().cors().disable()// .authorizeHttpRequests()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
@@ -62,6 +63,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/windows").permitAll()
                 .antMatchers(HttpMethod.GET, "/window").permitAll()
                 .antMatchers(HttpMethod.PUT, "/window").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/window").permitAll()
 
                 .antMatchers(HttpMethod.GET, "/magic").permitAll()
 

@@ -8,6 +8,7 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
+@EqualsAndHashCode
 @DynamoDBTable(tableName = "User_Win_Garden_Ballot_JoinTable")
 public class Garden {
     private String PK;

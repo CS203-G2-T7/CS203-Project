@@ -71,6 +71,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 //     }
 // }
 
+//Useless. Actually our service and repos are the same thing now.
 @EnableScan
 public interface GardenRepo extends CrudRepository<Garden, String> {
 }

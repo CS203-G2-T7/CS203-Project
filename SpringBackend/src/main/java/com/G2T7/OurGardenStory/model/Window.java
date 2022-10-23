@@ -8,14 +8,17 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
+@EqualsAndHashCode
 @DynamoDBTable(tableName = "User_Win_Garden_Ballot_JoinTable")
-
 public class Window {
-    private String PK;
+    @DynamoDBIgnore
+    public static int numInstance;
+
+    private String PK = "Window"; // Window objects have a default PK of "Window"
     private String SK;
 
-    @DynamoDBAttribute
-    private String WindowID;
+    @DynamoDBIndexHashKey(attributeName = "WindowId")
+    private String WindowId;
 
     @DynamoDBAttribute
     private String WindowDuration;
