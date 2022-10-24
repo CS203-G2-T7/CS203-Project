@@ -36,8 +36,7 @@ import com.amazonaws.services.cognitoidp.model.InvalidParameterException;
 import com.amazonaws.services.cognitoidp.model.MessageActionType;
 import com.G2T7.OurGardenStory.exception.CustomException;
 
-@CrossOrigin("*") // makes this api callable by other locally run servers, specifically,
-                  // "localhost:3000", the frontend app.
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(path = "/api/users")
 public class UserController {
