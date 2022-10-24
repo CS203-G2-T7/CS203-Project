@@ -1,12 +1,10 @@
 import { SectionBoxStyled } from "components/SectionBox.styled";
-import { TabPanelStyled , FAQ } from "./TabPanel.styled";
+import { TabPanelStyled, FAQStyled, VegListStyled } from "./TabPanel.styled";
 import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-
-
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -107,13 +105,13 @@ export default function BasicTabs() {
             <li>
               <h4>What are some recommended plants I can grow?</h4>
               <p>Here is a list of suggested edible plants you can grow:</p>
-              <p>
+              <VegListStyled>
                 Bayam, Cai Xin, Kang Kong, Kailan, Kale, Lettuce, Okinawa
                 Spinach, Sweet Potato, Ulam Raja, Brinjal, Chilli,
                 Lady’s-Finger, Long Bean, Tomato, Basil, Cekur, Chives, Cincau,
                 Indian Borage, Laska, Mint, Oyster Plant, Pandan, Saw Tooth
                 Coriander, Tumeric
-              </p>
+              </VegListStyled>
               <p>
                 All plants and gardening structures should not exceed 1 metre in
                 standing height (measured from soil level in the planter bed).
@@ -135,14 +133,14 @@ export default function BasicTabs() {
               </p>
             </li>
           </ul>
-          <FAQ>
+          <FAQStyled>
             Have more questions about the Allotment Gardens Scheme? Please refer
-            to the 
-            {" "}<a 
-            href="https://www.nparks.gov.sg/-/media/nparks-real-content/gardening/allotment-gardening/allotment-gardens-faqs_mar-2022.ashx?la=en&hash=2955B790F8BA94458309D0E575D130EEB6BEA661&hash=2955B790F8BA94458309D0E575D130EEB6BEA661">
-              FAQs</a>{" "}
+            to the{" "}
+            <a href="https://www.nparks.gov.sg/-/media/nparks-real-content/gardening/allotment-gardening/allotment-gardens-faqs_mar-2022.ashx?la=en&hash=2955B790F8BA94458309D0E575D130EEB6BEA661&hash=2955B790F8BA94458309D0E575D130EEB6BEA661">
+              FAQs
+            </a>{" "}
             here.
-          </FAQ>
+          </FAQStyled>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <ul>
@@ -213,7 +211,10 @@ export default function BasicTabs() {
           </ul>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequuntur quos nostrum voluptatem tempora deleniti cumque? Sequi explicabo deleniti omnis, quisquam, quidem ad veritatis porro esse officia maiores obcaecati, quaerat voluptates?
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequuntur
+          quos nostrum voluptatem tempora deleniti cumque? Sequi explicabo
+          deleniti omnis, quisquam, quidem ad veritatis porro esse officia
+          maiores obcaecati, quaerat voluptates?
         </TabPanel>
       </Box>
     </SectionBoxStyled>
