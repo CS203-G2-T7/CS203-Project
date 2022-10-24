@@ -1,5 +1,5 @@
 import { SectionBoxStyled } from "components/SectionBox.styled";
-import { TabPanelStyled } from "./TabPanel.styled";
+import { TabPanelStyled , FAQ } from "./TabPanel.styled";
 import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -98,7 +98,7 @@ export default function BasicTabs() {
                 <li>checking for water ponding to prevent mosquito breeding</li>
               </ul>
               <p>
-                Nparks reserves the right to terminate the lease of the
+                NParks reserves the right to terminate the lease of the
                 allotment plot and reallocate should the allotment gardener not
                 maintain the upkeep of their plot.{" "}
               </p>
@@ -135,14 +135,14 @@ export default function BasicTabs() {
               </p>
             </li>
           </ul>
-          <p>
+          <FAQ>
             Have more questions about the Allotment Gardens Scheme? Please refer
             to the 
             {" "}<a 
             href="https://www.nparks.gov.sg/-/media/nparks-real-content/gardening/allotment-gardening/allotment-gardens-faqs_mar-2022.ashx?la=en&hash=2955B790F8BA94458309D0E575D130EEB6BEA661&hash=2955B790F8BA94458309D0E575D130EEB6BEA661">
               FAQs</a>{" "}
             here.
-          </p>
+          </FAQ>
         </TabPanel>
         <TabPanel value={value} index={1}>
           <ul>
