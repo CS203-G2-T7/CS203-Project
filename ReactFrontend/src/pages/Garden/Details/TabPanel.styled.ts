@@ -13,8 +13,8 @@ export const TabPanelStyled = styled.div`
     font-family: "roboto", sans-serif; //details page the garden details and ballot details is roboto not nunito
     font-weight: 400;
     font-size: 1.2rem;
-    /* margin-bottom: 0.5rem; */
     margin-top: 0.5rem;
+    
   }
 
   a {
@@ -27,12 +27,9 @@ export const TabPanelStyled = styled.div`
   }
 `;
 
-export const FAQStyled = styled.div`
-  margin-top: 2rem;
-`;
-
-export const VegListStyled = styled.div`
+export const VegListStyled = styled.p`
   padding-left: 2rem;
   font-style: italic;
-  padding-bottom: calc(19.2rem / 16);
+  padding-bottom: calc(11.2rem / 16);
+  margin:0;
 `;
