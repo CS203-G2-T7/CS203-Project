@@ -215,7 +215,7 @@ export default function BasicTabs() {
           </ul>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Item Three
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequuntur quos nostrum voluptatem tempora deleniti cumque? Sequi explicabo deleniti omnis, quisquam, quidem ad veritatis porro esse officia maiores obcaecati, quaerat voluptates?
         </TabPanel>
       </Box>
     </SectionBoxStyled>
