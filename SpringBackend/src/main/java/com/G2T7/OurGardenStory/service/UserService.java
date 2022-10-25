@@ -196,7 +196,7 @@ public class UserService {
 
     public List<User> findUserByUsername(final String username) { //queries must always return a paginiated list
   
-      // Build query expression to Query GSI by windowID
+      // Build query expression to Query by username
       Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
       eav.put(":USR", new AttributeValue().withS("User"));
       eav.put(":USRNAME", new AttributeValue().withS(username));
@@ -211,7 +211,7 @@ public class UserService {
           throw new ResourceNotFoundException("User not found"); // might not be right exception
       }
       return foundUserList;
-  }
+    }
 }
 
 

@@ -17,7 +17,7 @@ public class Garden {
     @DynamoDBAttribute
     private String GardenAddress;
     @DynamoDBAttribute
-    private String NumPlots;
+    private int NumPlots;
     @DynamoDBAttribute
     private String Latitude;
     @DynamoDBAttribute

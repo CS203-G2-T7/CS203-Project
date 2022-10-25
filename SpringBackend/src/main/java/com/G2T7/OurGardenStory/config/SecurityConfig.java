@@ -51,6 +51,8 @@ public class SecurityConfig {
 
                 .antMatchers(HttpMethod.GET, "/garden").permitAll()
                 .antMatchers(HttpMethod.POST, "/garden").permitAll()
+                .antMatchers(HttpMethod.PUT, "/garden").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/garden").permitAll()
 
                 .antMatchers(HttpMethod.GET, "/ballots").permitAll()
                 .antMatchers(HttpMethod.GET, "/ballot").permitAll()
