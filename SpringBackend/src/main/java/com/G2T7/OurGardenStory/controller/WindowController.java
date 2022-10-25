@@ -3,6 +3,7 @@ package com.G2T7.OurGardenStory.controller;
 import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.service.WindowService;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +47,11 @@ public class WindowController {
     }
 
     @PutMapping(path = "/window")
-    public ResponseEntity<?> updateWindow(@RequestBody Window putWindow) {
+    public ResponseEntity<?> updateWindow(@RequestBody JsonNode payload) {
         try {
-            return ResponseEntity.ok(windowService.putWindow(putWindow));
+            String windowDuration = payload.get("windowDuration").asText();
+            String windowId = payload.get("windowId").asText();
+            return ResponseEntity.ok(windowService.putWindow(windowDuration, windowId));
         } catch (DynamoDBMappingException | ResourceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -57,9 +60,10 @@ public class WindowController {
     }
 
     @DeleteMapping(path = "/window")
-    public ResponseEntity<String> deleteWindow(@RequestBody Window deleteWindow) {
+    public ResponseEntity<String> deleteWindow(@RequestBody JsonNode payload) {
         try {
-            windowService.deleteWindowByPkSk(deleteWindow.getPK(), deleteWindow.getSK());
+            String windowId = payload.get("windowId").asText();
+            windowService.deleteWindow(windowId);
             return ResponseEntity.noContent().build();
         } catch (DynamoDBMappingException | ResourceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

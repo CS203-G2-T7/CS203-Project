@@ -70,22 +70,15 @@ public class WindowService {
         return window;
     }
 
-    public Window putWindow(final Window window) {
-        window.setPK("Window");
-        Window findWindow = findWindowByPkSk(window.getPK(), window.getSK());
-        if (findWindow == null) {
-            throw new ResourceNotFoundException("Window not found.");
-        }
-        window.setWindowId(findWindow.getWindowId());
+    public Window putWindow(final String windowDuration, final String windowId) {
+        Window window = findWindowById(windowId).get(0);
+        window.setWindowDuration(windowDuration);
         dynamoDBMapper.save(window);
         return window;
     }
 
-    public void deleteWindowByPkSk(final String pk, final String sk) {
-        Window toDeleteWindow = findWindowByPkSk(pk, sk);
-        if (toDeleteWindow == null) {
-            throw new ResourceNotFoundException("Window not found.");
-        }
+    public void deleteWindow(final String windowId) {
+        Window toDeleteWindow = findWindowById(windowId).get(0);
         dynamoDBMapper.delete(toDeleteWindow);
-    }
+      }
 }
