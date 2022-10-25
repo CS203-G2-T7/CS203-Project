@@ -11,7 +11,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.util.StringUtils;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -78,6 +80,20 @@ public class UserService {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+        
+        User user = new User();
+        user.setPK("User");
+        user.setSK(userSignUpRequest.getUsername());
+        user.setFirstName(userSignUpRequest.getGivenName());
+        user.setLastName(userSignUpRequest.getFamilyName());
+        user.setUsername(userSignUpRequest.getUsername());
+        user.setDOB(userSignUpRequest.getBirthDate());
+        user.setEmail(userSignUpRequest.getEmail());
+        user.setAddress(userSignUpRequest.getAddress());
+        user.setPhoneNumber(userSignUpRequest.getPhoneNumber());
+        user.setAccountDateCreated(LocalDate.now().toString());
+
+        dynamoDBMapper.save(user);
 
         return ResponseEntity.ok("User registered successfully!");
     }
@@ -167,19 +183,6 @@ public class UserService {
         return foundUserList;
     }
 
-    public User createUser(final User user) {
-      user.setPK("User");
-
-      // Find if already exist in table. Throw error.
-      User findUser = findUserByPkSk(user.getPK(), user.getSK());
-      if (findUser != null && findUser.getSK().equals(user.getSK())) {
-          throw new RuntimeException("User already exists.");
-          // Can make custom exceptions here, Then catch and throw 400 bad req
-      }
-      dynamoDBMapper.save(user);
-      return user;
-    }
-
     public User updateUserPlantId(final User user, final String plantID) {
       user.setPK("User");
       User findUser = findUserByPkSk(user.getPK(), user.getSK());
@@ -191,7 +194,24 @@ public class UserService {
       return user;
     }
 
+    public List<User> findUserByUsername(final String username) { //queries must always return a paginiated list
+  
+      // Build query expression to Query GSI by windowID
+      Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+      eav.put(":USR", new AttributeValue().withS("User"));
+      eav.put(":USRNAME", new AttributeValue().withS(username));
+    
+      DynamoDBQueryExpression<User> qe = new DynamoDBQueryExpression<User>()
+              .withKeyConditionExpression("PK = :USR and SK = :USRNAME ")
+              .withExpressionAttributeValues(eav);
 
+      PaginatedQueryList<User> foundUserList = dynamoDBMapper.query(User.class, qe);
+      // Check if not found. Should only return a single value.
+      if (foundUserList.size() == 0) {
+          throw new ResourceNotFoundException("User not found"); // might not be right exception
+      }
+      return foundUserList;
+  }
 }
 
 

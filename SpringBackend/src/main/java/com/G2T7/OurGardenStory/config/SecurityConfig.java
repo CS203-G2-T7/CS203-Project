@@ -65,7 +65,10 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/window").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/window").permitAll()
 
+                .antMatchers(HttpMethod.GET, "/api/users/user").permitAll()
+
                 .antMatchers(HttpMethod.GET, "/magic").permitAll()
+
 
                 .anyRequest().authenticated();
 

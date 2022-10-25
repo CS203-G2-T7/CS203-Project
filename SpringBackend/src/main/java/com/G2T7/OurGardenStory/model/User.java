@@ -22,13 +22,13 @@ public class User {
     private String LastName;
 
     @DynamoDBAttribute
+    private String Username;
+    
+    @DynamoDBAttribute
     private String DOB;
 
     @DynamoDBAttribute
     private String Email;
-
-    @DynamoDBAttribute
-    private String Password;
 
     @DynamoDBAttribute
     private String Address;
