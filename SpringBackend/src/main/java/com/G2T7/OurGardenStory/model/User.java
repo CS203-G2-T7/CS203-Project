@@ -1,5 +1,7 @@
 package com.G2T7.OurGardenStory.model;
 
+import java.util.List;
+
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import lombok.*;
 
@@ -36,6 +38,9 @@ public class User {
 
     @DynamoDBAttribute
     private String AccountDateCreated;
+
+    @DynamoDBAttribute
+    private List<String> Plant;
 
     @DynamoDBHashKey(attributeName = "PK")
     public String getPK() {
