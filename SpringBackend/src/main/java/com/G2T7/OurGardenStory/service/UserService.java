@@ -11,15 +11,14 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.util.StringUtils;
 
-import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,66 +36,71 @@ public class UserService {
     @Value(value = "${aws.cognito.clientId}")
     private String clientId;
 
-    public ResponseEntity<?> signUpFromUserSignUpRequest(UserSignUpRequest userSignUpRequest) {
-        try {
-            AttributeType emailAttr = new AttributeType().withName("email")
-                    .withValue(userSignUpRequest.getEmail());
-            AttributeType emailVerifiedAttr = new AttributeType().withName("email_verified")
-                    .withValue("true");
-            AttributeType addressAttr = new AttributeType().withName("address")
-                    .withValue(userSignUpRequest.getAddress());
-            AttributeType givenNameAttr = new AttributeType().withName("given_name")
-                    .withValue(userSignUpRequest.getGivenName());
-            AttributeType familyNameAttr = new AttributeType().withName("family_name")
-                    .withValue(userSignUpRequest.getFamilyName());
-            AttributeType birthDateAttr = new AttributeType().withName("birthdate")
-                    .withValue(userSignUpRequest.getBirthDate());
-            AttributeType phoneNumberAttr = new AttributeType().withName("phone_number")
-                    .withValue(userSignUpRequest.getPhoneNumber());
-            AttributeType phoneNumberVerifiedAttr = new AttributeType().withName("phone_number_verified")
-                    .withValue("true");
-            AdminCreateUserRequest userRequest = new AdminCreateUserRequest()
-                    .withUserPoolId(userPoolId).withUsername(userSignUpRequest.getUsername())
-                    .withTemporaryPassword(userSignUpRequest.getPassword())
-                    .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr, givenNameAttr, familyNameAttr,
-                            birthDateAttr, phoneNumberAttr, phoneNumberVerifiedAttr)
-                    .withMessageAction(MessageActionType.SUPPRESS)
-                    .withDesiredDeliveryMediums(DeliveryMediumType.EMAIL);
+    private AdminCreateUserRequest createUserRequest(UserSignUpRequest userSignUpRequest) {
+        AttributeType emailAttr = new AttributeType().withName("email")
+                .withValue(userSignUpRequest.getEmail());
+        AttributeType emailVerifiedAttr = new AttributeType().withName("email_verified")
+                .withValue("true");
+        AttributeType addressAttr = new AttributeType().withName("address")
+                .withValue(userSignUpRequest.getAddress());
+        AttributeType givenNameAttr = new AttributeType().withName("given_name")
+                .withValue(userSignUpRequest.getGivenName());
+        AttributeType familyNameAttr = new AttributeType().withName("family_name")
+                .withValue(userSignUpRequest.getFamilyName());
+        AttributeType birthDateAttr = new AttributeType().withName("birthdate")
+                .withValue(userSignUpRequest.getBirthDate());
+        AttributeType phoneNumberAttr = new AttributeType().withName("phone_number")
+                .withValue(userSignUpRequest.getPhoneNumber());
+        AttributeType phoneNumberVerifiedAttr = new AttributeType().withName("phone_number_verified")
+                .withValue("true");
 
-            AdminCreateUserResult createUserResult = cognitoClient.adminCreateUser(userRequest);
+        AdminCreateUserRequest userRequest = new AdminCreateUserRequest()
+                .withUserPoolId(userPoolId).withUsername(userSignUpRequest.getUsername())
+                .withTemporaryPassword(userSignUpRequest.getPassword())
+                .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr, givenNameAttr, familyNameAttr,
+                        birthDateAttr, phoneNumberAttr, phoneNumberVerifiedAttr)
+                .withMessageAction(MessageActionType.SUPPRESS)
+                .withDesiredDeliveryMediums(DeliveryMediumType.EMAIL);
 
-            System.out.println("User " + createUserResult.getUser().getUsername()
-                    + " is created. Status: " + createUserResult.getUser().getUserStatus());
-
-            AdminSetUserPasswordRequest adminSetUserPasswordRequest = new AdminSetUserPasswordRequest()
-                    .withUsername(userSignUpRequest.getUsername())
-                    .withUserPoolId(userPoolId)
-                    .withPassword(userSignUpRequest.getPassword()).withPermanent(true);
-
-            cognitoClient.adminSetUserPassword(adminSetUserPasswordRequest);
-
-        } catch (AWSCognitoIdentityProviderException e) {
-            return new ResponseEntity<>(e.getErrorMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        
-        User user = new User();
-        user.setPK("User");
-        user.setSK(userSignUpRequest.getUsername());
-        user.setFirstName(userSignUpRequest.getGivenName());
-        user.setLastName(userSignUpRequest.getFamilyName());
-        user.setUsername(userSignUpRequest.getUsername());
-        user.setDOB(userSignUpRequest.getBirthDate());
-        user.setEmail(userSignUpRequest.getEmail());
-        user.setAddress(userSignUpRequest.getAddress());
-        user.setPhoneNumber(userSignUpRequest.getPhoneNumber());
-        user.setAccountDateCreated(LocalDate.now().toString());
-
-        dynamoDBMapper.save(user);
-
-        return ResponseEntity.ok("User registered successfully!");
+        return userRequest;
     }
+
+    private AdminSetUserPasswordRequest userPasswordRequest(UserSignUpRequest userSignUpRequest) {
+        AdminSetUserPasswordRequest adminSetUserPasswordRequest = new AdminSetUserPasswordRequest()
+                .withUsername(userSignUpRequest.getUsername())
+                .withUserPoolId(userPoolId)
+                .withPassword(userSignUpRequest.getPassword()).withPermanent(true);
+
+        return adminSetUserPasswordRequest;
+    }
+
+    public void signUpFromUserSignUpRequest(UserSignUpRequest userSignUpRequest) {
+        // TODO: Basic sign up validation. Can be improved. Can have a dedicated user
+        // signup validation method.
+        LocalDate birthday = LocalDate.parse(userSignUpRequest.getBirthDate(),
+                DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        if (birthday.isAfter(LocalDate.now().minusYears(18))) {
+            throw new IllegalArgumentException("You must be at least 18 years old to sign up.");
+        }
+        if (userSignUpRequest.getPassword().length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long.");
+        }
+
+        // Cognito SignUp
+        AdminCreateUserRequest userRequest = createUserRequest(userSignUpRequest);
+        cognitoClient.adminCreateUser(userRequest);
+        AdminSetUserPasswordRequest adminSetUserPasswordRequest = userPasswordRequest(userSignUpRequest);
+        cognitoClient.adminSetUserPassword(adminSetUserPasswordRequest);
+
+        // Cognito Signup no error, then DynamoDB SignUp
+        User newUser = new User("User", userSignUpRequest.getUsername(), userSignUpRequest.getGivenName(),
+                userSignUpRequest.getFamilyName(), userSignUpRequest.getUsername(),
+                userSignUpRequest.getBirthDate(),
+                userSignUpRequest.getEmail(), userSignUpRequest.getAddress(), userSignUpRequest.getPhoneNumber(),
+                LocalDate.now().toString(), new ArrayList<String>());
+        dynamoDBMapper.save(newUser);
+    }
+
     public UserSignInResponse signInFromUserSignInRequest(UserSignInRequest userSignInRequest) {
 
         UserSignInResponse userSignInResponse = new UserSignInResponse();
@@ -162,7 +166,7 @@ public class UserService {
             throw new CustomException(e.getMessage());
         }
 
-        //cognitoClient.shutdown(); This results in user only signing in once.
+        // cognitoClient.shutdown(); This results in user only signing in once.
         return userSignInResponse;
     }
 
@@ -171,7 +175,7 @@ public class UserService {
     }
 
     public List<User> findAllUsers() {
-      Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
         eav.put(":USR", new AttributeValue().withS("User"));
         DynamoDBQueryExpression<User> qe = new DynamoDBQueryExpression<User>()
                 .withKeyConditionExpression("PK = :USR").withExpressionAttributeValues(eav);
@@ -184,34 +188,32 @@ public class UserService {
     }
 
     public User updateUserPlantId(final User user, final String plantID) {
-      user.setPK("User");
-      User findUser = findUserByPkSk(user.getPK(), user.getSK());
-      if (findUser == null) {
-        throw new ResourceNotFoundException("User not found.");
-      }
-      user.getPlant().add(plantID);
-      dynamoDBMapper.save(user);
-      return user;
+        user.setPK("User");
+        User findUser = findUserByPkSk(user.getPK(), user.getSK());
+        if (findUser == null) {
+            throw new ResourceNotFoundException("User not found.");
+        }
+        user.getPlant().add(plantID);
+        dynamoDBMapper.save(user);
+        return user;
     }
 
-    public List<User> findUserByUsername(final String username) { //queries must always return a paginiated list
-  
-      // Build query expression to Query by username
-      Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-      eav.put(":USR", new AttributeValue().withS("User"));
-      eav.put(":USRNAME", new AttributeValue().withS(username));
-    
-      DynamoDBQueryExpression<User> qe = new DynamoDBQueryExpression<User>()
-              .withKeyConditionExpression("PK = :USR and SK = :USRNAME ")
-              .withExpressionAttributeValues(eav);
+    public List<User> findUserByUsername(final String username) { // queries must always return a paginiated list
 
-      PaginatedQueryList<User> foundUserList = dynamoDBMapper.query(User.class, qe);
-      // Check if not found. Should only return a single value.
-      if (foundUserList.size() == 0) {
-          throw new ResourceNotFoundException("User not found"); // might not be right exception
-      }
-      return foundUserList;
+        // Build query expression to Query by username
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":USR", new AttributeValue().withS("User"));
+        eav.put(":USRNAME", new AttributeValue().withS(username));
+
+        DynamoDBQueryExpression<User> qe = new DynamoDBQueryExpression<User>()
+                .withKeyConditionExpression("PK = :USR and SK = :USRNAME ")
+                .withExpressionAttributeValues(eav);
+
+        PaginatedQueryList<User> foundUserList = dynamoDBMapper.query(User.class, qe);
+        // Check if not found. Should only return a single value.
+        if (foundUserList.size() == 0) {
+            throw new ResourceNotFoundException("User not found"); // might not be right exception
+        }
+        return foundUserList;
     }
 }
-
-
