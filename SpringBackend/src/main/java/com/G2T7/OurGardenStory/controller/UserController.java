@@ -7,8 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+<<<<<<< HEAD
 @CrossOrigin("*") // makes this api callable by other locally run servers, specifically,
 // "localhost:3000", the frontend app.
+=======
+@CrossOrigin(origins = "http://localhost:3000")
+>>>>>>> 1e89f40a23af79688b32229b800169d7561599ad
 @RestController
 @RequestMapping(path = "/api/users")
 public class UserController {
