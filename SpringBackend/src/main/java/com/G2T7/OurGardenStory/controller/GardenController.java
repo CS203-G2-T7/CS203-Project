@@ -37,7 +37,7 @@ public class GardenController {
                 return ResponseEntity.ok(gardenService.findGardenByGardenName(gardenName.get()));
             }
             return ResponseEntity.ok(gardenService.findAllGardens());
-        } catch (ResourceNotFoundException e) {
+        } catch (DynamoDBMappingException | ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

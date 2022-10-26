@@ -20,9 +20,6 @@ public class User {
 
     @DynamoDBAttribute
     private String LastName;
-
-    @DynamoDBAttribute
-    private String Username;
     
     @DynamoDBAttribute
     private String DOB;

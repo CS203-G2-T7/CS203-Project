@@ -1,4 +1,4 @@
-package com.G2T7.OurGardenStory.model;
+package com.G2T7.OurGardenStory.model.ReqResModel;
 
 import lombok.Getter;
 import lombok.Setter;
