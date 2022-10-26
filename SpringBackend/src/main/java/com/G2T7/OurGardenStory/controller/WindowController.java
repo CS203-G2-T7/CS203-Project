@@ -46,12 +46,11 @@ public class WindowController {
         }
     }
 
-    @PutMapping(path = "/window")
-    public ResponseEntity<?> updateWindow(@RequestBody JsonNode payload) {
+    @PutMapping(path = "/window") //with request param {:id}
+    public ResponseEntity<?> updateWindow(@RequestBody JsonNode payload, @RequestParam String id) {
         try {
             String windowDuration = payload.get("windowDuration").asText();
-            String windowId = payload.get("windowId").asText();
-            return ResponseEntity.ok(windowService.putWindow(windowDuration, windowId));
+            return ResponseEntity.ok(windowService.putWindow(windowDuration, id));
         } catch (DynamoDBMappingException | ResourceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -60,10 +59,9 @@ public class WindowController {
     }
 
     @DeleteMapping(path = "/window")
-    public ResponseEntity<String> deleteWindow(@RequestBody JsonNode payload) {
+    public ResponseEntity<String> deleteWindow(@RequestParam String id) {
         try {
-            String windowId = payload.get("windowId").asText();
-            windowService.deleteWindow(windowId);
+            windowService.deleteWindow(id);
             return ResponseEntity.noContent().build();
         } catch (DynamoDBMappingException | ResourceNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

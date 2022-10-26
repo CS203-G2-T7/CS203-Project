@@ -19,80 +19,63 @@ public class GardenService {
   @Autowired
   private DynamoDBMapper dynamoDBMapper;
 
-  // public Garden createGarden(final Garden garden) {
-  //   try{
-  //     System.out.println(garden);
-  //     dynamoDBMapper.save(garden);
-  //     return garden;    
-  //   }catch(Exception e) {
-  //     System.out.println(e);
-  //   }
-  //   return null;
-  // }
+  private String parseGardenName(final String gardenName) {
+    return gardenName.replace("-", " ");
+  }
 
-    private Garden findGardenByPkSk(final String pk, final String sk) {
-        return dynamoDBMapper.load(Garden.class, pk, sk);
+  public Garden findGardenByGardenName(final String gardenName) {
+    // process query param. Remove dashes.
+    Garden foundGarden = dynamoDBMapper.load(Garden.class, "Garden", parseGardenName(gardenName));
+    if (foundGarden == null) {
+      throw new ResourceNotFoundException("Garden not found"); // might not be right exception
     }
+    return foundGarden;
+  }
 
-    public List<Garden> findAllGardens() {
-      Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-        eav.put(":GDN", new AttributeValue().withS("Garden"));
-        DynamoDBQueryExpression<Garden> qe = new DynamoDBQueryExpression<Garden>()
-                .withKeyConditionExpression("PK = :GDN").withExpressionAttributeValues(eav);
+  public List<Garden> findAllGardens() {
+    Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+    eav.put(":GDN", new AttributeValue().withS("Garden"));
+    DynamoDBQueryExpression<Garden> qe = new DynamoDBQueryExpression<Garden>()
+        .withKeyConditionExpression("PK = :GDN").withExpressionAttributeValues(eav);
 
-        PaginatedQueryList<Garden> foundGardenList = dynamoDBMapper.query(Garden.class, qe);
-        if (foundGardenList.size() == 0) {
-            throw new ResourceNotFoundException("There are no gardens.");
-        }
-        return foundGardenList;
+    PaginatedQueryList<Garden> foundGardenList = dynamoDBMapper.query(Garden.class, qe);
+    if (foundGardenList.size() == 0) {
+      throw new ResourceNotFoundException("No gardens found.");
     }
+    return foundGardenList;
+  }
 
-    public Garden createGarden(final Garden garden) {
-      garden.setPK("Garden");
-      garden.setSK(garden.getGardenAddress());
-
-      //Find if already exist in table. Throw error.
-      Garden findGarden = findGardenByPkSk(garden.getPK(), garden.getSK());
-      if (findGarden != null && findGarden.getSK().equals(garden.getSK())) {
-          throw new RuntimeException("Garden already exists.");
-
-          /*
-          * TODO:
-          * Can make custom exceptions here, Then catch and throw 400 bad req
-          */
-      }
-      dynamoDBMapper.save(garden);
-      return garden;
+  public Garden createGarden(final Garden garden) {
+    if (garden == null) {
+      throw new IllegalArgumentException("Invalid garden provided.");
     }
+    garden.setPK("Garden");
 
-    public List<Garden> findGardenByGardenAddress(final String gardenAddress) { //queries must always return a paginiated list
-  
-      // Build query expression to Query by GardenAddress
-      Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-      eav.put(":GDN", new AttributeValue().withS("Garden"));
-      eav.put(":GDNADDR", new AttributeValue().withS(gardenAddress));
-    
-      DynamoDBQueryExpression<Garden> qe = new DynamoDBQueryExpression<Garden>()
-              .withKeyConditionExpression("PK = :GDN and SK = :GDNADDR ")
-              .withExpressionAttributeValues(eav);
-
-      PaginatedQueryList<Garden> foundGardenList = dynamoDBMapper.query(Garden.class, qe);
-      // Check if not found. Should only return a single value.
-      if (foundGardenList.size() == 0) {
-          throw new ResourceNotFoundException("Garden not found"); // might not be right exception
-      }
-      return foundGardenList;
+    // Find if already exist in table. Throw error.
+    Garden foundGarden = dynamoDBMapper.load(Garden.class, "Garden", garden.getSK());
+    if (foundGarden != null) {
+      throw new RuntimeException("Garden already exists.");
     }
+    dynamoDBMapper.save(garden);
+    return garden;
+  }
 
-    public Garden putGarden(final String gardenAddress, final int numPlots) {
-        Garden garden = findGardenByGardenAddress(gardenAddress).get(0);
-        garden.setNumPlots(numPlots);
-        dynamoDBMapper.save(garden);
-        return garden;
+  public Garden putGarden(final String gardenName, final String gardenAddress, final int numPlots) {
+    Garden foundGarden = findGardenByGardenName(parseGardenName(gardenName));
+    if (gardenAddress == null) {
+      throw new IllegalArgumentException("Invalid garden address.");
     }
+    if (numPlots <= 0) {
+      throw new IllegalArgumentException("Invalid number of plots.");
+    }
+    foundGarden.setGardenAddress(gardenAddress);
+    foundGarden.setNumPlots(numPlots);
+    dynamoDBMapper.save(foundGarden);
+    return foundGarden;
+  }
 
-    public void deleteGarden(final String gardenAddress) {
-      Garden toDeleteGarden = findGardenByGardenAddress(gardenAddress).get(0);
-      dynamoDBMapper.delete(toDeleteGarden);
-    }
+  public void deleteGarden(final String gardenName) {
+    Garden toDeleteGarden = findGardenByGardenName(parseGardenName(gardenName));
+    dynamoDBMapper.delete(toDeleteGarden);
+  }
 }

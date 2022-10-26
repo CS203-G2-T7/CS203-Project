@@ -24,7 +24,7 @@ public class WindowService {
         return dynamoDBMapper.load(Window.class, pk, sk);
     }
 
-    public List<Window> findWindowById(final String windowId) { //queries must always return a paginiated list
+    public List<Window> findWindowById(final String windowId) { //queries must always return a paginated list
         String capWinId = StringUtils.capitalize(windowId);
 
         // Build query expression to Query GSI by windowID
