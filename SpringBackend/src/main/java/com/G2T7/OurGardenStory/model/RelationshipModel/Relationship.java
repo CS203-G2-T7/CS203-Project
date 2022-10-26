@@ -1,7 +1,5 @@
 package com.G2T7.OurGardenStory.model.RelationshipModel;
 
-import java.time.LocalDateTime;
-
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import lombok.*;
 
