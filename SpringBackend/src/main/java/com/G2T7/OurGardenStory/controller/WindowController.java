@@ -1,11 +1,13 @@
 package com.G2T7.OurGardenStory.controller;
 
 import com.G2T7.OurGardenStory.model.Window;
+import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 import com.G2T7.OurGardenStory.service.WindowService;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -20,11 +22,8 @@ public class WindowController {
     private WindowService windowService;
 
     @GetMapping(path = "/window")
-    public ResponseEntity<List<Window>> findWindow(@RequestParam(name = "id") Optional<String> id) {
+    public ResponseEntity<List<Window>> findAllWindows() {
         try {
-            if (id.isPresent()) {
-                return ResponseEntity.ok(windowService.findWindowById(id.get()));
-            }
             return ResponseEntity.ok(windowService.findAllWindows());
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
@@ -46,7 +45,7 @@ public class WindowController {
         }
     }
 
-    @PutMapping(path = "/window") //with request param {:id}
+    @PutMapping(path = "/window") // with request param {:id}
     public ResponseEntity<?> updateWindow(@RequestBody JsonNode payload, @RequestParam String id) {
         try {
             String windowDuration = payload.get("windowDuration").asText();
@@ -69,4 +68,34 @@ public class WindowController {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
+
+    @GetMapping(path = "/window/{winId}/gardens")
+    public ResponseEntity<?> findGardensInWindow(@PathVariable String winId) {
+        try {
+            List<Relationship> relationList = windowService.findGardensInWindow(winId);
+            System.out.println(relationList);
+            return ResponseEntity.ok(relationList);
+        } catch (ResourceNotFoundException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping(path = "/window/{winId}/gardens")
+    public ResponseEntity<?> addGardensInWindow(@PathVariable String winId, @RequestBody JsonNode payload) {
+        try {
+            List<Relationship> gardenRelations = windowService.addGardensInWindow(winId, payload);
+            return ResponseEntity.ok(gardenRelations);
+        } catch (ResourceNotFoundException | IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 }

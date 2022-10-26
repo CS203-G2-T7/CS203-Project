@@ -1,5 +1,8 @@
 package com.G2T7.OurGardenStory.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
@@ -20,7 +23,7 @@ public class User {
 
     @DynamoDBAttribute
     private String LastName;
-    
+
     @DynamoDBAttribute
     private String DOB;
 
@@ -43,7 +46,7 @@ public class User {
     public String getPK() {
         return this.PK;
     }
-    
+
     public void setPK(String PK) {
         this.PK = PK;
     }
@@ -57,5 +60,17 @@ public class User {
         SK = sK;
     }
 
+    // static public class LocalDateTimeConverter implements
+    // DynamoDBTypeConverter<String, LocalDateTime> {
 
+    // @Override
+    // public String convert(final LocalDateTime time) {
+    // return time.toString();
+    // }
+
+    // @Override
+    // public LocalDateTime unconvert(final String stringValue) {
+    // return LocalDateTime.parse(stringValue);
+    // }
+    // }
 }

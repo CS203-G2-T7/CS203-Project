@@ -38,11 +38,10 @@ public class UserController {
             return ResponseEntity.ok().body(userSignUpRequest.getGivenName() + " signed up successfully.");
         } catch (IllegalArgumentException | DateTimeParseException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (AmazonServiceException e) {
+            AmazonServiceException ase = (AmazonServiceException) e;
+            return ResponseEntity.status(ase.getStatusCode()).body(ase.getMessage());
         } catch (Exception e) {
-            if (e instanceof AmazonServiceException) {
-                AmazonServiceException ase = (AmazonServiceException) e;
-                return ResponseEntity.status(ase.getStatusCode()).body(ase.getMessage());
-            }
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
@@ -54,11 +53,10 @@ public class UserController {
             return ResponseEntity.ok(signInService.signInFromUserSignInRequest(userSignInRequest));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (AmazonServiceException e) {
+            AmazonServiceException ase = (AmazonServiceException) e;
+            return ResponseEntity.status(ase.getStatusCode()).body(ase.getMessage());
         } catch (Exception e) {
-            if (e instanceof AmazonServiceException) {
-                AmazonServiceException ase = (AmazonServiceException) e;
-                return ResponseEntity.status(ase.getStatusCode()).body(ase.getMessage());
-            }
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }

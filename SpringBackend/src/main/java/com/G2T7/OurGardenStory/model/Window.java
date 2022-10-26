@@ -14,7 +14,7 @@ public class Window {
     @DynamoDBIgnore
     public static int numInstance;
 
-    private String PK = "Window"; // Window objects have a default PK of "Window"
+    private String PK = "Window";
     private String SK;
     private String windowId;
     @DynamoDBAttribute

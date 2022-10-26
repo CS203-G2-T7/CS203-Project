@@ -1,5 +1,6 @@
 package com.G2T7.OurGardenStory.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,11 +10,14 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.Window;
+import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Service
 public class WindowService {
@@ -24,7 +28,7 @@ public class WindowService {
         return dynamoDBMapper.load(Window.class, pk, sk);
     }
 
-    public List<Window> findWindowById(final String windowId) { //queries must always return a paginated list
+    public List<Window> findWindowById(final String windowId) { // queries must always return a paginated list
         String capWinId = StringUtils.capitalize(windowId);
 
         // Build query expression to Query GSI by windowID
@@ -80,5 +84,42 @@ public class WindowService {
     public void deleteWindow(final String windowId) {
         Window toDeleteWindow = findWindowById(windowId).get(0);
         dynamoDBMapper.delete(toDeleteWindow);
-      }
+    }
+
+    // Relationship services
+    public List<Relationship> findGardensInWindow(String windowId) {
+        String capWinId = StringUtils.capitalize(windowId);
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":WINID", new AttributeValue().withS(capWinId));
+        DynamoDBQueryExpression<Relationship> qe = new DynamoDBQueryExpression<Relationship>()
+                .withKeyConditionExpression("PK = :WINID").withExpressionAttributeValues(eav);
+
+        PaginatedQueryList<Relationship> foundRelationList = dynamoDBMapper.query(Relationship.class, qe);
+        if (foundRelationList.size() == 0) {
+            throw new ResourceNotFoundException("There are no windows.");
+        }
+        return foundRelationList;
+    }
+
+    public List<Relationship> addGardensInWindow(String windowId, JsonNode payload) {
+        String capWinId = StringUtils.capitalize(windowId);
+        findWindowById(capWinId).get(0); // validate window exists
+        List<Relationship> toAddRelationshipList = new ArrayList<Relationship>();
+
+        payload.forEach(relation -> {
+            //need check if relation already exists.
+            Garden foundGarden = dynamoDBMapper.load(Garden.class, "Garden", relation.get("gardenName").asText());
+            if (foundGarden == null) {
+                throw new IllegalArgumentException("Garden cannot be found");
+            }
+
+            Relationship newRelation = Relationship.createWindowGardenRelation(capWinId,
+                    relation.get("gardenName").asText(), relation.get("leaseDuration").asText(),
+                    relation.get("numPlotsForBalloting").asInt());
+            toAddRelationshipList.add(newRelation);
+        });
+        dynamoDBMapper.batchSave(toAddRelationshipList);
+
+        return toAddRelationshipList;
+    }
 }

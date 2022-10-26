@@ -12,6 +12,8 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,10 +61,17 @@ public class UserService {
 
     // Package accessible. Used by signUpService.
     void createUser(final UserSignUpRequest userSignUpRequest) {
+        User foundUser = dynamoDBMapper.load(User.class, "User", userSignUpRequest.getUsername());
+        if (foundUser != null) {
+            throw new IllegalArgumentException("User already exists.");
+        }
+        String birthday = LocalDate.parse(userSignUpRequest.getBirthDate(),
+                DateTimeFormatter.ofPattern("dd/MM/yyyy")).atTime(0, 0, 0).format(DateTimeFormatter.ISO_DATE_TIME);
+        System.out.println(birthday);
         User newUser = new User("User", userSignUpRequest.getUsername(), userSignUpRequest.getGivenName(),
-                userSignUpRequest.getFamilyName(), userSignUpRequest.getBirthDate(), userSignUpRequest.getEmail(),
+                userSignUpRequest.getFamilyName(), birthday, userSignUpRequest.getEmail(),
                 userSignUpRequest.getAddress(), userSignUpRequest.getPhoneNumber(),
-                LocalDate.now().toString(), new ArrayList<String>());
+                LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME), new ArrayList<String>());
         dynamoDBMapper.save(newUser);
     }
 }
