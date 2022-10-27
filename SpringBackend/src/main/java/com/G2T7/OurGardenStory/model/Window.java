@@ -13,6 +13,7 @@ import lombok.*;
 public class Window {
     @DynamoDBIgnore
     public static int numInstance;
+    public static final String entityName = "Window";
 
     private String PK = "Window";
     private String SK;

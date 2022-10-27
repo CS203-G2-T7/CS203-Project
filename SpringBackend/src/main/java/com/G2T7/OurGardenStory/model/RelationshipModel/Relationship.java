@@ -62,9 +62,9 @@ public class Relationship {
     this.WinId_GardenName = WinId_GardenName;
   }
 
-  public static Relationship createWindowGardenRelation(String winId, String gardenName, String leaseDuration,
-      int numPlotsForBalloting) {
-    return new Relationship(winId, gardenName, winId + "|" + gardenName, leaseDuration,
-        numPlotsForBalloting, null, null, 0, null);
-  }
+  // public static Relationship createWindowGardenRelation(String winId, String gardenName, String leaseDuration,
+  //     int numPlotsForBalloting) {
+  //   return new Relationship(winId, gardenName, winId + "|" + gardenName, leaseDuration,
+  //       numPlotsForBalloting, null, null, 0, null);
+  // }
 }

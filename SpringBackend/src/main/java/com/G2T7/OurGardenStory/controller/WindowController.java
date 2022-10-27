@@ -2,6 +2,7 @@ package com.G2T7.OurGardenStory.controller;
 
 import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
+import com.G2T7.OurGardenStory.service.RelationshipService;
 import com.G2T7.OurGardenStory.service.WindowService;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
 public class WindowController {
     @Autowired
     private WindowService windowService;
+    @Autowired
+    private RelationshipService relationshipService;
 
     @GetMapping(path = "/window")
     public ResponseEntity<List<Window>> findAllWindows() {
@@ -68,14 +72,20 @@ public class WindowController {
         }
     }
 
-    @GetMapping(path = "/window/{winId}/gardens")
-    public ResponseEntity<?> findGardensInWindow(@PathVariable String winId) {
+    // Relationships
+    @GetMapping(path = "/window/{winId}/garden")
+    public ResponseEntity<?> findAllGardensInWindow(@PathVariable String winId,
+            @RequestParam(name = "name") Optional<String> gardenName) {
         try {
-            List<Relationship> relationList = windowService.findGardensInWindow(winId);
-            System.out.println(relationList);
-            return ResponseEntity.ok(relationList);
+            if (gardenName.isEmpty()) {
+                List<Relationship> relationList = relationshipService.findAllGardensInWindow(winId);
+                System.out.println(relationList);
+                return ResponseEntity.ok(relationList);
+            }
+            Relationship gardenRelation = relationshipService.findGardenInWindow(winId, gardenName.get());
+            System.out.println(gardenRelation);
+            return ResponseEntity.ok(gardenRelation);
         } catch (ResourceNotFoundException e) {
-            System.out.println(e.getMessage());
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -83,18 +93,54 @@ public class WindowController {
         }
     }
 
-    @PostMapping(path = "/window/{winId}/gardens")
+    @PostMapping(path = "/window/{winId}/garden")
     public ResponseEntity<?> addGardensInWindow(@PathVariable String winId, @RequestBody JsonNode payload) {
         try {
-            List<Relationship> gardenRelations = windowService.addGardensInWindow(winId, payload);
+            List<Relationship> gardenRelations = relationshipService.addGardensInWindow(winId, payload);
             return ResponseEntity.ok(gardenRelations);
-        } catch (ResourceNotFoundException | IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }
 
+    @PutMapping(path = "/window/{winId}/garden")
+    public ResponseEntity<?> updateGardenInWindow(@PathVariable String winId,
+            @RequestParam(name = "name") String gardenName, @RequestBody JsonNode payload) {
+        try {
+            Relationship updatedRelation = relationshipService.updateGardenInWindow(winId, gardenName, payload);
+            return ResponseEntity.ok(updatedRelation);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @DeleteMapping(path = "/window/{winId}/garden")
+    public ResponseEntity<String> deleteGardenInWindow(@PathVariable String winId,
+            @RequestParam(name = "name") Optional<String> gardenName) {
+        try {
+            if (gardenName.isPresent()) {
+                relationshipService.deleteGardenInWindow(winId, gardenName.get());
+                return ResponseEntity.noContent().build();
+            }
+            relationshipService.deleteAllGardensInWindow(winId);
+            return ResponseEntity.noContent().build();
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

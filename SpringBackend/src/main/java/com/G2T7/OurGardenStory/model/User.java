@@ -12,6 +12,7 @@ import lombok.*;
 @Setter
 @DynamoDBTable(tableName = "User_Win_Garden_Ballot_JoinTable")
 public class User {
+    public static final String EntityName = "User";
     private String PK;
     private String SK;
 

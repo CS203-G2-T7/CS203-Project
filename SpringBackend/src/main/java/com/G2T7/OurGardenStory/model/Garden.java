@@ -11,6 +11,7 @@ import lombok.*;
 @EqualsAndHashCode
 @DynamoDBTable(tableName = "User_Win_Garden_Ballot_JoinTable")
 public class Garden {
+    public static final String EntityName = "Garden";
     private String PK;
     private String SK;
 

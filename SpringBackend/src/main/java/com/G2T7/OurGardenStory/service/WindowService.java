@@ -12,6 +12,7 @@ import org.springframework.util.StringUtils;
 
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.Window;
+import com.G2T7.OurGardenStory.model.RelationshipModel.GardenWin;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
@@ -84,42 +85,5 @@ public class WindowService {
     public void deleteWindow(final String windowId) {
         Window toDeleteWindow = findWindowById(windowId).get(0);
         dynamoDBMapper.delete(toDeleteWindow);
-    }
-
-    // Relationship services
-    public List<Relationship> findGardensInWindow(String windowId) {
-        String capWinId = StringUtils.capitalize(windowId);
-        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-        eav.put(":WINID", new AttributeValue().withS(capWinId));
-        DynamoDBQueryExpression<Relationship> qe = new DynamoDBQueryExpression<Relationship>()
-                .withKeyConditionExpression("PK = :WINID").withExpressionAttributeValues(eav);
-
-        PaginatedQueryList<Relationship> foundRelationList = dynamoDBMapper.query(Relationship.class, qe);
-        if (foundRelationList.size() == 0) {
-            throw new ResourceNotFoundException("There are no windows.");
-        }
-        return foundRelationList;
-    }
-
-    public List<Relationship> addGardensInWindow(String windowId, JsonNode payload) {
-        String capWinId = StringUtils.capitalize(windowId);
-        findWindowById(capWinId).get(0); // validate window exists
-        List<Relationship> toAddRelationshipList = new ArrayList<Relationship>();
-
-        payload.forEach(relation -> {
-            //need check if relation already exists.
-            Garden foundGarden = dynamoDBMapper.load(Garden.class, "Garden", relation.get("gardenName").asText());
-            if (foundGarden == null) {
-                throw new IllegalArgumentException("Garden cannot be found");
-            }
-
-            Relationship newRelation = Relationship.createWindowGardenRelation(capWinId,
-                    relation.get("gardenName").asText(), relation.get("leaseDuration").asText(),
-                    relation.get("numPlotsForBalloting").asInt());
-            toAddRelationshipList.add(newRelation);
-        });
-        dynamoDBMapper.batchSave(toAddRelationshipList);
-
-        return toAddRelationshipList;
     }
 }
