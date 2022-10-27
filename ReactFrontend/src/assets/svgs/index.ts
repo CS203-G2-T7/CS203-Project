@@ -9,3 +9,6 @@ export { ReactComponent as RedErrorCircle } from "./RedErrorCircle.svg";
 export { ReactComponent as LogoMain } from "./LogoMain.svg";
 export { ReactComponent as AccountButton } from "./AccountButton.svg";
 export { ReactComponent as WindowOptionArrow } from "./WindowOptionArrow.svg";
+export { ReactComponent as FacebookIcon } from "./FacebookIcon.svg";
+export { ReactComponent as InstagramIcon } from "./InstagramIcon.svg";
+export { ReactComponent as TwitterIcon } from "./TwitterIcon.svg";
