@@ -1,6 +1,5 @@
 package com.G2T7.OurGardenStory.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,15 +9,11 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.Window;
-import com.G2T7.OurGardenStory.model.RelationshipModel.GardenWin;
-import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.fasterxml.jackson.databind.JsonNode;
 
 @Service
 public class WindowService {
