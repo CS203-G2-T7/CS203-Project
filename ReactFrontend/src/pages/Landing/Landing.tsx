@@ -1,4 +1,5 @@
 import { LandingStyled } from "./Landing.styled";
+import { NavBarStyled } from "./NavBar.styled";
 import React from "react";
 import Navbar from "components/Navbar/Navbar";
 
@@ -17,7 +18,10 @@ type Props = {};
 export default function Login() {
   return (
     <LandingStyled>
-      <Navbar></Navbar>
+
+      <NavBarStyled>
+        <Navbar />
+      </NavBarStyled>
             <FacebookIcon />
             <InstagramIcon />
             <TwitterIcon />
