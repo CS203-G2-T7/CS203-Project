@@ -18,13 +18,22 @@ export default function Landing() {
         activities!
       </FollowStyled>
       <IconStyled>
-        <a href="https://www.nparks.gov.sg/-/media/nparks-real-content/gardening/allotment-gardening/allotment-gardens-faqs_mar-2022.ashx?la=en&hash=2955B790F8BA94458309D0E575D130EEB6BEA661&hash=2955B790F8BA94458309D0E575D130EEB6BEA661">
+        <a href="https://www.facebook.com/nparksbuzz/">
           <FacebookIcon />
         </a>
-        <InstagramIcon />
-        <TwitterIcon />
+
+        <a href="https://www.instagram.com/nparksbuzz/?hl=en">
+          <InstagramIcon />
+        </a>
+
+        <a href="https://twitter.com/nparksbuzz?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">
+          <TwitterIcon />
+        </a>
       </IconStyled>
-      <p>#nparksbuzz</p>
+      
+      <a href="https://www.instagram.com/explore/tags/nparksbuzz/?hl=en">
+        #nparksbuzz
+      </a>
     </SocialMediaStyled>
   );
 }
