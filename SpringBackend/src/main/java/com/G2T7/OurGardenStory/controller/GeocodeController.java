@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 import java.io.IOException;
-@CrossOrigin("*")
-@RestController
+
 public class GeocodeController {
 
     @Value("${geocoder.resource}")
@@ -20,7 +19,6 @@ public class GeocodeController {
 
     HashMap<String, Double> map = new HashMap<>();
 
-    @PostMapping(path = "/geocode")
     public double saveDistance(String username, String userAddress, String gardenLng, String gardenLat) {
         double distance = 0.0;
         try {

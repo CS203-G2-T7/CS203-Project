@@ -62,6 +62,10 @@ public class Relationship {
     this.WinId_GardenName = WinId_GardenName;
   }
 
+  public Relationship(String winId, String username, String winId_GardenName2, Object leaseDuration2, Object object,
+      String ballotID2, String ballotDateTime2, double distance2, String ballotStatus2) {
+  }
+
   // public static Relationship createWindowGardenRelation(String winId, String gardenName, String leaseDuration,
   //     int numPlotsForBalloting) {
   //   return new Relationship(winId, gardenName, winId + "|" + gardenName, leaseDuration,
