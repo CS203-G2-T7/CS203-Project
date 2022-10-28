@@ -1,5 +1,3 @@
 import styled from "styled-components";
 
-export const LandingStyled = styled.div`
-
-`;
+export const LandingStyled = styled.div``;

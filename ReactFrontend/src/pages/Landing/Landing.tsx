@@ -3,14 +3,11 @@ import { NavBarStyled } from "./NavBar.styled";
 import { HeaderStyled } from "./Header.styled";
 import { FooterStyled } from "./Footer.styled";
 import { BannerStyled } from "./Banner.styled";
-
-
+import SocialMedia from "./SocialMedia/SocialMedia";
 
 import React from "react";
 import Navbar from "components/Navbar/Navbar";
 import Content from "./Content/Content";
-
-
 
 import { FacebookIcon, InstagramIcon, TwitterIcon } from "assets/svgs";
 
@@ -23,16 +20,16 @@ export default function Landing() {
         <Navbar />
       </NavBarStyled>
       <HeaderStyled>
-        <h1>Explore <br></br> the Garden <br></br> with us today</h1>
+        <h1>
+          Explore <br></br> the Garden <br></br> with us today
+        </h1>
       </HeaderStyled>
       <BannerStyled>
         <p>Our Allotment Gardens</p>
       </BannerStyled>
       <Content />
-      
-      <FacebookIcon />
-      <InstagramIcon />
-      <TwitterIcon />
+      <SocialMedia />
+
       <FooterStyled></FooterStyled>
     </LandingStyled>
   );

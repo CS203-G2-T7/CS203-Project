@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const ContentStyled = styled.div`
-  background-color: #1A5119;
+  background-color: #1a5119;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -12,9 +12,9 @@ export const ContentStyled = styled.div`
     font-weight: 400;
     text-align: left;
 
-    padding-left: calc(54rem/16);
-    padding-right: calc(54rem/16);
-    line-height: 2.0;
+    padding-left: calc(54rem / 16);
+    padding-right: calc(54rem / 16);
+    line-height: 2;
     width: 100%;
   }
 `;
