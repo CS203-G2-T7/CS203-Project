@@ -1,5 +1,6 @@
 package com.G2T7.OurGardenStory.model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
@@ -71,4 +72,5 @@ public class User {
     // return LocalDateTime.parse(stringValue);
     // }
     // }
+
 }

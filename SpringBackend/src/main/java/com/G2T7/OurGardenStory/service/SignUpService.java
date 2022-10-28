@@ -28,7 +28,7 @@ public class SignUpService {
     // TODO: Basic sign up validation. Can be improved. Can have a dedicated user
     // signup validation method.
     LocalDate birthday = LocalDate.parse(userSignUpRequest.getBirthDate(),
-        DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        DateTimeFormatter.ofPattern("MM/dd/yyyy"));
     if (birthday.isAfter(LocalDate.now().minusYears(18))) {
       throw new IllegalArgumentException("You must be at least 18 years old to sign up.");
     }
