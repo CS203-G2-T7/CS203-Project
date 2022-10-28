@@ -10,8 +10,7 @@ type Props = {};
 
 export default function Carousel({}: Props) {
   return (
-    <CarouselStyled>
-      <Swiper
+      <CarouselStyled
         spaceBetween={50}
         slidesPerView={1}
         modules={[Navigation, Pagination]}
@@ -30,7 +29,6 @@ export default function Carousel({}: Props) {
         <SwiperSlide>
           <img src={require("assets/imgs/BishanAMKLanding.jpg")} alt="slide4" />
         </SwiperSlide>
-      </Swiper>
-    </CarouselStyled>
+      </CarouselStyled>
   );
 }

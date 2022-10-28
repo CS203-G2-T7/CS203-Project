@@ -2,6 +2,8 @@ import { LandingStyled } from "./Landing.styled";
 import { NavBarStyled } from "./NavBar.styled";
 import { HeaderStyled } from "./Header.styled";
 import { FooterStyled } from "./Footer.styled";
+import { BannerStyled } from "./Banner.styled";
+
 
 
 import React from "react";
@@ -23,7 +25,11 @@ export default function Landing() {
       <HeaderStyled>
         <h1>Explore <br></br> the Garden <br></br> with us today</h1>
       </HeaderStyled>
+      <BannerStyled>
+        <p>Our Allotment Gardens</p>
+      </BannerStyled>
       <Content />
+      
       <FacebookIcon />
       <InstagramIcon />
       <TwitterIcon />
