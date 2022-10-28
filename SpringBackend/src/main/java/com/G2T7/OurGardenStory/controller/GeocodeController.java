@@ -3,12 +3,11 @@ package com.G2T7.OurGardenStory.controller;
 import com.G2T7.OurGardenStory.geocoder.GeocodeDistance;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 import java.util.*;
 import java.io.IOException;
 
+@Service
 public class GeocodeController {
 
     @Value("${geocoder.resource}")
