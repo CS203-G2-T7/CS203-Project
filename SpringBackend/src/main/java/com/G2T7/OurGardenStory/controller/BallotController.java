@@ -49,6 +49,7 @@ public class BallotController {
     public ResponseEntity<?> addBallotInWindow(@PathVariable String winId, @RequestBody JsonNode payload) {
         try {
             String username = ballotService.getUsername();
+            System.out.println(username);
 
             List<Relationship> ballotRelations = ballotService.addBallotInWindow(winId, username, payload);
             return ResponseEntity.ok(ballotRelations);
