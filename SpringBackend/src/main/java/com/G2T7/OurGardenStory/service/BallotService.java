@@ -3,7 +3,8 @@ package com.G2T7.OurGardenStory.service;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import java.util.*;
+import java.util.Base64;
+import java.util.List;
 
 import javax.management.relation.Relation;
 import javax.print.attribute.standard.MediaSize.ISO;
@@ -19,7 +20,6 @@ import com.G2T7.OurGardenStory.model.RelationshipModel.Ballot;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 import com.G2T7.OurGardenStory.model.ReqResModel.UserSignInResponse;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.util.Base64;
 import org.springframework.util.StringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 
