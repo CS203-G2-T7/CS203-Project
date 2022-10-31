@@ -78,7 +78,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/window/{winId}/ballot").permitAll()
                 .antMatchers(HttpMethod.PUT, "/window/{winId}/ballot").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/window/{winId}/ballot").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/window/{winId}/addBallot").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/window/{winId}/allBallot").permitAll()
 
                 .anyRequest().permitAll();
 
