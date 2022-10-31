@@ -97,7 +97,7 @@ public class RelationshipService {
     dynamoDBMapper.batchDelete(allGardensToDelete);
   }
 
-  private boolean validateWinExist(final String winId) {
+  public boolean validateWinExist(final String winId) {
     // Check window exists
     String capWinId = StringUtils.capitalize(winId);
     Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();

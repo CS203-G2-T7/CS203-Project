@@ -79,7 +79,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/window/{winId}/ballot").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/window/{winId}/ballot").permitAll()
 
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
 
         http.addFilterBefore(awsCognitoJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).cors();
 
