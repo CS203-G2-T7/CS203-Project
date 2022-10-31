@@ -1,5 +1,6 @@
 package com.G2T7.OurGardenStory.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,22 @@ public class BallotController {
     @Autowired
     private BallotService ballotService;
 
+    @GetMapping(path = "/window/{winId}/allBallot")
+    public ResponseEntity<List<Relationship>> findAllBallots(@PathVariable String winId, @RequestBody JsonNode payload,
+        @RequestHeader Map<String, String> headers) {
+        try {
+            return ResponseEntity.ok(ballotService.findAllBallotsInWindowForGarden(winId, payload.get("gardenName").asText()));
+        } catch (ResourceNotFoundException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @GetMapping(path = "/window/{winId}/ballot")
-    public ResponseEntity<?> findUserBallotInWindow(@PathVariable String winId,
+    public ResponseEntity<?> findUserBallotInWindow(@PathVariable String winId, 
             @RequestHeader Map<String, String> headers) {
         try {
             // System.out.println(headers.get("username"));

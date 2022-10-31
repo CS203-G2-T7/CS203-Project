@@ -82,13 +82,12 @@ public class BallotService {
     }
 
     public Relationship addBallotInWindow(String windowId, String username, JsonNode payload) {
-        System.out.println("hello");
         String capWinId = StringUtils.capitalize(windowId);
 
         if (username == null) {
             throw new AuthenticationCredentialsNotFoundException("User is not authenticated");
         }
-        System.out.println("yo");
+
         Garden garden = gardenService.findGardenByGardenName(payload.get("gardenName").asText());
         String latitude = garden.getLatitude();
         String longitude = garden.getLongitude();
@@ -100,15 +99,17 @@ public class BallotService {
 
         LocalDate date = LocalDate.now();
         String currentDate = date.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-
-        System.out.println("yoyo");
         // validations
+        System.out.println("Start validation");
         validateUser(username);
+        System.out.println("Validated username");
         validateBallotPostDate(windowId, date);
+        System.out.println("Validated post date");
         validateGardenInWindow(windowId, currentDate);
+        System.out.println("validated Garden and window");
         validateUserHasBallotedBeforeInSameWindow(windowId, username);
+        System.out.println("No validation issues.");
 
-        System.out.println("yoyoyo");
         Relationship ballot = new Ballot(capWinId, username, capWinId + "|" + garden.getSK(),
                 "Ballot" + String.valueOf(++Ballot.numInstance), currentDate, distance,
                 Relationship.BallotStatus.PENDING);
@@ -196,13 +197,17 @@ public class BallotService {
     }
 
     public void validateUser(String username) {
+        System.out.println("Validating user exists");
         User user = userService.findUserByUsername(username);
+        System.out.println("validated user exists.");
         String DOB = user.getDOB();
+        System.out.println("Generate dob" + DOB);
         LocalDate birthdate = LocalDate.of(Integer.parseInt(DOB.substring(6)),
                 Integer.parseInt(DOB.substring(3, 5)), Integer.parseInt(DOB.substring(0, 2)));
 
         birthdate = birthdate.minusYears(18);
         if (birthdate.getYear() < 0) {
+            System.out.println("Validating user age");
             throw new CustomException("User must be 18 to ballot");
         }
     }

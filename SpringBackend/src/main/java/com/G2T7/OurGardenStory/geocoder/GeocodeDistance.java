@@ -33,8 +33,8 @@ public class GeocodeDistance {
         }
 
         double result = distanceBetweenTwoPoints(userLat, userLng, gardenLat, gardenLng);
-        System.out.println("The distance between the two addresses is " + result + "km");
-        System.out.println(result);
+        // System.out.println("The distance between the two addresses is " + result + "km");
+        // System.out.println(result);
         return result;
 
     }
