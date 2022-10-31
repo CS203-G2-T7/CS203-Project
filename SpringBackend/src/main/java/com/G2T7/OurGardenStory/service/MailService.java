@@ -19,33 +19,18 @@ public class MailService {
     @Value(value = "${sendgrid.api.key}")
     private String SENDGRID_API_KEY;
 
-    public String sendSuccessTextEmail(String emailTo) throws IOException {
+    public String sendTextEmail(String emailTo, String status) throws IOException {
         // the sender email should be the same as we used to Create a Single Sender Verification
         Email from = new Email("jinhan.loh.2021@scis.smu.edu.sg");
         String subject = "OurGardenStory Ballot";
         Email to = new Email(emailTo);
-        Content content = new Content("text/plain", "Congratulations, your ballot was successful :)");
-        Mail mail = new Mail(from, subject, to, content);
-
-        SendGrid sg = new SendGrid(SENDGRID_API_KEY);
-        Request request = new Request();
-        try {
-            request.setMethod(Method.POST);
-            request.setEndpoint("mail/send");
-            request.setBody(mail.build());
-            Response response = sg.api(request);
-            return response.getBody();
-        } catch (IOException ex) {
-            throw ex;
+        String message = "";
+        if (status.equals("Success")) {
+            message = "Congratulations, your ballot was successful :)";
+        } else {
+            message = "Sorry, your ballot was unsuccessful :(";
         }
-    }
-
-    public String sendFailureTextEmail(String emailTo) throws IOException {
-        // the sender email should be the same as we used to Create a Single Sender Verification
-        Email from = new Email("jinhan.loh.2021@scis.smu.edu.sg");
-        String subject = "OurGardenStory Ballot";
-        Email to = new Email(emailTo);
-        Content content = new Content("text/plain", "Sorry, your ballot was unsuccessful :(");
+        Content content = new Content("text/plain", message);
         Mail mail = new Mail(from, subject, to, content);
 
         SendGrid sg = new SendGrid(SENDGRID_API_KEY);
