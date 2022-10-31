@@ -38,6 +38,7 @@ public class AwsCognitoIdTokenProcessor {
 
             Object usernameObject = claims.getClaim("username");
             String username = usernameObject.toString();
+            System.out.println("Authenticate: " + username);
             if (username != null) {
                 List<GrantedAuthority> grantedAuthorities = of( new SimpleGrantedAuthority("ROLE_USER"));
                 User user = new User(username, "", of());

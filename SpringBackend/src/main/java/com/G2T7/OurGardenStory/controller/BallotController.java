@@ -1,9 +1,11 @@
 package com.G2T7.OurGardenStory.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,34 +13,32 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.G2T7.OurGardenStory.model.RelationshipModel.Ballot;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 import com.G2T7.OurGardenStory.service.BallotService;
-import com.G2T7.OurGardenStory.service.RelationshipService;
-import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpStatus;
 
 @CrossOrigin("*")
 @RestController
 public class BallotController {
-    
+
     @Autowired
     private BallotService ballotService;
 
     @GetMapping(path = "/window/{winId}/ballot")
-    public ResponseEntity<?> findBallotInWindow(@PathVariable String winId) {
+    public ResponseEntity<?> findUserBallotInWindow(@PathVariable String winId,
+            @RequestHeader Map<String, String> headers) {
         try {
-            String username = ballotService.getUsername();
-
-            Relationship ballot = ballotService.findUsernameInBallot(winId, username);
-            
+            // System.out.println(headers.get("username"));
+            Relationship ballot = ballotService.findUserBallotInWindow(winId, headers.get("username"));
             return ResponseEntity.ok(ballot);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (AuthenticationCredentialsNotFoundException e) {
+            return ResponseEntity.status(401).body(e.getMessage());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
@@ -46,14 +46,14 @@ public class BallotController {
     }
 
     @PostMapping(path = "/window/{winId}/ballot")
-    public ResponseEntity<?> addBallotInWindow(@PathVariable String winId, @RequestBody JsonNode payload) {
+    public ResponseEntity<?> addBallotInWindow(@PathVariable String winId, @RequestBody JsonNode payload,
+            @RequestHeader Map<String, String> headers) {
         try {
-            String username = ballotService.getUsername();
-            System.out.println(username);
-
-            Relationship ballotRelations = ballotService.addBallotInWindow(winId, username, payload);
+            System.out.println(headers.get("username"));
+            Relationship ballotRelations = ballotService.addBallotInWindow(winId, headers.get("username"), payload);
             return ResponseEntity.ok(ballotRelations);
         } catch (ResourceNotFoundException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -64,11 +64,10 @@ public class BallotController {
     }
 
     @PutMapping(path = "/window/{winId}/ballot")
-    public ResponseEntity<?> updateBallotInWindow(@PathVariable String winId, @RequestBody JsonNode payload) {
+    public ResponseEntity<?> updateBallotInWindow(@PathVariable String winId, @RequestBody JsonNode payload,
+            @RequestHeader Map<String, String> headers) {
         try {
-            String username = ballotService.getUsername();
-
-            Relationship updatedRelation = ballotService.updateGardenInBallot(winId, username, payload);
+            Relationship updatedRelation = ballotService.updateGardenInBallot(winId, headers.get("username"), payload);
             return ResponseEntity.ok(updatedRelation);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -81,10 +80,10 @@ public class BallotController {
     }
 
     @DeleteMapping(path = "/window/{winId}/ballot")
-    public ResponseEntity<String> deleteBallotInWindow(@PathVariable String winId) {
+    public ResponseEntity<String> deleteBallotInWindow(@PathVariable String winId,
+            @RequestHeader Map<String, String> headers) {
         try {
-            String username = ballotService.getUsername();            
-            ballotService.deleteBallotInWindow(winId, username);
+            ballotService.deleteBallotInWindow(winId, headers.get("username"));
             return ResponseEntity.noContent().build();
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

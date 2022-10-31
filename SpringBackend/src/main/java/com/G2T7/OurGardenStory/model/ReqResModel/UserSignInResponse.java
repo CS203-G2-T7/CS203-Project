@@ -13,9 +13,7 @@ import lombok.Setter;
 @EqualsAndHashCode
 public class UserSignInResponse {
     private String accessToken;
-    @Getter
-    @Setter
-    private static String idToken;
+    private String idToken;
     private String refreshToken;
     private String tokenType;
     private Integer expiresIn;
