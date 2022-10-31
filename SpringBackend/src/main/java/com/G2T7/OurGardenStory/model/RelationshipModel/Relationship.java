@@ -31,7 +31,7 @@ public class Relationship {
   @DynamoDBAttribute
   private String BallotDateTime;
   @DynamoDBAttribute
-  private int Distance;
+  private double Distance;
   @DynamoDBAttribute
   private String ballotStatus;
 

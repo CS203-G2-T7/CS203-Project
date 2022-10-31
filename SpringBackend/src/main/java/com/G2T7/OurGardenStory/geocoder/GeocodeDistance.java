@@ -18,11 +18,10 @@ public class GeocodeDistance {
 
         ObjectMapper mapper = new ObjectMapper();
         Geocoder geocoder = new Geocoder();
-
-        String response = geocoder.GeocodeSync(userAddress, resource, apiKey);
+        String response = geocoder.GeocodeSync("Singapore" + userAddress, resource, apiKey);
         JsonNode responseJsonNode = mapper.readTree(response);
         JsonNode items = responseJsonNode.get("items");
-
+        
         for (JsonNode item : items) {
             JsonNode address = item.get("address");
             String label = address.get("label").asText();
@@ -35,6 +34,7 @@ public class GeocodeDistance {
 
         double result = distanceBetweenTwoPoints(userLat, userLng, gardenLat, gardenLng);
         System.out.println("The distance between the two addresses is " + result + "km");
+        System.out.println(result);
         return result;
 
     }

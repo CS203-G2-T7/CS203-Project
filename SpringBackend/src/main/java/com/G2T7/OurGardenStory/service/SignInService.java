@@ -41,9 +41,15 @@ public class SignInService {
     AuthenticationResultType authenticationResult = result.getAuthenticationResult();
 
     // cognitoClient.shutdown(); //This results in user only signing in once.
-    return new UserSignInResponse(authenticationResult.getAccessToken(),
-        authenticationResult.getIdToken(), authenticationResult.getRefreshToken(),
-        authenticationResult.getTokenType(), authenticationResult.getExpiresIn(), "");
+    UserSignInResponse userSignInResponse = new UserSignInResponse();
+    userSignInResponse.setAccessToken(authenticationResult.getAccessToken());
+    userSignInResponse.setIdToken(authenticationResult.getIdToken());
+    userSignInResponse.setRefreshToken(authenticationResult.getRefreshToken());
+    userSignInResponse.setTokenType(authenticationResult.getTokenType());
+    userSignInResponse.setExpiresIn(authenticationResult.getExpiresIn());
+    userSignInResponse.setAddress("");
+    
+    return userSignInResponse;
   }
 
   private AdminInitiateAuthRequest createAuthRequest(final UserSignInRequest signInRequest) {
@@ -70,9 +76,15 @@ public class SignInService {
         .adminRespondToAuthChallenge(challengeRequest);
     AuthenticationResultType authenticationResult = challengeResult.getAuthenticationResult();
 
-    return new UserSignInResponse(authenticationResult.getAccessToken(),
-        authenticationResult.getIdToken(), authenticationResult.getRefreshToken(),
-        authenticationResult.getTokenType(), authenticationResult.getExpiresIn(), "");
+    UserSignInResponse userSignInResponse = new UserSignInResponse();
+    userSignInResponse.setAccessToken(authenticationResult.getAccessToken());
+    userSignInResponse.setIdToken(authenticationResult.getIdToken());
+    userSignInResponse.setRefreshToken(authenticationResult.getRefreshToken());
+    userSignInResponse.setTokenType(authenticationResult.getTokenType());
+    userSignInResponse.setExpiresIn(authenticationResult.getExpiresIn());
+    userSignInResponse.setAddress("");
+    
+    return userSignInResponse;
     // what is address in signInResponse?
   }
 
