@@ -85,9 +85,6 @@ public class BallotService {
         // validateGardenInWindow(windowId, currentDate);
         // validateIfGardenFull(garden, capWinId);
         // validateUserHasBallotedBeforeInSameWindow(windowId, username);
-
-        System.out.println(capWinId);
-        System.out.println(username);
         
         Relationship ballot = new Ballot();
         ballot.setPK(capWinId);
@@ -95,7 +92,7 @@ public class BallotService {
         ballot.setWinId_GardenName(windowId + "|" + payload.get("gardenName").asText());
         ballot.setBallotId("Ballot" + String.valueOf(++Ballot.numInstance));
         ballot.setBallotDateTime(currentDate);
-        ballot.setDistance((int)distance);
+        ballot.setDistance(distance);
         ballot.setBallotStatus("Pending");
 
         
@@ -110,6 +107,13 @@ public class BallotService {
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         String currentDate = date.format(formatter);
+
+        Garden garden = gardenService.findGardenByGardenName(payload.get("gardenName").asText());
+        String latitude = garden.getLatitude();
+        String longitude = garden.getLongitude();
+        User user = userService.findUserByUsername(username);
+        String userAddress = user.getAddress();
+        double distance = geocodeService.saveDistance(username, userAddress, longitude, latitude);
     
         Ballot ballot = new Ballot();
         ballot.setPK(capWinId);
@@ -117,7 +121,7 @@ public class BallotService {
         ballot.setWinId_GardenName(windowId + "|" + payload.get("gardenName").asText());
         ballot.setBallotId(toUpdateBallot.getBallotId());
         ballot.setBallotDateTime(currentDate);
-        ballot.setDistance((int)toUpdateBallot.getDistance());
+        ballot.setDistance(distance);
         ballot.setBallotStatus("Pending");
 
         dynamoDBMapper.save(ballot);
