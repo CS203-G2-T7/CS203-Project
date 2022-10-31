@@ -77,9 +77,8 @@ public class BallotService {
 
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        System.out.println("hello");
         String currentDate = date.format(formatter);
-        System.out.println("yo");
+
         //validations
         // validateUser(username);
         // validateBallotPostDate(windowId, date);
@@ -87,14 +86,20 @@ public class BallotService {
         // validateIfGardenFull(garden, capWinId);
         // validateUserHasBallotedBeforeInSameWindow(windowId, username);
 
-        System.out.println("hi");
         System.out.println(capWinId);
         System.out.println(username);
-        Relationship ballot = new Ballot(capWinId, username, payload.get("gardenName").asText(), 
-                                            "Ballot" + String.valueOf(++Ballot.numInstance), currentDate, distance, "Pending");
+        
+        Relationship ballot = new Ballot();
+        ballot.setPK(capWinId);
+        ballot.setSK(username);
+        ballot.setWinId_GardenName(windowId + "|" + payload.get("gardenName").asText());
+        ballot.setBallotId("Ballot" + String.valueOf(++Ballot.numInstance));
+        ballot.setBallotDateTime(currentDate);
+        ballot.setDistance((int)distance);
+        ballot.setBallotStatus("Pending");
+
         
         dynamoDBMapper.save(ballot);
-        System.out.println("almost thr");
         return ballot;
     }
 
@@ -105,11 +110,18 @@ public class BallotService {
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         String currentDate = date.format(formatter);
+    
+        Ballot ballot = new Ballot();
+        ballot.setPK(capWinId);
+        ballot.setSK(username);
+        ballot.setWinId_GardenName(windowId + "|" + payload.get("gardenName").asText());
+        ballot.setBallotId(toUpdateBallot.getBallotId());
+        ballot.setBallotDateTime(currentDate);
+        ballot.setDistance((int)toUpdateBallot.getDistance());
+        ballot.setBallotStatus("Pending");
 
-        toUpdateBallot = new Ballot(capWinId, username, payload.get("gardenName").asText(),  "Ballot" + String.valueOf(++Ballot.numInstance), currentDate, toUpdateBallot.getDistance(), "Pending");
-
-        dynamoDBMapper.save(toUpdateBallot);
-        return toUpdateBallot;
+        dynamoDBMapper.save(ballot);
+        return ballot;
     }      
 
     public void deleteBallotInWindow(String windowId, String username) {

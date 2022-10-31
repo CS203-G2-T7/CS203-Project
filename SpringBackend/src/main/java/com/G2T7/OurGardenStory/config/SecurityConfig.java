@@ -74,7 +74,12 @@ public class SecurityConfig {
 
                 .antMatchers(HttpMethod.GET, "/magic").permitAll()
 
-                .anyRequest().permitAll();
+                .antMatchers(HttpMethod.GET, "/window/{winId}/ballot").permitAll()
+                .antMatchers(HttpMethod.POST, "/window/{winId}/ballot").permitAll()
+                .antMatchers(HttpMethod.PUT, "/window/{winId}/ballot").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/window/{winId}/ballot").permitAll()
+
+                .anyRequest().authenticated();
 
         http.addFilterBefore(awsCognitoJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).cors();
 
