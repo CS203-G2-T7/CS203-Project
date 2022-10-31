@@ -74,7 +74,7 @@ public class SecurityConfig {
 
                 .antMatchers(HttpMethod.GET, "/magic").permitAll()
 
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
 
         http.addFilterBefore(awsCognitoJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).cors();
 

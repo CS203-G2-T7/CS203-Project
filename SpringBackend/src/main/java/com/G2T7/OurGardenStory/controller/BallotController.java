@@ -51,7 +51,7 @@ public class BallotController {
             String username = ballotService.getUsername();
             System.out.println(username);
 
-            List<Relationship> ballotRelations = ballotService.addBallotInWindow(winId, username, payload);
+            Relationship ballotRelations = ballotService.addBallotInWindow(winId, username, payload);
             return ResponseEntity.ok(ballotRelations);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

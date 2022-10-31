@@ -61,37 +61,41 @@ public class BallotService {
         return foundBallot;
     }
 
-    public List<Relationship> addBallotInWindow(String windowId, String username, JsonNode payload) {
+    public Relationship addBallotInWindow(String windowId, String username, JsonNode payload) {
         String capWinId = StringUtils.capitalize(windowId);
         List<Relationship> toAddRelationshipList = new ArrayList<Relationship>();
 
         Garden garden = gardenService.findGardenByGardenName(payload.get("gardenName").asText());
+
         String latitude = garden.getLatitude();
         String longitude = garden.getLongitude();
 
         User user = userService.findUserByUsername(username);
-        String userAddress = user.getAddress();
 
+        String userAddress = user.getAddress();
         double distance = geocodeService.saveDistance(username, userAddress, longitude, latitude);
 
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        System.out.println("hello");
         String currentDate = date.format(formatter);
-
+        System.out.println("yo");
         //validations
-        validateUser(username);
-        validateBallotPostDate(windowId, date);
-        validateGardenInWindow(windowId, currentDate);
-        validateIfGardenFull(garden, capWinId);
-        validateUserHasBallotedBeforeInSameWindow(windowId, username);
+        // validateUser(username);
+        // validateBallotPostDate(windowId, date);
+        // validateGardenInWindow(windowId, currentDate);
+        // validateIfGardenFull(garden, capWinId);
+        // validateUserHasBallotedBeforeInSameWindow(windowId, username);
 
-        payload.forEach(relation -> {
-            Relationship ballot = new Ballot(capWinId, username, payload.get("gardenName").asText(), "Ballot" + String.valueOf(++Ballot.numInstance), currentDate, distance, "Pending");
-            toAddRelationshipList.add(ballot);
-        });
+        System.out.println("hi");
+        System.out.println(capWinId);
+        System.out.println(username);
+        Relationship ballot = new Ballot(capWinId, username, payload.get("gardenName").asText(), 
+                                            "Ballot" + String.valueOf(++Ballot.numInstance), currentDate, distance, "Pending");
         
-        dynamoDBMapper.batchSave(toAddRelationshipList);
-        return toAddRelationshipList;
+        dynamoDBMapper.save(ballot);
+        System.out.println("almost thr");
+        return ballot;
     }
 
     public Relationship updateGardenInBallot(String windowId, String username, JsonNode payload) throws Exception {

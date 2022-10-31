@@ -23,6 +23,7 @@ public class GeocodeService {
 
     public double saveDistance(String username, String userAddress, String gardenLng, String gardenLat) {
         double distance = 0.0;
+
         try {
             distance = GeocodeDistance.distanceCalculator(userAddress, gardenLat, gardenLng, GEOCODING_RESOURCE,
                     API_KEY);
