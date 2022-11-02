@@ -33,7 +33,7 @@ public class BallotController {
     public ResponseEntity<List<Relationship>> findAllBallots(@PathVariable String winId, @RequestBody JsonNode payload,
         @RequestHeader Map<String, String> headers) {
         try {
-            return ResponseEntity.ok(ballotService.findAllBallotsInWindowForGarden(winId, payload.get("gardenName").asText()));
+            return ResponseEntity.ok(ballotService.findAllBallotsInWindowGarden(winId, payload.get("gardenName").asText()));
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.notFound().build();

@@ -1,5 +1,6 @@
 package com.G2T7.OurGardenStory.service;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -179,23 +180,6 @@ public class BallotService {
         return null;
     }
 
-    public List<Relationship> findAllBallotsInWindowForGarden(String windowId, String gardenName) {
-        String capWinId = StringUtils.capitalize(windowId);
-        // if (!relationshipService.validateWinExist(capWinId)) {
-        // throw new ResourceNotFoundException(capWinId + " does not exist.");
-        // }
-        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-        eav.put(":WINID", new AttributeValue().withS(capWinId));
-        DynamoDBQueryExpression<Relationship> qe = new DynamoDBQueryExpression<Relationship>()
-                .withKeyConditionExpression("PK = :WINID").withExpressionAttributeValues(eav);
-
-        PaginatedQueryList<Relationship> foundRelationList = dynamoDBMapper.query(Relationship.class, qe);
-        if (foundRelationList.isEmpty() || foundRelationList == null) {
-            throw new ResourceNotFoundException("There are no gardens in " + capWinId + ".");
-        }
-        return foundRelationList;
-    }
-
     public void validateUser(String username) {
         System.out.println("Validating user exists");
         User user = userService.findUserByUsername(username);
@@ -258,4 +242,7 @@ public class BallotService {
             throw new CustomException("User has already balloted in the same window");
         }
     }
+
 }
+
+

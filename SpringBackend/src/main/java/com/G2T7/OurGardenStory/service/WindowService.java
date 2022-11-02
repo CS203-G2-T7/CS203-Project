@@ -1,24 +1,45 @@
 package com.G2T7.OurGardenStory.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
+import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
+import static org.quartz.JobBuilder.*;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.G2T7.OurGardenStory.geocoder.AlgorithmService;
+import com.G2T7.OurGardenStory.model.Garden;
+import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
+import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
+import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship.BallotStatus;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 @Service
-public class WindowService {
+public class WindowService implements Job{
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
+    @Autowired
+    private BallotService ballotService;
+    @Autowired
+    private RelationshipService relationshipService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private AlgorithmService algorithmService;
+    @Autowired
+    private MailService mailService;
 
     private Window findWindowByPkSk(final String pk, final String sk) {
         return dynamoDBMapper.load(Window.class, pk, sk);
@@ -55,7 +76,7 @@ public class WindowService {
         return foundWindowList;
     }
 
-    public Window createWindow(final Window window) {
+    public Window createWindow(final Window window) throws SchedulerException {
         window.setPK("Window");
         window.setWindowId("Win" + ++Window.numInstance);
 
@@ -66,7 +87,9 @@ public class WindowService {
             throw new RuntimeException("Window already exists.");
             // Can make custom exceptions here, Then catch and throw 400 bad req
         }
+
         dynamoDBMapper.save(window);
+        scheduleAlgo(window.getWindowId());
         return window;
     }
 
@@ -81,4 +104,77 @@ public class WindowService {
         Window toDeleteWindow = findWindowById(windowId).get(0);
         dynamoDBMapper.delete(toDeleteWindow);
     }
+
+    public void scheduleAlgo(String winId) throws SchedulerException {
+        Window win = findWindowById(winId).get(0);
+        String startDate = win.getSK();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        LocalDate date = LocalDate.parse(startDate, formatter);
+        int index = win.getWindowDuration().indexOf("M");
+        int duration = Integer.parseInt(win.getWindowDuration().substring(0, index));
+        date = date.plusMonths(duration);
+        int day = date.getDayOfMonth();
+        int month = date.getMonthValue();
+        int year = date.getYear();
+
+
+        SchedulerFactory schedulerFactory = new StdSchedulerFactory();
+        Scheduler scheduler = schedulerFactory.getScheduler();  
+        JobDetail job = newJob(WindowService.class)
+                            .withIdentity("doAlgo")
+                            .usingJobData("winId", winId)
+                            .build();
+        
+        
+        SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+                            .withIdentity("doAlgo")
+                            .startAt(DateBuilder.dateOf(0, 0, 0, day, month,year))
+                            .forJob(job)
+                            .build();
+        
+        scheduler.start();
+        scheduler.scheduleJob(job, trigger);
+    }
+
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        try {
+            JobDataMap dataMap = context.getJobDetail().getJobDataMap();
+
+            String winId = dataMap.getString("winId");
+            List<Relationship> relationships = relationshipService.findAllGardensInWindow(winId);
+            List<String> gardens = new ArrayList<>();
+    
+            for (Relationship r : relationships) {
+                gardens.add(r.getSK());
+            }
+    
+            for (String gardenName : gardens) {
+                List<Relationship> ballots = ballotService.findAllBallotsInWindowGarden(winId, gardenName);
+                HashMap<String, Double> usernameDistance = new HashMap<>();
+                for (Relationship ballot : ballots) {
+                    String username = ballot.getSK();
+                    Double distance = ballot.getDistance();
+                    usernameDistance.put(username, distance);
+                }
+                Relationship r = relationshipService.findGardenInWindow(winId, gardenName);
+                int numPlotsAvailable = r.getNumPlotsForBalloting();
+                ArrayList<String> ballotSuccesses= algorithmService.getBallotSuccess(usernameDistance, numPlotsAvailable);
+                for (Relationship ballot : ballots) {
+                    if (ballotSuccesses.contains(ballot.getSK())) {
+                        ballot.setBallotStatus(BallotStatus.SUCCESS);
+                        String email = userService.findUserByUsername(ballot.getSK()).getEmail();
+                        mailService.sendTextEmail(email, "Success"); //this throws IOException
+                    } else {
+                        ballot.setBallotStatus(BallotStatus.FAILED);
+                        String email = userService.findUserByUsername(ballot.getSK()).getEmail();
+                        mailService.sendTextEmail(email, "Fail"); //this throws IOException
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
 }
+
