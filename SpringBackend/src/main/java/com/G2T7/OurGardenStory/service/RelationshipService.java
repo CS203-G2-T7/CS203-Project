@@ -29,7 +29,7 @@ public class RelationshipService {
   // Relationship services
   public List<Relationship> findAllGardensInWindow(String windowId) {
     String capWinId = StringUtils.capitalize(windowId);
-    if (!validateWinExist(capWinId)) {
+    if (!validateWinExist(capWinId)) { //Already validate when call findWindowById. Don't need another validator.
       throw new ResourceNotFoundException(capWinId + " does not exist.");
     }
     Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
