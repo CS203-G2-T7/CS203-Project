@@ -33,7 +33,8 @@ public class SecurityConfig {
     private AwsCognitoJwtAuthFilter awsCognitoJwtAuthenticationFilter;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -42,7 +43,7 @@ public class SecurityConfig {
 
         List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL); // add "/home" etc.?
 
-        http.csrf().disable().cors().disable()//.authorizeHttpRequests()
+        http.csrf().disable().cors().disable()// .authorizeHttpRequests()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
@@ -50,6 +51,8 @@ public class SecurityConfig {
 
                 .antMatchers(HttpMethod.GET, "/garden").permitAll()
                 .antMatchers(HttpMethod.POST, "/garden").permitAll()
+                .antMatchers(HttpMethod.PUT, "/garden").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/garden").permitAll()
 
                 .antMatchers(HttpMethod.GET, "/ballots").permitAll()
                 .antMatchers(HttpMethod.GET, "/ballot").permitAll()
@@ -59,13 +62,25 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/geocode").permitAll()
 
                 .antMatchers(HttpMethod.POST, "/window").permitAll()
-                .antMatchers(HttpMethod.GET, "/windows").permitAll()
                 .antMatchers(HttpMethod.GET, "/window").permitAll()
+                .antMatchers(HttpMethod.GET, "/window/{id}/garden").permitAll()
+                .antMatchers(HttpMethod.POST, "/window/{id}/garden").permitAll()
+                .antMatchers(HttpMethod.PUT, "/window/{id}/garden").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/window/{id}/garden").permitAll()
                 .antMatchers(HttpMethod.PUT, "/window").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/window").permitAll()
+
+                .antMatchers(HttpMethod.GET, "/api/users/user").permitAll()
 
                 .antMatchers(HttpMethod.GET, "/magic").permitAll()
 
-                .anyRequest().authenticated();
+                .antMatchers(HttpMethod.GET, "/window/{winId}/ballot").permitAll()
+                .antMatchers(HttpMethod.POST, "/window/{winId}/ballot").permitAll()
+                .antMatchers(HttpMethod.PUT, "/window/{winId}/ballot").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/window/{winId}/ballot").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/window/{winId}/allBallot").permitAll()
+
+                .anyRequest().permitAll();
 
         http.addFilterBefore(awsCognitoJwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).cors();
 

@@ -40,7 +40,7 @@ export default function LoginForm({}: Props) {
         password: data.password,
       })
       .then((res) => {
-        console.log(res); //JH: very bad practice to store jwt tokens in local storage. Backend has to send it as HTTPOnly cookie.
+        console.log(res);
         localStorage.setItem("jwtAccessToken", res.data.accessToken);
         navigate("/home");
         console.log(res.data.accessToken);
