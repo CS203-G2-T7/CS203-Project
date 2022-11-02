@@ -4,6 +4,8 @@ import NotFound from "pages/404";
 import Login from "pages/Login/Login";
 import SignUp from "pages/SignUp/SignUp";
 import Garden from "pages/Garden/Garden";
+import Landing from "pages/Landing/Landing";
+
 
 function App() {
   const location = useLocation();
@@ -11,7 +13,8 @@ function App() {
   return (
     <Routes location={location}>
       {/* Accessible to all */}
-      <Route path="/" element={<Login />} />
+      <Route path="/" element={<Landing />} />
+      <Route path="/Landing" element={<Landing />} />
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/sign-up" element={<SignUp />} />

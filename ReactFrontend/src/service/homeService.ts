@@ -6,7 +6,11 @@ const BALLOTS_LATEST_WINDOW_URL = "http://localhost:5000/ballot";
 class Home {
   //gets Window, which contains array of Gardens
   getLatestWindow(): Promise<AxiosResponse<any, any>> {
-    return axios.get(LATEST_WINDOW_URL);
+    return axios.get(LATEST_WINDOW_URL, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtAccessToken"),
+      },
+    });
   }
   getBallotsLatestWindow(): Promise<AxiosResponse<any, any>> {
     return axios.get(BALLOTS_LATEST_WINDOW_URL);
