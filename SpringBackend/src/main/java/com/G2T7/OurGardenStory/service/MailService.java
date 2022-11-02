@@ -19,7 +19,7 @@ public class MailService {
     @Value(value = "${sendgrid.api.key}")
     private String SENDGRID_API_KEY;
 
-    public String sendTextEmail(String emailTo, String status) throws IOException {
+    public String sendTextEmail (String emailTo, String status) throws IOException {
         // the sender email should be the same as we used to Create a Single Sender Verification
         Email from = new Email("jinhan.loh.2021@scis.smu.edu.sg");
         String subject = "OurGardenStory Ballot";
