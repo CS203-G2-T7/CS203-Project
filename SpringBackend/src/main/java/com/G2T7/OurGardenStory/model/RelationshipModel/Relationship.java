@@ -33,11 +33,11 @@ public class Relationship {
   @DynamoDBAttribute
   private double Distance;
   @DynamoDBAttribute
-  private BallotStatus ballotStatus;
+  private String ballotStatus;
 
-  public enum BallotStatus {
-    PENDING, SUCCESS, FAILED, INVALID
-  };
+  // public enum BallotStatus {
+  //   PENDING, SUCCESS, FAILED, INVALID
+  // };
 
   @DynamoDBHashKey(attributeName = "PK")
   public String getPK() {

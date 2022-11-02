@@ -66,7 +66,7 @@ public class UserService {
             throw new IllegalArgumentException("User already exists.");
         }
         String birthday = LocalDate.parse(userSignUpRequest.getBirthDate(),
-                DateTimeFormatter.ofPattern("MM/dd/yyyy")).atTime(0, 0, 0).format(DateTimeFormatter.ISO_DATE_TIME);
+                DateTimeFormatter.ofPattern("MM-dd-yyyy")).atTime(0, 0, 0).format(DateTimeFormatter.ISO_DATE_TIME);
         System.out.println(birthday);
         User newUser = new User("User", userSignUpRequest.getUsername(), userSignUpRequest.getGivenName(),
                 userSignUpRequest.getFamilyName(), birthday, userSignUpRequest.getEmail(),

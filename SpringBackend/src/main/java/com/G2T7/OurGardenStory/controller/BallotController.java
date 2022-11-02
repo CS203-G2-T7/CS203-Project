@@ -33,7 +33,7 @@ public class BallotController {
     public ResponseEntity<List<Relationship>> findAllBallots(@PathVariable String winId, @RequestBody JsonNode payload,
         @RequestHeader Map<String, String> headers) {
         try {
-            return ResponseEntity.ok(ballotService.findAllBallotsInWindowForGarden(winId, payload.get("gardenName").asText()));
+            return ResponseEntity.ok(ballotService.findAllBallotsInWindowGarden(winId, payload.get("gardenName").asText()));
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.notFound().build();
@@ -47,7 +47,6 @@ public class BallotController {
     public ResponseEntity<?> findUserBallotInWindow(@PathVariable String winId, 
             @RequestHeader Map<String, String> headers) {
         try {
-            // System.out.println(headers.get("username"));
             Relationship ballot = ballotService.findUserBallotInWindow(winId, headers.get("username"));
             return ResponseEntity.ok(ballot);
         } catch (ResourceNotFoundException e) {
@@ -99,7 +98,8 @@ public class BallotController {
             @RequestHeader Map<String, String> headers) {
         try {
             ballotService.deleteBallotInWindow(winId, headers.get("username"));
-            return ResponseEntity.noContent().build();
+            // return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().body("Ballot deleted");
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {

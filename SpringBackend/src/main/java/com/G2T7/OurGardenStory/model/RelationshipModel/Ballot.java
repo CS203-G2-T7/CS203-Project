@@ -12,8 +12,11 @@ public class Ballot extends Relationship {
     public static int numInstance;
 
     public Ballot(String winId, String username, String gardenName, String ballotId, String ballotDateTime,
-            double distance, BallotStatus ballotStatus) {
+            double distance, String ballotStatus) {
         super(winId, username, winId + "|" + gardenName, null, 0, ballotId, ballotDateTime, distance,
                 ballotStatus);
     }
 }
+
+
+

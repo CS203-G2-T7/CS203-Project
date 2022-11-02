@@ -28,6 +28,8 @@ import java.util.*;
 import org.springframework.util.StringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+
 @Service
 public class BallotService {
 
@@ -75,9 +77,9 @@ public class BallotService {
         }
 
         Relationship foundBallot = dynamoDBMapper.load(Ballot.class, capWinId, username);
-        if (foundBallot == null) {
-            throw new ResourceNotFoundException("Ballot does not exist.");
-        }
+        // if (foundBallot == null) {
+        //     throw new ResourceNotFoundException("Ballot does not exist.");
+        // }
         return foundBallot;
     }
 
@@ -98,40 +100,33 @@ public class BallotService {
         double distance = geocodeService.saveDistance(username, userAddress, longitude, latitude);
 
         LocalDate date = LocalDate.now();
-        String currentDate = date.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+        String currentDate = date.format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+        System.out.println(currentDate);
         // validations
         System.out.println("Start validation");
-        validateUser(username);
         System.out.println("Validated username");
         validateBallotPostDate(windowId, date);
         System.out.println("Validated post date");
-        validateGardenInWindow(windowId, currentDate);
-        System.out.println("validated Garden and window");
+        // validateGardenInWindow(windowId, currentDate);
+        // System.out.println("validated Garden and window");
         validateUserHasBallotedBeforeInSameWindow(windowId, username);
         System.out.println("No validation issues.");
 
         Relationship ballot = new Ballot(capWinId, username, capWinId + "|" + garden.getSK(),
                 "Ballot" + String.valueOf(++Ballot.numInstance), currentDate, distance,
-                Relationship.BallotStatus.PENDING);
-        // ballot.setPK(capWinId);
-        // ballot.setSK(username);
-        // ballot.setWinId_GardenName(windowId + "|" +
-        // payload.get("gardenName").asText());
-        // ballot.setBallotId("Ballot" + String.valueOf(++Ballot.numInstance));
-        // ballot.setBallotDateTime(currentDate);
-        // ballot.setDistance(distance);
-        // ballot.setBallotStatus(Relationship.BallotStatus.PENDING);
+                "PENDING");
 
         dynamoDBMapper.save(ballot);
+        System.out.println("Ballot is successfully posted");
         return ballot;
     }
 
-    public Relationship updateGardenInBallot(String windowId, String username, JsonNode payload) throws Exception {
+    public Relationship updateGardenInBallot(String windowId, String username, JsonNode payload) {
         String capWinId = StringUtils.capitalize(windowId);
         Relationship toUpdateBallot = findUserBallotInWindow(capWinId, username);
 
         LocalDate date = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
         String currentDate = date.format(formatter);
 
         Garden garden = gardenService.findGardenByGardenName(payload.get("gardenName").asText());
@@ -141,15 +136,10 @@ public class BallotService {
         String userAddress = user.getAddress();
         double distance = geocodeService.saveDistance(username, userAddress, longitude, latitude);
 
+        // Relationship ballot = new Ballot(capWinId, username, capWinId + "|" + garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
+        //                         Relationship.BallotStatus.PENDING);
         Relationship ballot = new Ballot(capWinId, username, capWinId + "|" + garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
-                                Relationship.BallotStatus.PENDING);
-        // ballot.setPK(capWinId);
-        // ballot.setSK(username);
-        // ballot.setWinId_GardenName(windowId + "|" + payload.get("gardenName").asText());
-        // ballot.setBallotId(toUpdateBallot.getBallotId());
-        // ballot.setBallotDateTime(currentDate);
-        // ballot.setDistance(distance);
-        // ballot.setBallotStatus(Relationship.BallotStatus.PENDING);
+                                        "PENDING");
 
         dynamoDBMapper.save(ballot);
         return ballot;
@@ -163,7 +153,6 @@ public class BallotService {
     }
 
     public String getUsername() {
-        // String idToken = UserSignInResponse.getIdToken();
         String idToken = "";
         String[] chunks = idToken.split("\\.");
 
@@ -177,39 +166,6 @@ public class BallotService {
             }
         }
         return null;
-    }
-
-    public List<Relationship> findAllBallotsInWindowForGarden(String windowId, String gardenName) {
-        String capWinId = StringUtils.capitalize(windowId);
-        // if (!relationshipService.validateWinExist(capWinId)) {
-        // throw new ResourceNotFoundException(capWinId + " does not exist.");
-        // }
-        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-        eav.put(":WINID", new AttributeValue().withS(capWinId));
-        DynamoDBQueryExpression<Relationship> qe = new DynamoDBQueryExpression<Relationship>()
-                .withKeyConditionExpression("PK = :WINID").withExpressionAttributeValues(eav);
-
-        PaginatedQueryList<Relationship> foundRelationList = dynamoDBMapper.query(Relationship.class, qe);
-        if (foundRelationList.isEmpty() || foundRelationList == null) {
-            throw new ResourceNotFoundException("There are no gardens in " + capWinId + ".");
-        }
-        return foundRelationList;
-    }
-
-    public void validateUser(String username) {
-        System.out.println("Validating user exists");
-        User user = userService.findUserByUsername(username);
-        System.out.println("validated user exists.");
-        String DOB = user.getDOB();
-        System.out.println("Generate dob" + DOB);
-        LocalDate birthdate = LocalDate.of(Integer.parseInt(DOB.substring(6)),
-                Integer.parseInt(DOB.substring(3, 5)), Integer.parseInt(DOB.substring(0, 2)));
-
-        birthdate = birthdate.minusYears(18);
-        if (birthdate.getYear() < 0) {
-            System.out.println("Validating user age");
-            throw new CustomException("User must be 18 to ballot");
-        }
     }
 
     public void validateBallotPostDate(String windowId, LocalDate date) {
@@ -237,6 +193,13 @@ public class BallotService {
         relationshipService.findGardenInWindow(windowId, gardenName);
     }
 
+    public void validateUserHasBallotedBeforeInSameWindow(String windowId, String username) {
+        Relationship r = findUserBallotInWindow(windowId, username);
+        if (r != null) {
+            throw new CustomException("User has already balloted in the same window");
+        }
+    }
+
     // public void validateIfGardenFull(Garden garden, String winId) {
     //     // TODO
     //     List<Relationship> ballots = findAllBallotsInWindowForGarden(winId, garden.getSK());
@@ -251,11 +214,4 @@ public class BallotService {
     //     }
     //     return;
     // }
-
-    public void validateUserHasBallotedBeforeInSameWindow(String windowId, String username) {
-        Relationship r = findUserBallotInWindow(windowId, username);
-        if (r != null) {
-            throw new CustomException("User has already balloted in the same window");
-        }
-    }
 }
