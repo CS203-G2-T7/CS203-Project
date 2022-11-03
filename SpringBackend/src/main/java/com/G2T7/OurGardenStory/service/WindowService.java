@@ -3,6 +3,7 @@ package com.G2T7.OurGardenStory.service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -110,12 +111,29 @@ public class WindowService implements Job{
         String startDate = win.getSK();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
         LocalDate date = LocalDate.parse(startDate, formatter);
-        int index = win.getWindowDuration().indexOf("M");
-        int duration = Integer.parseInt(win.getWindowDuration().substring(0, index));
-        date = date.plusMonths(duration);
-        int day = date.getDayOfMonth();
-        int month = date.getMonthValue();
-        int year = date.getYear();
+        
+        String winDuration = win.getWindowDuration();
+        Date d = null;
+        if (winDuration.contains("M")) {
+            int index = winDuration.indexOf("M");
+            int duration = Integer.parseInt(winDuration.substring(0, index));
+            date = date.plusMonths(duration);
+            int day = date.getDayOfMonth();
+            int month = date.getMonthValue();
+            int year = date.getYear();
+            d = DateBuilder.dateOf(0, 0, 0, day, month,year);
+        } else if (winDuration.contains("minute")) {
+            int index = winDuration.indexOf("minute");
+            int duration = Integer.parseInt(winDuration.substring(0, index));
+            LocalTime time = LocalTime.now();
+            time = time.plusMinutes(duration);
+            int hour = time.getHour();
+            int minute = time.getMinute();
+            int seconds = time.getSecond();
+            d = DateBuilder.dateOf(hour, minute, seconds);
+        }
+        
+        
 
 
         SchedulerFactory schedulerFactory = new StdSchedulerFactory();
@@ -128,7 +146,7 @@ public class WindowService implements Job{
         
         SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
                             .withIdentity("doAlgo")
-                            .startAt(DateBuilder.dateOf(0, 0, 0, day, month,year))
+                            .startAt(d)
                             .forJob(job)
                             .build();
         
