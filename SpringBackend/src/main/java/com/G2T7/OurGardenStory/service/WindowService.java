@@ -20,7 +20,6 @@ import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
-import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship.BallotStatus;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
@@ -178,11 +177,11 @@ public class WindowService implements Job{
                 ArrayList<String> ballotSuccesses= algorithmService.getBallotSuccess(usernameDistance, numPlotsAvailable);
                 for (Relationship ballot : ballots) {
                     if (ballotSuccesses.contains(ballot.getSK())) {
-                        ballot.setBallotStatus(BallotStatus.SUCCESS);
+                        ballot.setBallotStatus("Success");
                         String email = userService.findUserByUsername(ballot.getSK()).getEmail();
                         mailService.sendTextEmail(email, "Success"); //this throws IOException
                     } else {
-                        ballot.setBallotStatus(BallotStatus.FAILED);
+                        ballot.setBallotStatus("Fail");
                         String email = userService.findUserByUsername(ballot.getSK()).getEmail();
                         mailService.sendTextEmail(email, "Fail"); //this throws IOException
                     }

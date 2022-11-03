@@ -27,7 +27,7 @@ public class MailService {
         String message = "";
         if (status.equals("Success")) {
             message = "Congratulations, your ballot was successful :)";
-        } else {
+        } else if (status.equals("Fail")) {
             message = "Sorry, your ballot was unsuccessful :(";
         }
         Content content = new Content("text/plain", message);
