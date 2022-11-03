@@ -45,13 +45,9 @@ public class RelationshipService {
   }
 
   public Relationship findGardenInWindow(String windowId, String gardenName) {
-    System.out.println("validation garden in window starts");
     String capWinId = StringUtils.capitalize(windowId);
-    System.out.println("yup1");
     String formatGardenName = gardenName.replace("-", " ");
-    System.out.println("yup2");
     validateAndThrowWinAndGardenExist(capWinId, formatGardenName);
-    System.out.println("yup3");
 
     Relationship foundRelationship = dynamoDBMapper.load(Relationship.class, capWinId,
         formatGardenName);

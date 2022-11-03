@@ -64,9 +64,8 @@ public class BallotController {
     public ResponseEntity<?> addBallotInWindow(@PathVariable String winId, @RequestBody JsonNode payload,
             @RequestHeader Map<String, String> headers) {
         try {
-            System.out.println(headers.get("username"));
-            Relationship ballotRelations = ballotService.addBallotInWindow(winId, headers.get("username"), payload);
-            return ResponseEntity.ok(ballotRelations);
+            Relationship ballot = ballotService.addBallotInWindow(winId, headers.get("username"), payload);
+            return ResponseEntity.ok(ballot);
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
