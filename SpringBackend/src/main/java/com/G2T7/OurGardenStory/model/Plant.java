@@ -24,8 +24,6 @@ public class Plant {
     // private String plantId;
 
     @DynamoDBAttribute
-    private String plantName;
-    @DynamoDBAttribute
     private String plantSpecies;
     @DynamoDBAttribute
     private String description;

@@ -19,19 +19,16 @@ public class PlantService {
     private DynamoDBMapper dynamoDBMapper;
 
     public List<Plant> findAllPlants() {
-        // Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-        // eav.put(":PLNT", new AttributeValue().withS("Plant"));
-        // DynamoDBQueryExpression<Plant> qe = new DynamoDBQueryExpression<Plant>()
-        //     .withKeyConditionExpression("PK = :PLNT").withExpressionAttributeValues(eav);
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":PLNT", new AttributeValue().withS("Plant"));
+        DynamoDBQueryExpression<Plant> qe = new DynamoDBQueryExpression<Plant>()
+            .withKeyConditionExpression("PK = :PLNT").withExpressionAttributeValues(eav);
     
-        // PaginatedQueryList<Plant> foundGardenList = dynamoDBMapper.query(Plant.class, qe);
-        // if (foundGardenList.size() == 0) {
-        //   throw new ResourceNotFoundException("No gardens found.");
-        // }
-        // return foundGardenList;
-
-        PaginatedScanList<Plant> plantList = dynamoDBMapper.scan(Plant.class, null);
-        return plantList;
+        PaginatedQueryList<Plant> foundGardenList = dynamoDBMapper.query(Plant.class, qe);
+        if (foundGardenList.size() == 0) {
+          throw new ResourceNotFoundException("No gardens found.");
+        }
+        return foundGardenList;
       }
 
     public Plant findPlantByName(final String plantName) {
