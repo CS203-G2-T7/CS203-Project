@@ -66,6 +66,7 @@ public class UserService {
         dynamoDBMapper.save(newUser);
     }
 
+    // TODO Plant user relation. Should separate into different file.
     // called on /my-plants. Authenticated. Get username from JWT Token.
     // can have another service for plant related user operations. CRUD on
     // user-plant O2M relationship.
