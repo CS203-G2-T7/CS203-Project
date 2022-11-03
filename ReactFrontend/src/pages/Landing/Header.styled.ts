@@ -2,6 +2,10 @@ import styled from "styled-components";
 
 export const HeaderStyled = styled.div`
   background-image: url("./image/HeaderTree.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  
   h1 {
     font-family: "Song Myung", serif;
     font-size: 128px;
