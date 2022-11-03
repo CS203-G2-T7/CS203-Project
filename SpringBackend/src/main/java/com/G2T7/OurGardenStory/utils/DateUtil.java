@@ -1,5 +1,6 @@
 package com.G2T7.OurGardenStory.utils;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -26,9 +27,32 @@ public class DateUtil {
     return date.format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
   }
 
-  // Obtains a Period from a text string such as PnYnMnD
+  // Obtains a Period from a text string such as PnYnMnD. Year, Month, Day
   public static Period convertStringToPeriod(String periodInput) {
+    if (periodInput.contains("minute")) {
+      return Period.of(0, 0, 0);
+    }
     Period convertedPeriod = Period.parse(periodInput);
     return convertedPeriod;
+  }
+
+  // duration for PnDTnHnMn.nS. Day, Hour, Min, Sec
+  public static Duration convertStringToDuration(String durationInput) {
+
+    Duration convertedDuration = Duration.parse(durationInput);
+    System.out.println("ok?");
+    return convertedDuration;
+  }
+
+  public static LocalDate getWindowEndDateFromStartDateAndDuration(String startDateString, String timeFrameString) {
+    LocalDate winStartDate = convertStringToLocalDate(startDateString);
+
+    if (timeFrameString.contains("PT")) {
+      return winStartDate.plus(DateUtil.convertStringToDuration(timeFrameString));
+    } else if (timeFrameString.contains("P")) {
+      return winStartDate.plus(DateUtil.convertStringToPeriod(timeFrameString));
+    } else {
+      throw new IllegalArgumentException("Invalid window duration " + timeFrameString);
+    }
   }
 }

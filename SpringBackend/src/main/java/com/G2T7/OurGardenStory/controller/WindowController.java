@@ -48,6 +48,7 @@ public class WindowController {
         } catch (SchedulerException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }

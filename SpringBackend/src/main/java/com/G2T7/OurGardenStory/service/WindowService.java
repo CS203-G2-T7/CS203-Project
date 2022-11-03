@@ -3,6 +3,8 @@ package com.G2T7.OurGardenStory.service;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Period;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -20,6 +22,7 @@ import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
+import com.G2T7.OurGardenStory.utils.DateUtil;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
@@ -73,8 +76,7 @@ public class WindowService {
         Window findWindow = findWindowByPkSk(window.getPK(), window.getSK());
         if (findWindow != null && findWindow.getSK().equals(window.getSK())) {
             --Window.numInstance;
-            throw new RuntimeException("Window already exists.");
-            // Can make custom exceptions here, Then catch and throw 400 bad req
+            throw new RuntimeException("Window with start date " + window.getSK() + " already exists.");
         }
 
         dynamoDBMapper.save(window);
@@ -95,21 +97,15 @@ public class WindowService {
     }
 
     public void scheduleAlgo(String winId) throws SchedulerException {
-        Window win = findWindowById(winId).get(0);
-        String startDate = win.getSK();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        LocalDate date = LocalDate.parse(startDate, formatter);
-        
-        String winDuration = win.getWindowDuration();
-        Date d = null;
-        if (winDuration.contains("M")) {
-            int index = winDuration.indexOf("M");
-            int duration = Integer.parseInt(winDuration.substring(0, index));
-            date = date.plusMonths(duration);
-            int day = date.getDayOfMonth();
-            int month = date.getMonthValue();
-            int year = date.getYear();
-            d = DateBuilder.dateOf(0, 0, 0, day, month,year);
+        Window foundWindow = findWindowById(winId).get(0);
+        String startDate = foundWindow.getSK();
+
+        String winDuration = foundWindow.getWindowDuration();
+        Date endDate = null;
+        if (winDuration.contains("P")) {
+            LocalDate endLocalDate = DateUtil.getWindowEndDateFromStartDateAndDuration(startDate, winDuration);
+            endDate = DateBuilder.dateOf(0, 0, 0, endLocalDate.getDayOfMonth(), endLocalDate.getMonthValue(),
+                    endLocalDate.getYear());
         } else if (winDuration.contains("minute")) {
             int index = winDuration.indexOf("minute");
             int duration = Integer.parseInt(winDuration.substring(0, index));
@@ -118,31 +114,24 @@ public class WindowService {
             int hour = time.getHour();
             int minute = time.getMinute();
             int seconds = time.getSecond();
-            d = DateBuilder.dateOf(hour, minute, seconds);
+            endDate = DateBuilder.dateOf(hour, minute, seconds);
         }
-        
-        
-
 
         SchedulerFactory schedulerFactory = new StdSchedulerFactory();
-        Scheduler scheduler = schedulerFactory.getScheduler();  
+        Scheduler scheduler = schedulerFactory.getScheduler();
         JobDetail job = newJob(BallotService.class)
-                            .withIdentity("doAlgo")
-                            .usingJobData("winId", winId)
-                            .build();
-        
-        
+                .withIdentity("doAlgo")
+                .usingJobData("winId", winId)
+                .build();
+
         SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
-                            .withIdentity("doAlgo")
-                            .startAt(d)
-                            .forJob(job)
-                            .build();
-        
+                .withIdentity("doAlgo")
+                .startAt(endDate)
+                .forJob(job)
+                .build();
+
         scheduler.start();
-        // scheduler.setJobFactory(myJobFactory);
         scheduler.scheduleJob(job, trigger);
     }
 
-    
 }
-

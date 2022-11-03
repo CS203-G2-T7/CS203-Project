@@ -261,14 +261,21 @@ public class BallotService implements Job {
         }
     }
 
-    public LocalDate convertStringToLocalDate(String date) {
-        int year = Integer.parseInt(date.substring(0, 4));
-        int month = Integer.parseInt(date.substring(5, 7));
-        int day = Integer.parseInt(date.substring(8));
+    // public void validateIfGardenFull(Garden garden, String winId) {
+    // List<Relationship> ballots = findAllBallotsInWindowForGarden(winId,
+    // garden.getSK());
+    // int numBallots = ballots.size();
 
-        LocalDate convertedDate = LocalDate.of(year, month, day);
-        return convertedDate;
-    }
+    // Relationship gardenWin = dynamoDBMapper.load(Relationship.class, winId,
+    // garden.getSK());
+
+    // int numPlotsForBalloting = gardenWin.getNumPlotsForBalloting();
+
+    // if (numBallots >= numPlotsForBalloting) {
+    // throw new CustomException("Plots are full");
+    // }
+    // return;
+    // }
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
