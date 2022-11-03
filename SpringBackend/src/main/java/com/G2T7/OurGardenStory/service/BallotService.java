@@ -67,15 +67,18 @@ public class BallotService implements Job {
 
     public List<Relationship> findAllBallotsInWindowGarden(String windowId, String gardenName) {
         String capWinId = StringUtils.capitalize(windowId);
+        String capWinIdGardenName = capWinId + "_" + gardenName;
+ 
         if (!relationshipService.validateWinExist(capWinId)) {
           throw new ResourceNotFoundException(capWinId + " does not exist.");
         }
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-        eav.put(":WINID", new AttributeValue().withS(capWinId));
+        eav.put(":GardenWinValue", new AttributeValue().withS(capWinIdGardenName));
         DynamoDBQueryExpression<Relationship> qe = new DynamoDBQueryExpression<Relationship>()
-            .withKeyConditionExpression("PK = :WINID")
-            .withExpressionAttributeValues(eav)
-            .withIndexName(capWinId + "|" + gardenName);
+            .withIndexName("WinId_GardenName-index")
+            .withConsistentRead(false)
+            .withKeyConditionExpression("WinId_GardenName = :GardenWinValue")
+            .withExpressionAttributeValues(eav);
     
         PaginatedQueryList<Relationship> foundRelationList = dynamoDBMapper.query(Relationship.class, qe);
         if (foundRelationList.isEmpty() || foundRelationList == null) {
@@ -146,7 +149,7 @@ public class BallotService implements Job {
         String userAddress = user.getAddress();
         double distance = geocodeService.saveDistance(username, userAddress, longitude, latitude);
 
-        // Relationship ballot = new Ballot(capWinId, username, capWinId + "|" + garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
+        // Relationship ballot = new Ballot(capWinId, username, capWinId + "-" + garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
         //                         Relationship.BallotStatus.PENDING);
         Relationship ballot = new Ballot(capWinId, username, garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
                                         "PENDING");
