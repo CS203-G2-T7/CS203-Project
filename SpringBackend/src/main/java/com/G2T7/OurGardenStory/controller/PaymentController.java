@@ -1,6 +1,7 @@
 package com.G2T7.OurGardenStory.controller;
 
 import com.G2T7.OurGardenStory.service.PaymentService;
+import com.stripe.model.Charge;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +17,13 @@ public class PaymentController {
     }
 
     @PostMapping(path = "/payment")
-    public ResponseEntity makePayment(@RequestHeader Map<String, String> headers) {
+    public ResponseEntity<?> makePayment(@RequestHeader Map<String, String> headers) {
         try {
-            String chargeId = paymentService.checkout(headers.get("username"));
-            if (chargeId == null) {
+            Charge charge = paymentService.checkout(headers.get("username"));
+            if (charge == null) {
                 return ResponseEntity.badRequest().body("An error occurred while trying to create a charge.");
             }
-            return ResponseEntity.ok("Success! You have successfully checked out!");
+            return ResponseEntity.ok("Amount paid is $" + charge.getAmount()/100.0 + " for " + charge.getDescription());
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

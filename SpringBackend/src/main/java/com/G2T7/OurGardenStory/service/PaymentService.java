@@ -18,16 +18,16 @@ public class PaymentService {
     private String STRIPE_API_KEY;
 
     // TODO: business logic of only successful ballots to make payment
-    public String checkout(String username){
+    public Charge checkout(String username){
         if (username == null) {
             throw new AuthenticationCredentialsNotFoundException("User is not authenticated");
         }
 
-        String chargeId = null;
+        Charge charge = null;
         String customerId = null;
-        CustomerSearchResult result = searchCustomer(username);
-        if (!result.getData().isEmpty()) {
-            customerId = result.getData().get(0).getId();
+        CustomerSearchResult customerSearchResult = searchCustomer(username);
+        if (!customerSearchResult.getData().isEmpty()) {
+            customerId = customerSearchResult.getData().get(0).getId();
         }
 
         try {
@@ -35,7 +35,7 @@ public class PaymentService {
             Map<String, Object> chargeParams = new HashMap<>();
             chargeParams.put("amount", 69);
             chargeParams.put("currency", "sgd");
-            chargeParams.put("description", "Charge for ballot at ");
+            chargeParams.put("description", "{Ballot_Name} and {Window_Name}");
 
             if (customerId != null) {
                 chargeParams.put("customer", customerId);
@@ -43,13 +43,13 @@ public class PaymentService {
                 chargeParams.put("customer", createCustomer(username).getId());
             }
 
-            Charge charge = Charge.create(chargeParams);
-            chargeId = charge.getId();
+            charge = Charge.create(chargeParams);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-        return chargeId;
+        return charge;
     }
 
     public Customer createCustomer(String username) {
@@ -69,7 +69,7 @@ public class PaymentService {
     }
 
     public CustomerSearchResult searchCustomer(String username) {
-        CustomerSearchResult result = null;
+        CustomerSearchResult customerSearchResult = null;
 
         try {
             Stripe.apiKey = STRIPE_API_KEY;
@@ -78,11 +78,11 @@ public class PaymentService {
                     .builder()
                     .setQuery(query)
                     .build();
-            result = Customer.search(customerSearchParams);
+            customerSearchResult = Customer.search(customerSearchParams);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return result;
+        return customerSearchResult;
     }
 }
