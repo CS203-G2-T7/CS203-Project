@@ -26,19 +26,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 @Service
-public class WindowService implements Job{
+public class WindowService {
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
-    @Autowired
-    private BallotService ballotService;
-    @Autowired
-    private RelationshipService relationshipService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private AlgorithmService algorithmService;
-    @Autowired
-    private MailService mailService;
 
     private Window findWindowByPkSk(final String pk, final String sk) {
         return dynamoDBMapper.load(Window.class, pk, sk);
@@ -88,7 +78,7 @@ public class WindowService implements Job{
         }
 
         dynamoDBMapper.save(window);
-        scheduleAlgo(window.getWindowId());
+        //scheduleAlgo(window.getWindowId());
         return window;
     }
 
@@ -136,7 +126,7 @@ public class WindowService implements Job{
 
         SchedulerFactory schedulerFactory = new StdSchedulerFactory();
         Scheduler scheduler = schedulerFactory.getScheduler();  
-        JobDetail job = newJob(WindowService.class)
+        JobDetail job = newJob(BallotService.class)
                             .withIdentity("doAlgo")
                             .usingJobData("winId", winId)
                             .build();
@@ -152,45 +142,6 @@ public class WindowService implements Job{
         scheduler.scheduleJob(job, trigger);
     }
 
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-        try {
-            JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-
-            String winId = dataMap.getString("winId");
-            List<Relationship> relationships = relationshipService.findAllGardensInWindow(winId);
-            List<String> gardens = new ArrayList<>();
     
-            for (Relationship r : relationships) {
-                gardens.add(r.getSK());
-            }
-    
-            for (String gardenName : gardens) {
-                List<Relationship> ballots = ballotService.findAllBallotsInWindowGarden(winId, gardenName);
-                HashMap<String, Double> usernameDistance = new HashMap<>();
-                for (Relationship ballot : ballots) {
-                    String username = ballot.getSK();
-                    Double distance = ballot.getDistance();
-                    usernameDistance.put(username, distance);
-                }
-                Relationship r = relationshipService.findGardenInWindow(winId, gardenName);
-                int numPlotsAvailable = r.getNumPlotsForBalloting();
-                ArrayList<String> ballotSuccesses= algorithmService.getBallotSuccess(usernameDistance, numPlotsAvailable);
-                for (Relationship ballot : ballots) {
-                    if (ballotSuccesses.contains(ballot.getSK())) {
-                        ballot.setBallotStatus("Success");
-                        String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-                        mailService.sendTextEmail(email, "Success"); //this throws IOException
-                    } else {
-                        ballot.setBallotStatus("Fail");
-                        String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-                        mailService.sendTextEmail(email, "Fail"); //this throws IOException
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-    }
 }
 

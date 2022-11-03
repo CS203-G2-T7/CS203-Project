@@ -2,6 +2,9 @@ package com.G2T7.OurGardenStory.geocoder;
 
 import java.util.*;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class AlgorithmServiceImpl implements AlgorithmService {
     public ArrayList<String> getBallotSuccess(HashMap<String,Double> balloters, int numSuccess) {
         ArrayList<String> list = new ArrayList<>(balloters.keySet());

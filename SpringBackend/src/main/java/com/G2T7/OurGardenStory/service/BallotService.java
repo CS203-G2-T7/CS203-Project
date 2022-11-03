@@ -1,5 +1,6 @@
 package com.G2T7.OurGardenStory.service;
 
+import java.io.IOException;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
+import org.quartz.Job;
+import org.quartz.JobDataMap;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -14,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import com.G2T7.OurGardenStory.controller.GeocodeService;
 import com.G2T7.OurGardenStory.exception.CustomException;
+import com.G2T7.OurGardenStory.geocoder.AlgorithmService;
+import com.G2T7.OurGardenStory.geocoder.AlgorithmServiceImpl;
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
@@ -32,7 +39,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import ch.qos.logback.core.net.SyslogOutputStream;
 
 @Service
-public class BallotService {
+public class BallotService implements Job {
 
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
@@ -51,6 +58,12 @@ public class BallotService {
 
     @Autowired
     private RelationshipService relationshipService;
+
+    @Autowired
+    private AlgorithmServiceImpl algorithmService;
+
+    @Autowired
+    private MailService mailService;
 
     public List<Relationship> findAllBallotsInWindowGarden(String windowId, String gardenName) {
         String capWinId = StringUtils.capitalize(windowId);
@@ -103,9 +116,9 @@ public class BallotService {
         LocalDate date = LocalDate.now();
         String currentDate = date.format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
         // validations
-        validateBallotPostDate(windowId, date);
-        validateGardenInWindow(windowId, payload.get("gardenName").asText());
-        validateUserHasBallotedBeforeInSameWindow(windowId, username);
+        // validateBallotPostDate(windowId, date);
+        // validateGardenInWindow(windowId, payload.get("gardenName").asText());
+        // validateUserHasBallotedBeforeInSameWindow(windowId, username);
 
         //String winId, String username, String gardenName, String ballotId, String ballotDateTime,
         //double distance, String ballotStatus
@@ -230,6 +243,91 @@ public class BallotService {
     //     }
     //     return;
     // }
+
+    public void execute(JobExecutionContext context) throws JobExecutionException {
+        // try {
+        //     JobDataMap dataMap = context.getJobDetail().getJobDataMap();
+
+        //     String winId = dataMap.getString("winId");
+        //     String capWinId = StringUtils.capitalize(winId);
+        //     List<Relationship> relationships = relationshipService.findAllGardensInWindow(capWinId);
+        //     List<String> gardens = new ArrayList<>();
+    
+        //     for (Relationship r : relationships) {
+        //         gardens.add(r.getSK());
+        //     }
+    
+        //     for (String gardenName : gardens) {
+        //         List<Relationship> ballots = findAllBallotsInWindowGarden(winId, gardenName);
+        //         HashMap<String, Double> usernameDistance = new HashMap<>();
+        //         for (Relationship ballot : ballots) {
+        //             String username = ballot.getSK();
+        //             Double distance = ballot.getDistance();
+        //             usernameDistance.put(username, distance);
+        //         }
+        //         Relationship r = relationshipService.findGardenInWindow(winId, gardenName);
+        //         int numPlotsAvailable = r.getNumPlotsForBalloting();
+        //         ArrayList<String> ballotSuccesses= algorithmService.getBallotSuccess(usernameDistance, numPlotsAvailable);
+        //         for (Relationship ballot : ballots) {
+        //             if (ballotSuccesses.contains(ballot.getSK())) {
+        //                 ballot.setBallotStatus("Success");
+        //                 String email = userService.findUserByUsername(ballot.getSK()).getEmail();
+        //                 mailService.sendTextEmail(email, "Success"); //this throws IOException
+        //             } else {
+        //                 ballot.setBallotStatus("Fail");
+        //                 String email = userService.findUserByUsername(ballot.getSK()).getEmail();
+        //                 mailService.sendTextEmail(email, "Fail"); //this throws IOException
+        //             }
+        //         }
+        //     }
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
+        
+    }
+
+    public void methodName(String winId) {
+        try {
+            System.out.println("test");
+            List<Relationship> relationships = relationshipService.findAllGardensInWindow(winId);
+            System.out.println(relationships.toString());
+            List<String> gardens = new ArrayList<>();
+    
+            for (Relationship r : relationships) {
+                System.out.println(r.getLeaseDuration());
+                gardens.add(r.getSK());
+            }
+
+            System.out.println("======");
+    
+            for (String gardenName : gardens) {
+                System.out.println(gardenName);
+                List<Relationship> ballots = findAllBallotsInWindowGarden(winId, gardenName);
+                HashMap<String, Double> usernameDistance = new HashMap<>();
+                for (Relationship ballot : ballots) {
+                    String username = ballot.getSK();
+                    Double distance = ballot.getDistance();
+                    usernameDistance.put(username, distance);
+                }
+                Relationship r = relationshipService.findGardenInWindow(winId, gardenName);
+                int numPlotsAvailable = r.getNumPlotsForBalloting();
+                ArrayList<String> ballotSuccesses= algorithmService.getBallotSuccess(usernameDistance, numPlotsAvailable);
+                for (Relationship ballot : ballots) {
+                    if (ballotSuccesses.contains(ballot.getSK())) {
+                        ballot.setBallotStatus("Success");
+                        String email = userService.findUserByUsername(ballot.getSK()).getEmail();
+                        mailService.sendTextEmail(email, "Success"); //this throws IOException
+                    } else {
+                        ballot.setBallotStatus("Fail");
+                        String email = userService.findUserByUsername(ballot.getSK()).getEmail();
+                        mailService.sendTextEmail(email, "Fail"); //this throws IOException
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
 
