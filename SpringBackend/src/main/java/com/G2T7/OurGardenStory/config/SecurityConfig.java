@@ -80,7 +80,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/window/{winId}/ballot").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/window/{winId}/allBallot").permitAll()
 
-                .antMatchers(HttpMethod.POST, "/payment").permitAll()
+                .antMatchers(HttpMethod.POST, "/payment").authenticated()
 
                 .anyRequest().permitAll();
 
