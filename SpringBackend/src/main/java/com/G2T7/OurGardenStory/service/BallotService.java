@@ -222,22 +222,6 @@ public class BallotService implements Job {
         dynamoDBMapper.delete(ballotToDelete);
     }
 
-    public String getUsername() {
-        String idToken = "";
-        String[] chunks = idToken.split("\\.");
-
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        String decodedPayload = new String(decoder.decode(chunks[1]));
-        String[] payload_attr = decodedPayload.split(",");
-
-        for (String payload : payload_attr) {
-            if (payload.contains("username")) {
-                return payload.substring(payload.indexOf(":\"") + 2, payload.length() - 1); // username is returned
-            }
-        }
-        return null;
-    }
-
     public void validateUser(String username) {
         System.out.println("Validating user exists");
         User user = userService.findUserByUsername(username);
@@ -286,15 +270,6 @@ public class BallotService implements Job {
         if (foundBallot != null) {
             throw new IllegalArgumentException("User " + username + " has already balloted in window " + capWinId);
         }
-    }
-
-    public LocalDate convertStringToLocalDate(String date) {
-        int year = Integer.parseInt(date.substring(0, 4));
-        int month = Integer.parseInt(date.substring(5, 7));
-        int day = Integer.parseInt(date.substring(8));
-
-        LocalDate convertedDate = LocalDate.of(year, month, day);
-        return convertedDate;
     }
 
     // public void validateIfGardenFull(Garden garden, String winId) {
