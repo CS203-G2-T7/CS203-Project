@@ -2,7 +2,7 @@ package com.G2T7.OurGardenStory.controller;
 
 import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
-import com.G2T7.OurGardenStory.service.RelationshipService;
+import com.G2T7.OurGardenStory.service.WinGardenService;
 import com.G2T7.OurGardenStory.service.WindowService;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -22,7 +22,7 @@ public class WindowController {
     @Autowired
     private WindowService windowService;
     @Autowired
-    private RelationshipService relationshipService;
+    private WinGardenService relationshipService;
 
     @GetMapping(path = "/window")
     public ResponseEntity<List<Window>> findAllWindows() {

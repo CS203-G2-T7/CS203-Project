@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,7 +21,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.fasterxml.jackson.databind.JsonNode;
 
 @Service
-public class RelationshipService {
+public class WinGardenService {
   @Autowired
   private DynamoDBMapper dynamoDBMapper;
 
@@ -30,7 +29,7 @@ public class RelationshipService {
   public List<Relationship> findAllGardensInWindow(String windowId) {
     String capWinId = StringUtils.capitalize(windowId);
     if (!validateWinExist(capWinId)) {
-      throw new ResourceNotFoundException(capWinId + " does not exist.");
+      throw new ResourceNotFoundException("Window " + capWinId + " cannot be found");
     }
     Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
     eav.put(":WINID", new AttributeValue().withS(capWinId));
@@ -60,12 +59,12 @@ public class RelationshipService {
   public List<Relationship> addGardensInWindow(String windowId, JsonNode payload) {
     String capWinId = StringUtils.capitalize(windowId);
     if (!validateWinExist(capWinId)) {
-      throw new ResourceNotFoundException(capWinId + " does not exist.");
+      throw new ResourceNotFoundException("Window " + capWinId + " cannot be found");
     }
 
     List<Relationship> toAddRelationshipList = new ArrayList<Relationship>();
     payload.forEach(relation -> {
-      validateWinGardenRelation(capWinId, relation.get("gardenName").asText()); // throws if invalid
+      validateWinGardenRelation(capWinId, relation.get("gardenName").asText());
       Relationship gardenWin = new GardenWin(capWinId,
           relation.get("gardenName").asText(), relation.get("leaseDuration").asText(),
           relation.get("numPlotsForBalloting").asInt());
@@ -97,8 +96,15 @@ public class RelationshipService {
     dynamoDBMapper.batchDelete(allGardensToDelete);
   }
 
+  /*
+   * Validations. Doesn't throw, only return boolean.
+   * 1. Validate window exist
+   * 2. Validate garden exist
+   * 3. Check relationship exist
+   */
+
+  // Check window exists
   public boolean validateWinExist(final String winId) {
-    // Check window exists
     String capWinId = StringUtils.capitalize(winId);
     Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
     eav.put(":WID", new AttributeValue().withS(capWinId));
@@ -109,23 +115,14 @@ public class RelationshipService {
     return foundWindowList != null && !foundWindowList.isEmpty() && foundWindowList.get(0) != null;
   }
 
+  // Check garden exists
   private boolean validateGardenExist(String gardenName) {
     Garden foundGarden = dynamoDBMapper.load(Garden.class, Garden.EntityName, gardenName);
     return foundGarden != null;
   }
 
-  private void validateAndThrowWinAndGardenExist(String winId, String gardenName) {
-    if (!validateWinExist(winId)) {
-      throw new ResourceNotFoundException(winId + " does not exist.");
-    } else if (!validateGardenExist(gardenName)) {
-      throw new ResourceNotFoundException(gardenName + " does not exist");
-    }
-    // No errors
-    return;
-  }
-
+  // Check relationship exists //For add gardens in window
   private void validateWinGardenRelation(String winId, String gardenName) {
-    // Check relationship exists
     Relationship foundRelationship = dynamoDBMapper.load(Relationship.class, winId,
         gardenName);
     if (!validateGardenExist(gardenName)) {
@@ -133,6 +130,15 @@ public class RelationshipService {
     } else if (foundRelationship != null) {
       throw new IllegalArgumentException(winId + " already has " + gardenName);
     }
+  }
+
+  private void validateAndThrowWinAndGardenExist(String winId, String gardenName) {
+    if (!validateWinExist(winId)) {
+      throw new ResourceNotFoundException("Window " + winId + " cannot be found");
+    } else if (!validateGardenExist(gardenName)) {
+      throw new ResourceNotFoundException("Garden " + gardenName + " cannot be found");
+    }
+    return;
   }
 
   // TODO: Validation for JSON payload. Check num ballots and leaseDuration valid.

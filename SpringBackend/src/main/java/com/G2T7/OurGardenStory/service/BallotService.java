@@ -1,9 +1,8 @@
 package com.G2T7.OurGardenStory.service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.stereotype.Service;
 
 import com.G2T7.OurGardenStory.controller.GeocodeService;
-import com.G2T7.OurGardenStory.exception.CustomException;
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
@@ -22,13 +20,10 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.amazonaws.services.dynamodbv2.xspec.L;
 
 import java.util.*;
 import org.springframework.util.StringUtils;
 import com.fasterxml.jackson.databind.JsonNode;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
 
 @Service
 public class BallotService {
@@ -49,42 +44,86 @@ public class BallotService {
     private WindowService windowService;
 
     @Autowired
-    private RelationshipService relationshipService;
+    private WinGardenService relationshipService;
+
+    /**
+     * Finds all ballots given a window and a garden
+     * Has to query GSI of WinId_GardenName-index to get ballots.
+     * 
+     * @windowId ID of window
+     * @gardenName name of garden
+     * @return List of found ballots
+     * 
+     *         Validations:
+     *         1. Window exists
+     *         2. Garden exists
+     *         3. Garden is in window
+     *         4. Ballots List not empty
+     */
 
     public List<Relationship> findAllBallotsInWindowGarden(String windowId, String gardenName) {
         String capWinId = StringUtils.capitalize(windowId);
-        String capWinIdGardenName = capWinId + "_" + gardenName;
- 
+
         if (!relationshipService.validateWinExist(capWinId)) {
-          throw new ResourceNotFoundException(capWinId + " does not exist.");
+            throw new ResourceNotFoundException(capWinId + " does not exist.");
         }
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-        eav.put(":GardenWinValue", new AttributeValue().withS(capWinIdGardenName));
+        eav.put(":GardenWinValue", new AttributeValue().withS(capWinId + "_" + gardenName));
         DynamoDBQueryExpression<Relationship> qe = new DynamoDBQueryExpression<Relationship>()
-            .withIndexName("WinId_GardenName-index")
-            .withConsistentRead(false)
-            .withKeyConditionExpression("WinId_GardenName = :GardenWinValue")
-            .withExpressionAttributeValues(eav);
-    
-        PaginatedQueryList<Relationship> foundRelationList = dynamoDBMapper.query(Relationship.class, qe);
-        if (foundRelationList.isEmpty() || foundRelationList == null) {
-          throw new ResourceNotFoundException("There are no ballots in " + capWinId + ".");
+                .withIndexName("WinId_GardenName-index")
+                .withConsistentRead(false)
+                .withKeyConditionExpression("WinId_GardenName = :GardenWinValue")
+                .withExpressionAttributeValues(eav);
+
+        PaginatedQueryList<Relationship> foundBallots = dynamoDBMapper.query(Relationship.class, qe);
+        if (foundBallots.isEmpty() || foundBallots == null) {
+            throw new ResourceNotFoundException("There are no ballots in " + capWinId + ".");
         }
-        return foundRelationList;
-      }
+        return foundBallots;
+    }
+
+    /**
+     * Gets a user's ballot given windowId and username. Username supposedly from
+     * JWT token. Ballots are unique by PK = windowId and SK = username. Can just
+     * use load from DynamoDBMapper.
+     * 
+     * Validate:
+     * 1. windowId exists
+     * 
+     * @param windowId
+     * @param username
+     * @return FoundBallot
+     */
 
     public Relationship findUserBallotInWindow(String windowId, String username) {
         String capWinId = StringUtils.capitalize(windowId);
         if (username == null) {
             throw new AuthenticationCredentialsNotFoundException("User is not authenticated");
         }
-
         Relationship foundBallot = dynamoDBMapper.load(Ballot.class, capWinId, username);
-        // if (foundBallot == null) {
-        //     throw new ResourceNotFoundException("Ballot does not exist.");
-        // }
+        if (foundBallot == null) {
+            throw new ResourceNotFoundException("Ballot for " + username + " in window " + windowId + " not found");
+        }
         return foundBallot;
     }
+
+    /**
+     * Adds ballot given garden, window and username. Called when place ballot
+     * clicked
+     * on frontend.
+     * 
+     * Validate:
+     * 1. Window Exists
+     * 2. Garden Exists
+     * 3. Garden Window relationship exists
+     * 4. Ballot post date within window frame
+     * 5. User has not balloted in same window before.
+     * 
+     * @param windowId
+     * @param username
+     * @param payload
+     * @return addedBallot
+     */
 
     public Relationship addBallotInWindow(String windowId, String username, JsonNode payload) {
         String capWinId = StringUtils.capitalize(windowId);
@@ -104,19 +143,17 @@ public class BallotService {
 
         LocalDate date = LocalDate.now();
         String currentDate = date.format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-        // validations
-        // validateBallotPostDate(windowId, date);
-        // validateGardenInWindow(windowId, payload.get("gardenName").asText());
-        // validateUserHasBallotedBeforeInSameWindow(windowId, username);
 
-        //String winId, String username, String gardenName, String ballotId, String ballotDateTime,
-        //double distance, String ballotStatus
+        // validations
+        validateBallotPostDate(windowId, date);
+        validateGardenInWindow(windowId, payload.get("gardenName").asText());
+        validateUserHasBallotedBeforeInSameWindow(windowId, username);
+
         Relationship ballot = new Ballot(capWinId, username, garden.getSK(),
                 "Ballot" + String.valueOf(++Ballot.numInstance), currentDate, distance,
                 "PENDING");
 
         dynamoDBMapper.save(ballot);
-        System.out.println("Ballot is successfully posted");
         return ballot;
     }
 
@@ -135,10 +172,12 @@ public class BallotService {
         String userAddress = user.getAddress();
         double distance = geocodeService.saveDistance(username, userAddress, longitude, latitude);
 
-        // Relationship ballot = new Ballot(capWinId, username, capWinId + "-" + garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
-        //                         Relationship.BallotStatus.PENDING);
-        Relationship ballot = new Ballot(capWinId, username, garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
-                                        "PENDING");
+        // Relationship ballot = new Ballot(capWinId, username, capWinId + "-" +
+        // garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
+        // Relationship.BallotStatus.PENDING);
+        Relationship ballot = new Ballot(capWinId, username, garden.getSK(), toUpdateBallot.getBallotId(), currentDate,
+                distance,
+                "PENDING");
 
         dynamoDBMapper.save(ballot);
         return ballot;
@@ -151,20 +190,33 @@ public class BallotService {
         dynamoDBMapper.delete(ballotToDelete);
     }
 
-    //Check ballot post date within window
+    // Check ballot post date within window
     public void validateBallotPostDate(String windowId, LocalDate date) {
-        Window win = windowService.findWindowById(windowId).get(0);
-        String startDate = win.getSK();
-        LocalDate winStartDate = convertStringToLocalDate(startDate);
+        Window foundWindow = windowService.findWindowById(windowId).get(0);
+        LocalDate winStartDate = convertStringToLocalDate(foundWindow.getSK());
 
-        String winDuration = win.getWindowDuration();
-        
-        int winDurationMonth = Integer.parseInt(winDuration.substring(0, winDuration.indexOf('M')));
-        LocalDate winEndDate = winStartDate.plusMonths(winDurationMonth); 
+        String winDurationString = foundWindow.getWindowDuration(); // In Period format. 3M, 1d, 1Y
+        Period winDuration = convertStringToPeriod(winDurationString); // P3M -> 3 months
+        System.out.println("Window duration: " + winDuration);
 
-        if (date.isBefore(winStartDate) || date.isAfter(winEndDate)) {
-            throw new IllegalArgumentException("Ballot is submitted outside of window balloting period");
-        } 
+        LocalDate winEndDate = winStartDate.plus(winDuration);
+        System.out.println("End date: " + winEndDate);
+
+        String errorMessage = null;
+        if (date.isBefore(winStartDate)) {
+            errorMessage = "before";
+        } else if (date.isAfter(winEndDate)) {
+            errorMessage = "after";
+        }
+
+        if (errorMessage != null) {
+            throw new IllegalArgumentException(
+                    "Ballot is submitted " + errorMessage + " " + StringUtils.capitalize(windowId)
+                            + " balloting period.\nStart date: "
+                            + winStartDate.format(DateTimeFormatter.ofPattern("dd LLLL yyyy")) + "\nEnd date:   "
+                            + winEndDate.format(DateTimeFormatter.ofPattern("dd LLLL yyyy")));
+        }
+        // reach here no error
     }
 
     public void validateGardenInWindow(String windowId, String gardenName) {
@@ -178,12 +230,26 @@ public class BallotService {
         }
     }
 
+    /**
+     * Converts string in the format MM-dd-yyyy to a LocalDate object.
+     * 
+     * @param date
+     * @return convertedLocalDate object
+     */
     public LocalDate convertStringToLocalDate(String date) {
-        int year = Integer.parseInt(date.substring(0, 4));
-        int month = Integer.parseInt(date.substring(5, 7));
-        int day = Integer.parseInt(date.substring(8));
+        String dateComponents[] = date.split("-");
+
+        int year = Integer.parseInt(dateComponents[2]);
+        int month = Integer.parseInt(dateComponents[0]);
+        int day = Integer.parseInt(dateComponents[1]);
 
         LocalDate convertedDate = LocalDate.of(year, month, day);
         return convertedDate;
+    }
+
+    // Obtains a Period from a text string such as PnYnMnD
+    public Period convertStringToPeriod(String periodInput) {
+        Period convertedPeriod = Period.parse(periodInput);
+        return convertedPeriod;
     }
 }
