@@ -78,7 +78,7 @@ public class WindowService {
         }
 
         dynamoDBMapper.save(window);
-        //scheduleAlgo(window.getWindowId());
+        scheduleAlgo(window.getWindowId());
         return window;
     }
 
@@ -139,6 +139,7 @@ public class WindowService {
                             .build();
         
         scheduler.start();
+        // scheduler.setJobFactory(myJobFactory);
         scheduler.scheduleJob(job, trigger);
     }
 

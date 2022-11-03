@@ -32,8 +32,13 @@ import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.xspec.L;
 
+import io.quarkus.arc.Arc;
+import io.quarkus.arc.ManagedContext;
+
 import java.util.*;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
@@ -84,7 +89,16 @@ public class BallotService implements Job {
         if (foundRelationList.isEmpty() || foundRelationList == null) {
           throw new ResourceNotFoundException("There are no ballots in " + capWinId + ".");
         }
-        return foundRelationList;
+
+        List<Relationship> result = new ArrayList<>();
+
+        for (Relationship r : foundRelationList) {
+            String sk = r.getSK();
+            if (relationshipService.validateGardenExist(sk) == false) {
+                result.add(r);
+            }
+        }
+        return result;
       }
 
     public Relationship findUserBallotInWindow(String windowId, String username) {
@@ -248,63 +262,29 @@ public class BallotService implements Job {
     // }
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        // try {
-        //     JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-
-        //     String winId = dataMap.getString("winId");
-        //     String capWinId = StringUtils.capitalize(winId);
-        //     List<Relationship> relationships = relationshipService.findAllGardensInWindow(capWinId);
-        //     List<String> gardens = new ArrayList<>();
-    
-        //     for (Relationship r : relationships) {
-        //         gardens.add(r.getSK());
-        //     }
-    
-        //     for (String gardenName : gardens) {
-        //         List<Relationship> ballots = findAllBallotsInWindowGarden(winId, gardenName);
-        //         HashMap<String, Double> usernameDistance = new HashMap<>();
-        //         for (Relationship ballot : ballots) {
-        //             String username = ballot.getSK();
-        //             Double distance = ballot.getDistance();
-        //             usernameDistance.put(username, distance);
-        //         }
-        //         Relationship r = relationshipService.findGardenInWindow(winId, gardenName);
-        //         int numPlotsAvailable = r.getNumPlotsForBalloting();
-        //         ArrayList<String> ballotSuccesses= algorithmService.getBallotSuccess(usernameDistance, numPlotsAvailable);
-        //         for (Relationship ballot : ballots) {
-        //             if (ballotSuccesses.contains(ballot.getSK())) {
-        //                 ballot.setBallotStatus("Success");
-        //                 String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-        //                 mailService.sendTextEmail(email, "Success"); //this throws IOException
-        //             } else {
-        //                 ballot.setBallotStatus("Fail");
-        //                 String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-        //                 mailService.sendTextEmail(email, "Fail"); //this throws IOException
-        //             }
-        //         }
-        //     }
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
-        
-    }
-
-    public void methodName(String winId) {
         try {
-            System.out.println("test");
+            ManagedContext requestContext = Arc.container().requestContext();
+            if (!requestContext.isActive()) {
+                requestContext.activate();
+            }
+            RelationshipService relationshipService = Arc.container().instance(RelationshipService.class).get();
+            // MailService relationshipService = Arc.container().instance(RelationshipService.class).get();
+            // RelationshipService relationshipService = Arc.container().instance(RelationshipService.class).get();
+            // RelationshipService relationshipService = Arc.container().instance(RelationshipService.class).get();
+            JobDataMap dataMap = context.getJobDetail().getJobDataMap();
+            String winId = dataMap.getString("winId");
+            System.out.println(winId);
             List<Relationship> relationships = relationshipService.findAllGardensInWindow(winId);
-            System.out.println(relationships.toString());
             List<String> gardens = new ArrayList<>();
     
             for (Relationship r : relationships) {
-                System.out.println(r.getLeaseDuration());
+                System.out.println(r.getSK());
                 gardens.add(r.getSK());
             }
 
             System.out.println("======");
     
             for (String gardenName : gardens) {
-                System.out.println(gardenName);
                 List<Relationship> ballots = findAllBallotsInWindowGarden(winId, gardenName);
                 HashMap<String, Double> usernameDistance = new HashMap<>();
                 for (Relationship ballot : ballots) {
@@ -317,13 +297,15 @@ public class BallotService implements Job {
                 ArrayList<String> ballotSuccesses= algorithmService.getBallotSuccess(usernameDistance, numPlotsAvailable);
                 for (Relationship ballot : ballots) {
                     if (ballotSuccesses.contains(ballot.getSK())) {
-                        ballot.setBallotStatus("Success");
+                        ballot.setBallotStatus("SUCCESS");
+                        dynamoDBMapper.save(ballot);
                         String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-                        mailService.sendTextEmail(email, "Success"); //this throws IOException
+                        mailService.sendTextEmail(email, "SUCCESS"); //this throws IOException
                     } else {
-                        ballot.setBallotStatus("Fail");
+                        ballot.setBallotStatus("FAIL");
+                        dynamoDBMapper.save(ballot);
                         String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-                        mailService.sendTextEmail(email, "Fail"); //this throws IOException
+                        mailService.sendTextEmail(email, "FAIL"); //this throws IOException
                     }
                 }
             }

@@ -25,9 +25,9 @@ public class MailService {
         String subject = "OurGardenStory Ballot";
         Email to = new Email(emailTo);
         String message = "";
-        if (status.equals("Success")) {
+        if (status.equals("SUCCESS")) {
             message = "Congratulations, your ballot was successful :)";
-        } else if (status.equals("Fail")) {
+        } else if (status.equals("FAIL")) {
             message = "Sorry, your ballot was unsuccessful :(";
         }
         Content content = new Content("text/plain", message);

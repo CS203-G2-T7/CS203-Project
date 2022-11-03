@@ -110,13 +110,4 @@ public class BallotController {
         }
     }
 
-    @PostMapping(path = "/doMagic")
-    public ResponseEntity<String> doMagic(@RequestBody JsonNode payload) {
-        try {
-            ballotService.methodName(payload.get("winId").asText());
-            return ResponseEntity.ok().body("Magic occurred");
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-    }
 }

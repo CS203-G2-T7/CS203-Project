@@ -41,7 +41,17 @@ public class RelationshipService {
     if (foundRelationList.isEmpty() || foundRelationList == null) {
       throw new ResourceNotFoundException("There are no gardens in " + capWinId + ".");
     }
-    return foundRelationList;
+    
+    List<Relationship> result = new ArrayList<>();
+
+        for (Relationship r : foundRelationList) {
+            String sk = r.getSK();
+            if (validateGardenExist(sk) == true) {
+                result.add(r);
+            }
+        }
+        return result;
+
   }
 
   public Relationship findGardenInWindow(String windowId, String gardenName) {
@@ -109,7 +119,7 @@ public class RelationshipService {
     return foundWindowList != null && !foundWindowList.isEmpty() && foundWindowList.get(0) != null;
   }
 
-  private boolean validateGardenExist(String gardenName) {
+  public boolean validateGardenExist(String gardenName) {
     Garden foundGarden = dynamoDBMapper.load(Garden.class, Garden.EntityName, gardenName);
     return foundGarden != null;
   }

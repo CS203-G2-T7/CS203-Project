@@ -68,6 +68,11 @@
 			<artifactId>quartz</artifactId>
 			<version>2.3.0</version>
 		</dependency>
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-arc</artifactId>
+			<version>3.0.0.Alpha1</version>
+		</dependency>
 	
 
 		<!-- java-jwt -->
