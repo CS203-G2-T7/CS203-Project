@@ -62,17 +62,17 @@ public class BallotController {
     }
 
     @PostMapping(path = "/window/{winId}/ballot")
-    public ResponseEntity<?> addBallotInWindow(@PathVariable String winId, @RequestBody JsonNode payload,
+    public ResponseEntity<?> addBallotInWindowGarden(@PathVariable String winId, @RequestBody JsonNode payload,
             @RequestHeader Map<String, String> headers) {
         try {
-            Relationship ballot = ballotService.addBallotInWindow(winId, headers.get("username"), payload);
+            Relationship ballot = ballotService.addBallotInWindowGarden(winId, headers.get("username"), payload);
             return ResponseEntity.ok(ballot);
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             System.out.println(e);
             return ResponseEntity.internalServerError().body(e.getMessage());

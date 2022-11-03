@@ -112,12 +112,15 @@ public class BallotService {
      * clicked
      * on frontend.
      * 
-     * Validate:
+     * Basic validation:
      * 1. Window Exists
      * 2. Garden Exists
      * 3. Garden Window relationship exists
-     * 4. Ballot post date within window frame
-     * 5. User has not balloted in same window before.
+     * 4. User authenticated
+     * 
+     * Advanced validation:
+     * 5. Ballot post date within window frame
+     * 6. User has not balloted in same window before.
      * 
      * @param windowId
      * @param username
@@ -125,33 +128,30 @@ public class BallotService {
      * @return addedBallot
      */
 
-    public Relationship addBallotInWindow(String windowId, String username, JsonNode payload) {
+    public Relationship addBallotInWindowGarden(String windowId, String username, JsonNode payload) {
         String capWinId = StringUtils.capitalize(windowId);
 
+        // Basic existence validations
+        relationshipService.findGardenInWindow(capWinId, payload.get("gardenName").asText());
         if (username == null) {
             throw new AuthenticationCredentialsNotFoundException("User is not authenticated");
         }
 
+        // Advanced validations
+        validateBallotPostDate(capWinId, LocalDate.now());
+        validateUserMultipleBallots(capWinId, username);
+
+        // Passed all validations, then create call geocode. Create ballot and save.
         Garden garden = gardenService.findGardenByGardenName(payload.get("gardenName").asText());
-        String latitude = garden.getLatitude();
-        String longitude = garden.getLongitude();
-
         User user = userService.findUserByUsername(username);
-        String userAddress = user.getAddress();
 
-        double distance = geocodeService.saveDistance(username, userAddress, longitude, latitude);
-
-        LocalDate date = LocalDate.now();
-        String currentDate = date.format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-
-        // validations
-        validateBallotPostDate(windowId, date);
-        validateGardenInWindow(windowId, payload.get("gardenName").asText());
-        validateUserHasBallotedBeforeInSameWindow(windowId, username);
+        double distance = geocodeService.saveDistance(username, user.getAddress(), garden.getLongitude(),
+                garden.getLatitude());
 
         Relationship ballot = new Ballot(capWinId, username, garden.getSK(),
-                "Ballot" + String.valueOf(++Ballot.numInstance), currentDate, distance,
-                "PENDING");
+                "Ballot" + String.valueOf(++Ballot.numInstance),
+                LocalDate.now().format(DateTimeFormatter.ofPattern("MM-dd-yyyy")),
+                distance, "PENDING");
 
         dynamoDBMapper.save(ballot);
         return ballot;
@@ -191,16 +191,14 @@ public class BallotService {
     }
 
     // Check ballot post date within window
-    public void validateBallotPostDate(String windowId, LocalDate date) {
-        Window foundWindow = windowService.findWindowById(windowId).get(0);
+    public void validateBallotPostDate(String capWinId, LocalDate date) {
+        Window foundWindow = windowService.findWindowById(capWinId).get(0);
         LocalDate winStartDate = convertStringToLocalDate(foundWindow.getSK());
 
         String winDurationString = foundWindow.getWindowDuration(); // In Period format. 3M, 1d, 1Y
         Period winDuration = convertStringToPeriod(winDurationString); // P3M -> 3 months
-        System.out.println("Window duration: " + winDuration);
 
         LocalDate winEndDate = winStartDate.plus(winDuration);
-        System.out.println("End date: " + winEndDate);
 
         String errorMessage = null;
         if (date.isBefore(winStartDate)) {
@@ -211,7 +209,7 @@ public class BallotService {
 
         if (errorMessage != null) {
             throw new IllegalArgumentException(
-                    "Ballot is submitted " + errorMessage + " " + StringUtils.capitalize(windowId)
+                    "Ballot is submitted " + errorMessage + " " + capWinId
                             + " balloting period.\nStart date: "
                             + winStartDate.format(DateTimeFormatter.ofPattern("dd LLLL yyyy")) + "\nEnd date:   "
                             + winEndDate.format(DateTimeFormatter.ofPattern("dd LLLL yyyy")));
@@ -219,14 +217,10 @@ public class BallotService {
         // reach here no error
     }
 
-    public void validateGardenInWindow(String windowId, String gardenName) {
-        relationshipService.findGardenInWindow(windowId, gardenName);
-    }
-
-    public void validateUserHasBallotedBeforeInSameWindow(String windowId, String username) {
-        Relationship r = findUserBallotInWindow(windowId, username);
-        if (r != null) {
-            throw new IllegalArgumentException("User has already balloted in the same window");
+    public void validateUserMultipleBallots(String capWinId, String username) {
+        Relationship foundBallot = dynamoDBMapper.load(Ballot.class, capWinId, username);
+        if (foundBallot != null) {
+            throw new IllegalArgumentException("User " + username + " has already balloted in window " + capWinId);
         }
     }
 
