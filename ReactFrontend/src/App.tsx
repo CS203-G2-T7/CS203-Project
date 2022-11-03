@@ -5,6 +5,8 @@ import Login from "pages/Login/Login";
 import SignUp from "pages/SignUp/SignUp";
 import Garden from "pages/Garden/Garden";
 import Landing from "pages/Landing/Landing";
+import MyPlants from "pages/MyPlants/MyPlants";
+
 
 
 function App() {
@@ -14,11 +16,13 @@ function App() {
     <Routes location={location}>
       {/* Accessible to all */}
       <Route path="/" element={<Landing />} />
-      <Route path="/Landing" element={<Landing />} />
+      <Route path="/landing" element={<Landing />} />
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/garden" element={<Garden />} />
+      <Route path="/myplants" element={<MyPlants />} />
+
       {/* Accessible to NOT logged in users */}
 
       <Route path="*" element={<Login />} />

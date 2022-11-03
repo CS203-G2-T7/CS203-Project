@@ -8,11 +8,14 @@ import SocialMedia from "./SocialMedia/SocialMedia";
 import React, { useEffect } from "react";
 import Navbar from "components/Navbar/Navbar";
 import Content from "./Content/Content";
-
-import { FacebookIcon, InstagramIcon, TwitterIcon } from "assets/svgs";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import landingService from "service/landingService";
 
+const fakeDB = [
+  {plantName: "",
+  dessfm: ""},
+  {}
+]
 
 type Props = {};
 
