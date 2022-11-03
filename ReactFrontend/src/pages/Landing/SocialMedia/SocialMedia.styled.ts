@@ -10,10 +10,10 @@ export const SocialMediaStyled = styled.div`
   flex-direction: column;
   align-items: center;
   margin: 0;
-  padding-bottom: 5rem;
+  margin-bottom: 5rem;
   p {
     margin: 0;
-    padding-top: 4rem;  
+    margin-top: 4rem;  
   }
   a {
     color: #1a5119;
@@ -26,14 +26,12 @@ export const SocialMediaStyled = styled.div`
 
 export const FollowStyled = styled.div`
   color: black;
-  padding-top: 1rem;
-
+  margin-top: 1rem;
 `;
 
 export const IconStyled = styled.div`
   align-items: center;
   display: flex;
-  padding-top: 1rem;
   gap: 5rem;
   a {
     cursor: pointer;

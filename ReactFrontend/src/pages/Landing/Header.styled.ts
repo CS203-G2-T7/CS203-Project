@@ -8,7 +8,7 @@ export const HeaderStyled = styled.div`
   
   h1 {
     font-family: "Song Myung", serif;
-    font-size: 128px;
+    font-size: calc(128rem / 16);
     font-weight: 400;
     color: white;
     margin: 0;
