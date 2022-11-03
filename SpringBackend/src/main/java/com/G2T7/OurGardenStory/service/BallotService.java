@@ -1,5 +1,6 @@
 package com.G2T7.OurGardenStory.service;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -164,7 +165,22 @@ public class BallotService {
         return null;
     }
 
-    //Check ballot post date within window
+    public void validateUser(String username) {
+        System.out.println("Validating user exists");
+        User user = userService.findUserByUsername(username);
+        System.out.println("validated user exists.");
+        String DOB = user.getDOB();
+        System.out.println("Generate dob" + DOB);
+        LocalDate birthdate = LocalDate.of(Integer.parseInt(DOB.substring(6)),
+                Integer.parseInt(DOB.substring(3, 5)), Integer.parseInt(DOB.substring(0, 2)));
+
+        birthdate = birthdate.minusYears(18);
+        if (birthdate.getYear() < 0) {
+            System.out.println("Validating user age");
+            throw new CustomException("User must be 18 to ballot");
+        }
+    }
+
     public void validateBallotPostDate(String windowId, LocalDate date) {
         Window win = windowService.findWindowById(windowId).get(0);
         String startDate = win.getSK();
@@ -214,4 +230,7 @@ public class BallotService {
     //     }
     //     return;
     // }
+
 }
+
+
