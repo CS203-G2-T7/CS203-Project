@@ -57,7 +57,7 @@ public class Relationship {
     this.SK = SK;
   }
 
-  @DynamoDBIndexHashKey(attributeName = "WindId|GardenName", globalSecondaryIndexName = "WinId_GardenName-index")
+  @DynamoDBIndexHashKey(attributeName = "WinId_GardenName", globalSecondaryIndexName = "WinId_GardenName-index")
   public String getWinId_GardenName() {
     return this.WinId_GardenName;
   }

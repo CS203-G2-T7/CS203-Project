@@ -53,15 +53,18 @@ public class BallotService {
 
     public List<Relationship> findAllBallotsInWindowGarden(String windowId, String gardenName) {
         String capWinId = StringUtils.capitalize(windowId);
+        String capWinIdGardenName = capWinId + "_" + gardenName;
+ 
         if (!relationshipService.validateWinExist(capWinId)) {
           throw new ResourceNotFoundException(capWinId + " does not exist.");
         }
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-        eav.put(":WINID", new AttributeValue().withS(capWinId));
+        eav.put(":GardenWinValue", new AttributeValue().withS(capWinIdGardenName));
         DynamoDBQueryExpression<Relationship> qe = new DynamoDBQueryExpression<Relationship>()
-            .withKeyConditionExpression("PK = :WINID")
-            .withExpressionAttributeValues(eav)
-            .withIndexName(capWinId + "|" + gardenName);
+            .withIndexName("WinId_GardenName-index")
+            .withConsistentRead(false)
+            .withKeyConditionExpression("WinId_GardenName = :GardenWinValue")
+            .withExpressionAttributeValues(eav);
     
         PaginatedQueryList<Relationship> foundRelationList = dynamoDBMapper.query(Relationship.class, qe);
         if (foundRelationList.isEmpty() || foundRelationList == null) {
@@ -102,9 +105,9 @@ public class BallotService {
         LocalDate date = LocalDate.now();
         String currentDate = date.format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
         // validations
-        validateBallotPostDate(windowId, date);
-        validateGardenInWindow(windowId, payload.get("gardenName").asText());
-        validateUserHasBallotedBeforeInSameWindow(windowId, username);
+        // validateBallotPostDate(windowId, date);
+        // validateGardenInWindow(windowId, payload.get("gardenName").asText());
+        // validateUserHasBallotedBeforeInSameWindow(windowId, username);
 
         //String winId, String username, String gardenName, String ballotId, String ballotDateTime,
         //double distance, String ballotStatus
@@ -132,7 +135,7 @@ public class BallotService {
         String userAddress = user.getAddress();
         double distance = geocodeService.saveDistance(username, userAddress, longitude, latitude);
 
-        // Relationship ballot = new Ballot(capWinId, username, capWinId + "|" + garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
+        // Relationship ballot = new Ballot(capWinId, username, capWinId + "-" + garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
         //                         Relationship.BallotStatus.PENDING);
         Relationship ballot = new Ballot(capWinId, username, garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
                                         "PENDING");
@@ -146,22 +149,6 @@ public class BallotService {
 
         Relationship ballotToDelete = findUserBallotInWindow(capWinId, username);
         dynamoDBMapper.delete(ballotToDelete);
-    }
-
-    public String getUsername() {
-        String idToken = "";
-        String[] chunks = idToken.split("\\.");
-
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-        String decodedPayload = new String(decoder.decode(chunks[1]));
-        String[] payload_attr = decodedPayload.split(",");
-
-        for (String payload : payload_attr) {
-            if (payload.contains("username")) {
-                return payload.substring(payload.indexOf(":\"") + 2, payload.length() - 1); // username is returned
-            }
-        }
-        return null;
     }
 
     //Check ballot post date within window
@@ -199,19 +186,4 @@ public class BallotService {
         LocalDate convertedDate = LocalDate.of(year, month, day);
         return convertedDate;
     }
-
-    // public void validateIfGardenFull(Garden garden, String winId) {
-    //     // TODO
-    //     List<Relationship> ballots = findAllBallotsInWindowForGarden(winId, garden.getSK());
-    //     int numBallots = ballots.size();
-
-    //     Relationship gardenWin = dynamoDBMapper.load(Relationship.class, winId, garden.getSK());
-
-    //     int numPlotsForBalloting = gardenWin.getNumPlotsForBalloting();
-
-    //     if (numBallots >= numPlotsForBalloting) {
-    //         throw new CustomException("Plots are full");
-    //     }
-    //     return;
-    // }
 }
