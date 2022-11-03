@@ -36,7 +36,8 @@ public class UserPlantController {
     @PostMapping(path = "/my-plant")
     public ResponseEntity<?> saveMyPlant(@RequestBody JsonNode payload, @RequestHeader Map<String, String> headers) {
         try {
-            return ResponseEntity.ok(userService.addUserPlantName(headers.get("username"), null));
+            System.out.println("username is " + headers.get("username"));
+            return ResponseEntity.ok(userService.addUserPlantName(headers.get("username"), payload));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -44,11 +45,11 @@ public class UserPlantController {
         }
     }
 
-    @PutMapping(path = "/my-plant")
+    @DeleteMapping(path = "/my-plant")
     public ResponseEntity<?> deleteMyPlant(@RequestBody JsonNode payload,
             @RequestHeader Map<String, String> headers) {
         try {
-            return ResponseEntity.ok(userService.removeUserPlantName(payload.get("plantName").asText(), payload));
+            return ResponseEntity.ok(userService.removeUserPlantName(headers.get("username"), payload));
         } catch (DynamoDBMappingException | ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {

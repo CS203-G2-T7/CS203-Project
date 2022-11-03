@@ -47,6 +47,7 @@ public class BallotController {
     public ResponseEntity<?> findUserBallotInWindow(@PathVariable String winId, 
             @RequestHeader Map<String, String> headers) {
         try {
+            System.out.println(headers.get("username"));
             Relationship ballot = ballotService.findUserBallotInWindow(winId, headers.get("username"));
             return ResponseEntity.ok(ballot);
         } catch (ResourceNotFoundException e) {

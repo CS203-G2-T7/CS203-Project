@@ -79,6 +79,7 @@ public class UserService {
             }
             updatedPlantIdList.add(plantName);
         });
+
         foundUser.setPlant(updatedPlantIdList);
         dynamoDBMapper.save(foundUser);
         return foundUser.getPlant();
