@@ -126,7 +126,7 @@ public class WinGardenService {
   }
 
   // Check garden exists
-  private boolean validateGardenExist(String gardenName) {
+  public boolean validateGardenExist(String gardenName) {
     Garden foundGarden = dynamoDBMapper.load(Garden.class, Garden.EntityName, gardenName);
     return foundGarden != null;
   }

@@ -17,12 +17,9 @@ import org.springframework.security.authentication.AuthenticationCredentialsNotF
 import org.springframework.stereotype.Service;
 
 import com.G2T7.OurGardenStory.controller.GeocodeService;
-<<<<<<< HEAD
 import com.G2T7.OurGardenStory.exception.CustomException;
 import com.G2T7.OurGardenStory.geocoder.AlgorithmService;
 import com.G2T7.OurGardenStory.geocoder.AlgorithmServiceImpl;
-=======
->>>>>>> eb64202ad486eab696bca8c33dd48742381ef10b
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
@@ -62,7 +59,7 @@ public class BallotService implements Job {
     private WindowService windowService;
 
     @Autowired
-    private WinGardenService relationshipService;
+    private WinGardenService winGardenService;
 
     /**
      * Finds all ballots given a window and a garden
@@ -88,7 +85,7 @@ public class BallotService implements Job {
     public List<Relationship> findAllBallotsInWindowGarden(String windowId, String gardenName) {
         String capWinId = StringUtils.capitalize(windowId);
 
-        if (!relationshipService.validateWinExist(capWinId)) {
+        if (!winGardenService.validateWinExist(capWinId)) {
             throw new ResourceNotFoundException(capWinId + " does not exist.");
         }
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
@@ -108,12 +105,12 @@ public class BallotService implements Job {
 
         for (Relationship r : foundBallots) {
             String sk = r.getSK();
-            if (relationshipService.validateGardenExist(sk) == false) {
+            if (!winGardenService.validateGardenExist(sk)) {
                 result.add(r);
             }
         }
         return result;
-      }
+    }
 
     /**
      * Gets a user's ballot given windowId and username. Username supposedly from
@@ -167,7 +164,7 @@ public class BallotService implements Job {
         String capWinId = StringUtils.capitalize(windowId);
 
         // Basic existence validations
-        relationshipService.findGardenInWindow(capWinId, payload.get("gardenName").asText());
+        winGardenService.findGardenInWindow(capWinId, payload.get("gardenName").asText());
         if (username == null) {
             throw new AuthenticationCredentialsNotFoundException("User is not authenticated");
         }
@@ -257,7 +254,6 @@ public class BallotService implements Job {
         }
     }
 
-
     // Check ballot post date within window
     public void validateBallotPostDate(String capWinId, LocalDate date) {
         Window foundWindow = windowService.findWindowById(capWinId).get(0);
@@ -302,18 +298,19 @@ public class BallotService implements Job {
     }
 
     // public void validateIfGardenFull(Garden garden, String winId) {
-    //     // TODO
-    //     List<Relationship> ballots = findAllBallotsInWindowForGarden(winId, garden.getSK());
-    //     int numBallots = ballots.size();
+    // List<Relationship> ballots = findAllBallotsInWindowForGarden(winId,
+    // garden.getSK());
+    // int numBallots = ballots.size();
 
-    //     Relationship gardenWin = dynamoDBMapper.load(Relationship.class, winId, garden.getSK());
+    // Relationship gardenWin = dynamoDBMapper.load(Relationship.class, winId,
+    // garden.getSK());
 
-    //     int numPlotsForBalloting = gardenWin.getNumPlotsForBalloting();
+    // int numPlotsForBalloting = gardenWin.getNumPlotsForBalloting();
 
-    //     if (numBallots >= numPlotsForBalloting) {
-    //         throw new CustomException("Plots are full");
-    //     }
-    //     return;
+    // if (numBallots >= numPlotsForBalloting) {
+    // throw new CustomException("Plots are full");
+    // }
+    // return;
     // }
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -322,23 +319,26 @@ public class BallotService implements Job {
             if (!requestContext.isActive()) {
                 requestContext.activate();
             }
-            RelationshipService relationshipService = Arc.container().instance(RelationshipService.class).get();
-            // MailService relationshipService = Arc.container().instance(RelationshipService.class).get();
-            // RelationshipService relationshipService = Arc.container().instance(RelationshipService.class).get();
-            // RelationshipService relationshipService = Arc.container().instance(RelationshipService.class).get();
+            WinGardenService relationshipService = Arc.container().instance(WinGardenService.class).get();
+            // MailService relationshipService =
+            // Arc.container().instance(RelationshipService.class).get();
+            // RelationshipService relationshipService =
+            // Arc.container().instance(RelationshipService.class).get();
+            // RelationshipService relationshipService =
+            // Arc.container().instance(RelationshipService.class).get();
             JobDataMap dataMap = context.getJobDetail().getJobDataMap();
             String winId = dataMap.getString("winId");
             System.out.println(winId);
             List<Relationship> relationships = relationshipService.findAllGardensInWindow(winId);
             List<String> gardens = new ArrayList<>();
-    
+
             for (Relationship r : relationships) {
                 System.out.println(r.getSK());
                 gardens.add(r.getSK());
             }
 
             System.out.println("======");
-    
+
             for (String gardenName : gardens) {
                 List<Relationship> ballots = findAllBallotsInWindowGarden(winId, gardenName);
                 HashMap<String, Double> usernameDistance = new HashMap<>();
@@ -349,18 +349,19 @@ public class BallotService implements Job {
                 }
                 Relationship r = relationshipService.findGardenInWindow(winId, gardenName);
                 int numPlotsAvailable = r.getNumPlotsForBalloting();
-                ArrayList<String> ballotSuccesses= algorithmService.getBallotSuccess(usernameDistance, numPlotsAvailable);
+                ArrayList<String> ballotSuccesses = algorithmService.getBallotSuccess(usernameDistance,
+                        numPlotsAvailable);
                 for (Relationship ballot : ballots) {
                     if (ballotSuccesses.contains(ballot.getSK())) {
                         ballot.setBallotStatus("SUCCESS");
                         dynamoDBMapper.save(ballot);
                         String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-                        mailService.sendTextEmail(email, "SUCCESS"); //this throws IOException
+                        mailService.sendTextEmail(email, "SUCCESS"); // this throws IOException
                     } else {
                         ballot.setBallotStatus("FAIL");
                         dynamoDBMapper.save(ballot);
                         String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-                        mailService.sendTextEmail(email, "FAIL"); //this throws IOException
+                        mailService.sendTextEmail(email, "FAIL"); // this throws IOException
                     }
                 }
             }
@@ -368,9 +369,4 @@ public class BallotService implements Job {
             e.printStackTrace();
         }
     }
-
-=======
->>>>>>> eb64202ad486eab696bca8c33dd48742381ef10b
 }
-
-
