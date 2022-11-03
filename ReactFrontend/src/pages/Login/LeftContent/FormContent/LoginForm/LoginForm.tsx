@@ -42,7 +42,7 @@ export default function LoginForm({}: Props) {
       .then((res) => {
         console.log(res);
         localStorage.setItem("jwtAccessToken", res.data.accessToken);
-        navigate("/home");
+        navigate("/landing");
         console.log(res.data.accessToken);
       })
       .catch((err) => {
@@ -74,7 +74,7 @@ export default function LoginForm({}: Props) {
             inputRef={ref}
             fullWidth
             margin="normal"
-            placeholder="John Tan"
+            placeholder="e.g John Tan"
           />
         )}
       />

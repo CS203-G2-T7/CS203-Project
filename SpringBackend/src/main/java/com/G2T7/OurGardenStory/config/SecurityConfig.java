@@ -62,14 +62,14 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/geocode").permitAll()
 
                 .antMatchers(HttpMethod.POST, "/window").permitAll()
-                .antMatchers(HttpMethod.GET, "/window").permitAll()
+                .antMatchers(HttpMethod.GET, "/window").authenticated()
                 .antMatchers(HttpMethod.GET, "/window/{id}/garden").permitAll()
                 .antMatchers(HttpMethod.POST, "/window/{id}/garden").permitAll()
                 .antMatchers(HttpMethod.PUT, "/window/{id}/garden").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/window/{id}/garden").permitAll()
                 .antMatchers(HttpMethod.PUT, "/window").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/window").permitAll()
-
+        
                 .antMatchers(HttpMethod.GET, "/api/users/user").permitAll()
 
                 .antMatchers(HttpMethod.GET, "/magic").permitAll()

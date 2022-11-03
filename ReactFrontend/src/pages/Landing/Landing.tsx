@@ -5,15 +5,35 @@ import { FooterStyled } from "./Footer.styled";
 import { BannerStyled } from "./Banner.styled";
 import SocialMedia from "./SocialMedia/SocialMedia";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "components/Navbar/Navbar";
 import Content from "./Content/Content";
 
 import { FacebookIcon, InstagramIcon, TwitterIcon } from "assets/svgs";
+import { Navigate, useNavigate } from "react-router-dom";
+import landingService from "service/landingService";
+
 
 type Props = {};
 
 export default function Landing() {
+  const navigate = useNavigate();
+  const loadHandler = (): void => {
+    landingService
+    .checkLoggedIn()
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate("/login")
+      });
+  };
+
+  useEffect(() => {
+    loadHandler();
+  }, []);
+
   return (
     <LandingStyled>
       <NavBarStyled>
