@@ -101,18 +101,14 @@ public class BallotService {
 
         LocalDate date = LocalDate.now();
         String currentDate = date.format(DateTimeFormatter.ofPattern("MM-dd-yyyy"));
-        System.out.println(currentDate);
         // validations
-        System.out.println("Start validation");
-        System.out.println("Validated username");
         validateBallotPostDate(windowId, date);
-        System.out.println("Validated post date");
-        // validateGardenInWindow(windowId, currentDate);
-        // System.out.println("validated Garden and window");
+        validateGardenInWindow(windowId, payload.get("gardenName").asText());
         validateUserHasBallotedBeforeInSameWindow(windowId, username);
-        System.out.println("No validation issues.");
 
-        Relationship ballot = new Ballot(capWinId, username, capWinId + "|" + garden.getSK(),
+        //String winId, String username, String gardenName, String ballotId, String ballotDateTime,
+        //double distance, String ballotStatus
+        Relationship ballot = new Ballot(capWinId, username, garden.getSK(),
                 "Ballot" + String.valueOf(++Ballot.numInstance), currentDate, distance,
                 "PENDING");
 
@@ -138,7 +134,7 @@ public class BallotService {
 
         // Relationship ballot = new Ballot(capWinId, username, capWinId + "|" + garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
         //                         Relationship.BallotStatus.PENDING);
-        Relationship ballot = new Ballot(capWinId, username, capWinId + "|" + garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
+        Relationship ballot = new Ballot(capWinId, username, garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
                                         "PENDING");
 
         dynamoDBMapper.save(ballot);
@@ -168,16 +164,11 @@ public class BallotService {
         return null;
     }
 
+    //Check ballot post date within window
     public void validateBallotPostDate(String windowId, LocalDate date) {
-        // TODO
         Window win = windowService.findWindowById(windowId).get(0);
         String startDate = win.getSK();
-
-        int year = Integer.parseInt(startDate.substring(0, 4));
-        int month = Integer.parseInt(startDate.substring(5, 7));
-        int day = Integer.parseInt(startDate.substring(8));
-
-        LocalDate winStartDate = LocalDate.of(year, month, day);
+        LocalDate winStartDate = convertStringToLocalDate(startDate);
 
         String winDuration = win.getWindowDuration();
         
@@ -185,7 +176,7 @@ public class BallotService {
         LocalDate winEndDate = winStartDate.plusMonths(winDurationMonth); 
 
         if (date.isBefore(winStartDate) || date.isAfter(winEndDate)) {
-            throw new CustomException("Ballot is submitted outside of window balloting period");
+            throw new IllegalArgumentException("Ballot is submitted outside of window balloting period");
         } 
     }
 
@@ -196,8 +187,17 @@ public class BallotService {
     public void validateUserHasBallotedBeforeInSameWindow(String windowId, String username) {
         Relationship r = findUserBallotInWindow(windowId, username);
         if (r != null) {
-            throw new CustomException("User has already balloted in the same window");
+            throw new IllegalArgumentException("User has already balloted in the same window");
         }
+    }
+
+    public LocalDate convertStringToLocalDate(String date) {
+        int year = Integer.parseInt(date.substring(0, 4));
+        int month = Integer.parseInt(date.substring(5, 7));
+        int day = Integer.parseInt(date.substring(8));
+
+        LocalDate convertedDate = LocalDate.of(year, month, day);
+        return convertedDate;
     }
 
     // public void validateIfGardenFull(Garden garden, String winId) {
