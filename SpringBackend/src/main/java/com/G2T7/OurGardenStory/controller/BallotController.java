@@ -30,10 +30,12 @@ public class BallotController {
     private BallotService ballotService;
 
     @GetMapping(path = "/window/{winId}/allBallot")
-    public ResponseEntity<List<Relationship>> findAllBallots(@PathVariable String winId, @RequestBody JsonNode payload,
-        @RequestHeader Map<String, String> headers) {
+    public ResponseEntity<List<Relationship>> findAllBallotsInWindowGarden(@PathVariable String winId,
+            @RequestBody JsonNode payload,
+            @RequestHeader Map<String, String> headers) {
         try {
-            return ResponseEntity.ok(ballotService.findAllBallotsInWindowGarden(winId, payload.get("gardenName").asText()));
+            return ResponseEntity
+                    .ok(ballotService.findAllBallotsInWindowGarden(winId, payload.get("gardenName").asText()));
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.notFound().build();
@@ -44,7 +46,7 @@ public class BallotController {
     }
 
     @GetMapping(path = "/window/{winId}/ballot")
-    public ResponseEntity<?> findUserBallotInWindow(@PathVariable String winId, 
+    public ResponseEntity<?> findUserBallotInWindow(@PathVariable String winId,
             @RequestHeader Map<String, String> headers) {
         try {
             Relationship ballot = ballotService.findUserBallotInWindow(winId, headers.get("username"));
@@ -60,20 +62,20 @@ public class BallotController {
     }
 
     @PostMapping(path = "/window/{winId}/ballot")
-    public ResponseEntity<?> addBallotInWindow(@PathVariable String winId, @RequestBody JsonNode payload,
+    public ResponseEntity<?> addBallotInWindowGarden(@PathVariable String winId, @RequestBody JsonNode payload,
             @RequestHeader Map<String, String> headers) {
         try {
-            System.out.println(headers.get("username"));
-            Relationship ballotRelations = ballotService.addBallotInWindow(winId, headers.get("username"), payload);
-            return ResponseEntity.ok(ballotRelations);
+            Relationship ballot = ballotService.addBallotInWindowGarden(winId, headers.get("username"), payload);
+            return ResponseEntity.ok(ballot);
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().build();
+            System.out.println(e);
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
@@ -109,4 +111,5 @@ public class BallotController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
 }

@@ -48,9 +48,7 @@ public class AwsCognitoJwtAuthFilter extends GenericFilter {
             authentication = this.cognitoIdTokenProcessor.authenticate((HttpServletRequest) request);
             if (authentication != null) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
                 User authenticatedUser = (User) authentication.getPrincipal();
-                System.out.println("Get principal: " + authenticatedUser.getUsername());
                 mutableRequest.putHeader("username", authenticatedUser.getUsername()); // add request header
             }
         } catch (Exception var6) {
