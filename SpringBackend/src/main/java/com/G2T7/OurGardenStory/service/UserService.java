@@ -8,6 +8,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
@@ -68,10 +69,11 @@ public class UserService {
     // called on /my-plants. Authenticated. Get username from JWT Token.
     // can have another service for plant related user operations. CRUD on
     // user-plant O2M relationship.
-    public List<String> addUserPlantName(final String username, final List<String> newPlantNameList) {
+    public List<String> addUserPlantName(final String username, JsonNode payload) {
         User foundUser = findUserByUsername(username);
         List<String> updatedPlantIdList = new ArrayList<String>(foundUser.getPlant());
-        newPlantNameList.forEach(plantName -> {
+        payload.forEach(relation -> {
+            String plantName = relation.get("plantName").asText();
             if (dynamoDBMapper.load(Plant.class, "Plant", plantName) == null) {
                 throw new CustomException("Plant not found");
             }
@@ -103,10 +105,11 @@ public class UserService {
         return p;
     }
 
-    public List<String> removeUserPlantName(final String username, final List<String> newPlantNameList) {
+    public List<String> removeUserPlantName(final String username, JsonNode payload) {
         User foundUser = findUserByUsername(username);
         List<String> updatedPlantIdList = new ArrayList<String>(foundUser.getPlant());
-        newPlantNameList.forEach(plantName -> {
+        payload.forEach(relation -> {
+            String plantName = relation.get("plantName").asText();
             if (dynamoDBMapper.load(Plant.class, "Plant", plantName) == null) {
                 throw new CustomException("Plant not found");
             }
