@@ -10,7 +10,6 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.G2T7.OurGardenStory.controller.GeocodeService;
 import com.G2T7.OurGardenStory.exception.CustomException;
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;

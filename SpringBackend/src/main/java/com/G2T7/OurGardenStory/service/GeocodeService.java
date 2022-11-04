@@ -1,4 +1,4 @@
-package com.G2T7.OurGardenStory.controller;
+package com.G2T7.OurGardenStory.service;
 
 import com.G2T7.OurGardenStory.geocoder.GeocodeDistance;
 
