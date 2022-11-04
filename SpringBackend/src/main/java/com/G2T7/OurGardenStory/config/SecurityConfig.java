@@ -1,11 +1,10 @@
 package com.G2T7.OurGardenStory.config;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import com.G2T7.OurGardenStory.security.AwsCognitoJwtAuthFilter;
-
 import com.G2T7.OurGardenStory.security.JwtAuthenticationEntryPoint;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.http.HttpMethod;
@@ -26,15 +25,17 @@ public class SecurityConfig {
     public static final String SIGNUP_URL = "/api/users/sign-up";
     public static final String SIGNIN_URL = "/api/users/sign-in";
 
-    @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-    @Autowired
     private AwsCognitoJwtAuthFilter awsCognitoJwtAuthenticationFilter;
 
+    @Autowired
+    public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, AwsCognitoJwtAuthFilter awsCognitoJwtAuthenticationFilter) {
+        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+        this.awsCognitoJwtAuthenticationFilter = awsCognitoJwtAuthenticationFilter;
+    }
+
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
