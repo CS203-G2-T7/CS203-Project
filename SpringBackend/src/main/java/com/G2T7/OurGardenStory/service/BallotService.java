@@ -154,7 +154,9 @@ public class BallotService {
         }
 
         // Advanced validations
-        validateBallotPostDate(capWinId, LocalDate.now());
+        if (windowService.findWindowById(capWinId).get(0).getWindowDuration().charAt(1) != 'T') {
+            validateBallotPostDate(capWinId, LocalDate.now());
+        }
         validateUserMultipleBallots(capWinId, username);
 
         // Passed all validations, then create call geocode. Create ballot and save.

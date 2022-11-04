@@ -117,7 +117,7 @@ public class AlgorithmServiceImpl {
         int minute = 0;
         int second = 0;
 
-        if (Duration.parse(windowDuration) != null) {
+        if (windowDuration.charAt(1) == 'T') {
             Duration d = Duration.parse(windowDuration);
             LocalDateTime endDate = LocalDateTime.now().plusSeconds(d.getSeconds());
             year = endDate.getYear();
@@ -127,7 +127,7 @@ public class AlgorithmServiceImpl {
             minute = endDate.getMinute();
             second = endDate.getSecond();
 
-        } else if (Period.parse(windowDuration) != null) {
+        } else if (windowDuration.charAt(1) != 'T') {
             Period p = Period.parse(windowDuration);
             LocalDateTime endDate = LocalDateTime.now()
                                     .plusYears(p.getYears())
