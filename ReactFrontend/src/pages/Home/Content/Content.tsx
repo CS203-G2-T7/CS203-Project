@@ -21,9 +21,9 @@ export default function Content({}: Props) {
 
   useEffect(() => {
     Promise.all([
-      homeService.getGardenInLastestWindow(),
+      homeService.getGardenInLatestWindow(),
       homeService.getGardenByName("Jeff-Park"),
-      //homeService.getAllBallotsInWindGarden(),
+      // homeService.getAllBallotsInWindGarden(),
     ])
       .then((resArr) => {
         // console.log(resArr);
