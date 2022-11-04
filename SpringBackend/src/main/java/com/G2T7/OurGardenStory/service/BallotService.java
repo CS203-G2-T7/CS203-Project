@@ -1,16 +1,10 @@
 package com.G2T7.OurGardenStory.service;
 
-import java.io.IOException;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.quartz.Job;
-import org.quartz.JobDataMap;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;

@@ -1,12 +1,15 @@
 package com.G2T7.OurGardenStory.service;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 
@@ -22,6 +25,8 @@ public class AlgorithmServiceImpl implements AlgorithmService {
     private UserService userService;
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
+    @Autowired
+    private WindowService windowService;
 
     public ArrayList<String> getBallotSuccess(HashMap<String,Double> balloters, int numSuccess) {
         ArrayList<String> list = new ArrayList<>(balloters.keySet());
@@ -103,10 +108,43 @@ public class AlgorithmServiceImpl implements AlgorithmService {
                 doMagic(winId);
             }
         };
+        Window window = windowService.findWindowById(winId).get(0);
+        String windowDuration = window.getWindowDuration();
+        int year = 0;
+        int month = 0;
+        int day = 0;
+        int hour = 0;
+        int minute = 0;
+        int second = 0;
+
+        if (Duration.parse(windowDuration) != null) {
+            Duration d = Duration.parse(windowDuration);
+            LocalDateTime endDate = LocalDateTime.now().plusSeconds(d.getSeconds());
+            year = endDate.getYear();
+            month = endDate.getMonthValue() - 1;
+            day = endDate.getDayOfMonth();
+            hour = endDate.getHour();
+            minute = endDate.getMinute();
+            second = endDate.getSecond();
+
+        } else if (Period.parse(windowDuration) != null) {
+            Period p = Period.parse(windowDuration);
+            LocalDateTime endDate = LocalDateTime.now()
+                                    .plusYears(p.getYears())
+                                    .plusMonths(p.getMonths())
+                                    .plusDays(p.getDays());
+            
+            year = endDate.getYear();
+            month = endDate.getMonthValue() - 1;
+            day = endDate.getDayOfMonth();
+            hour = endDate.getHour();
+            minute = endDate.getMinute();
+            second = endDate.getSecond();
+        }
         Calendar date = Calendar.getInstance();
-        LocalDateTime time = LocalDateTime.now();
-        date.set(time.getYear(), time.getMonthValue() - 1, time.getDayOfMonth(), time.getHour(), time.getMinute() + 3, time.getSecond());
+        date.set(year, month, day, hour, minute, second);
         T.schedule(doAlgo, date.getTime());
+        System.out.println(date.getTime().toString());
     }
 
     // public String getNextInWaitList (List<String> waitList) {
