@@ -26,13 +26,30 @@ public class Ballot extends Relationship {
         }
     }
 
+    public static enum PaymentStatus {
+        PENDING("PENDING"),
+        SUCCESS("SUCCESS"),
+        FAILED("FAILED");
+
+        public final String value;
+
+        private PaymentStatus(final String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value;
+        }
+    }
+
     @DynamoDBIgnore
     public static int numInstance;
 
     public Ballot(String winId, String username, String gardenName, String ballotId, String ballotDateTime,
-            double distance, String ballotStatus) {
+            double distance, String ballotStatus, String paymentStatus) {
         super(winId, username, winId + "_" + gardenName, null, 0, ballotId, ballotDateTime, distance,
-                ballotStatus);
+                ballotStatus, paymentStatus);
     }
 
 }

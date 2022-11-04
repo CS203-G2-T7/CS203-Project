@@ -183,7 +183,7 @@ public class BallotService implements Job {
         Relationship ballot = new Ballot(capWinId, username, garden.getSK(),
                 "Ballot" + String.valueOf(++Ballot.numInstance),
                 DateUtil.convertLocalDateToString(LocalDate.now()),
-                distance, Ballot.BallotStatus.PENDING.value);
+                distance, Ballot.BallotStatus.PENDING.value, Ballot.PaymentStatus.PENDING.value);
 
         dynamoDBMapper.save(ballot);
         return ballot;
@@ -209,7 +209,7 @@ public class BallotService implements Job {
         // Relationship.BallotStatus.PENDING);
         Relationship ballot = new Ballot(capWinId, username, garden.getSK(), toUpdateBallot.getBallotId(), currentDate,
                 distance,
-                "PENDING");
+                Ballot.BallotStatus.PENDING.value, Ballot.BallotStatus.PENDING.value);
 
         dynamoDBMapper.save(ballot);
         return ballot;

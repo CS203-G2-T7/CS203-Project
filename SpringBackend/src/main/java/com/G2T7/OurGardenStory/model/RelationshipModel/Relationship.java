@@ -34,6 +34,8 @@ public class Relationship {
   private double Distance;
   @DynamoDBAttribute
   private String ballotStatus;
+  @DynamoDBAttribute
+  private String paymentStatus;
 
   // public enum BallotStatus {
   //   PENDING, SUCCESS, FAILED, INVALID
@@ -67,6 +69,6 @@ public class Relationship {
   }
 
   public Relationship(String winId, String username, String winId_GardenName2, Object leaseDuration2, Object object,
-      String ballotID2, String ballotDateTime2, double distance2, String ballotStatus2) {
+      String ballotID2, String ballotDateTime2, double distance2, String ballotStatus2, String paymentStatus) {
   }
 }
