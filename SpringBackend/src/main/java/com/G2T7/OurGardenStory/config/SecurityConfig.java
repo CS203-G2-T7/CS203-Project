@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(permitAllEndpointList.toArray(new String[permitAllEndpointList.size()])).permitAll()
-
+                .antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers(HttpMethod.GET, "/garden").permitAll()
                 .antMatchers(HttpMethod.POST, "/garden").permitAll()
                 .antMatchers(HttpMethod.PUT, "/garden").permitAll()
