@@ -25,6 +25,7 @@ import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Ballot;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
+import com.G2T7.OurGardenStory.model.RelationshipModel.Ballot.BallotStatus;
 import com.G2T7.OurGardenStory.utils.*;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
