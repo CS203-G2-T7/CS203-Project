@@ -2,6 +2,7 @@ package com.G2T7.OurGardenStory.controller;
 
 import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
+import com.G2T7.OurGardenStory.service.AlgorithmServiceImpl;
 import com.G2T7.OurGardenStory.service.BallotService;
 import com.G2T7.OurGardenStory.service.WinGardenService;
 import com.G2T7.OurGardenStory.service.WindowService;
@@ -25,6 +26,8 @@ public class WindowController {
     private WindowService windowService;
     @Autowired
     private WinGardenService relationshipService;
+    @Autowired
+    private AlgorithmServiceImpl algorithmServiceImpl;
 
     @GetMapping(path = "/window")
     public ResponseEntity<List<Window>> findAllWindows() {
@@ -42,7 +45,10 @@ public class WindowController {
     @PostMapping(path = "/window")
     public ResponseEntity<?> saveWindow(@RequestBody Window postedWindow) {
         try {
-            return ResponseEntity.ok(windowService.createWindow(postedWindow));
+            Window window = windowService.createWindow(postedWindow);
+            String winId = window.getWindowId();
+            algorithmServiceImpl.scheduleAlgo(winId);
+            return ResponseEntity.ok(window);
         } catch (DynamoDBMappingException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (SchedulerException e) {

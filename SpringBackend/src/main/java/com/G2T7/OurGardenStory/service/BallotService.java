@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 
 import com.G2T7.OurGardenStory.controller.GeocodeService;
 import com.G2T7.OurGardenStory.exception.CustomException;
-import com.G2T7.OurGardenStory.geocoder.AlgorithmService;
-import com.G2T7.OurGardenStory.geocoder.AlgorithmServiceImpl;
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
@@ -41,7 +39,7 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import com.fasterxml.jackson.databind.JsonNode;
 
 @Service
-public class BallotService implements Job {
+public class BallotService {
 
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
@@ -61,6 +59,7 @@ public class BallotService implements Job {
     @Autowired
     private WinGardenService winGardenService;
 
+
     /**
      * Finds all ballots given a window and a garden
      * Has to query GSI of WinId_GardenName-index to get ballots.
@@ -76,11 +75,6 @@ public class BallotService implements Job {
      *         4. Ballots List not empty
      */
 
-    @Autowired
-    private AlgorithmServiceImpl algorithmService;
-
-    @Autowired
-    private MailService mailService;
 
     public List<Relationship> findAllBallotsInWindowGarden(String windowId, String gardenName) {
         String capWinId = StringUtils.capitalize(windowId);
@@ -288,60 +282,62 @@ public class BallotService implements Job {
     // return;
     // }
 
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-        try {
-            ManagedContext requestContext = Arc.container().requestContext();
-            if (!requestContext.isActive()) {
-                requestContext.activate();
-            }
-            WinGardenService relationshipService = Arc.container().instance(WinGardenService.class).get();
-            // MailService relationshipService =
-            // Arc.container().instance(RelationshipService.class).get();
-            // RelationshipService relationshipService =
-            // Arc.container().instance(RelationshipService.class).get();
-            // RelationshipService relationshipService =
-            // Arc.container().instance(RelationshipService.class).get();
-            JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-            String winId = dataMap.getString("winId");
-            System.out.println(winId);
-            List<Relationship> relationships = relationshipService.findAllGardensInWindow(winId);
-            List<String> gardens = new ArrayList<>();
+    
 
-            for (Relationship r : relationships) {
-                System.out.println(r.getSK());
-                gardens.add(r.getSK());
-            }
+    // public void execute(JobExecutionContext context) throws JobExecutionException {
+    //     try {
+    //         ManagedContext requestContext = Arc.container().requestContext();
+    //         if (!requestContext.isActive()) {
+    //             requestContext.activate();
+    //         }
+    //         WinGardenService relationshipService = Arc.container().instance(WinGardenService.class).get();
+    //         // MailService relationshipService =
+    //         // Arc.container().instance(RelationshipService.class).get();
+    //         // RelationshipService relationshipService =
+    //         // Arc.container().instance(RelationshipService.class).get();
+    //         // RelationshipService relationshipService =
+    //         // Arc.container().instance(RelationshipService.class).get();
+    //         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
+    //         String winId = dataMap.getString("winId");
+    //         System.out.println(winId);
+    //         List<Relationship> relationships = relationshipService.findAllGardensInWindow(winId);
+    //         List<String> gardens = new ArrayList<>();
 
-            System.out.println("======");
+    //         for (Relationship r : relationships) {
+    //             System.out.println(r.getSK());
+    //             gardens.add(r.getSK());
+    //         }
 
-            for (String gardenName : gardens) {
-                List<Relationship> ballots = findAllBallotsInWindowGarden(winId, gardenName);
-                HashMap<String, Double> usernameDistance = new HashMap<>();
-                for (Relationship ballot : ballots) {
-                    String username = ballot.getSK();
-                    Double distance = ballot.getDistance();
-                    usernameDistance.put(username, distance);
-                }
-                Relationship r = relationshipService.findGardenInWindow(winId, gardenName);
-                int numPlotsAvailable = r.getNumPlotsForBalloting();
-                ArrayList<String> ballotSuccesses = algorithmService.getBallotSuccess(usernameDistance,
-                        numPlotsAvailable);
-                for (Relationship ballot : ballots) {
-                    if (ballotSuccesses.contains(ballot.getSK())) {
-                        ballot.setBallotStatus("SUCCESS");
-                        dynamoDBMapper.save(ballot);
-                        String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-                        mailService.sendTextEmail(email, "SUCCESS"); // this throws IOException
-                    } else {
-                        ballot.setBallotStatus("FAIL");
-                        dynamoDBMapper.save(ballot);
-                        String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-                        mailService.sendTextEmail(email, "FAIL"); // this throws IOException
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    //         System.out.println("======");
+
+    //         for (String gardenName : gardens) {
+    //             List<Relationship> ballots = findAllBallotsInWindowGarden(winId, gardenName);
+    //             HashMap<String, Double> usernameDistance = new HashMap<>();
+    //             for (Relationship ballot : ballots) {
+    //                 String username = ballot.getSK();
+    //                 Double distance = ballot.getDistance();
+    //                 usernameDistance.put(username, distance);
+    //             }
+    //             Relationship r = relationshipService.findGardenInWindow(winId, gardenName);
+    //             int numPlotsAvailable = r.getNumPlotsForBalloting();
+    //             ArrayList<String> ballotSuccesses = algorithmService.getBallotSuccess(usernameDistance,
+    //                     numPlotsAvailable);
+    //             for (Relationship ballot : ballots) {
+    //                 if (ballotSuccesses.contains(ballot.getSK())) {
+    //                     ballot.setBallotStatus("SUCCESS");
+    //                     dynamoDBMapper.save(ballot);
+    //                     String email = userService.findUserByUsername(ballot.getSK()).getEmail();
+    //                     mailService.sendTextEmail(email, "SUCCESS"); // this throws IOException
+    //                 } else {
+    //                     ballot.setBallotStatus("FAIL");
+    //                     dynamoDBMapper.save(ballot);
+    //                     String email = userService.findUserByUsername(ballot.getSK()).getEmail();
+    //                     mailService.sendTextEmail(email, "FAIL"); // this throws IOException
+    //                 }
+    //             }
+    //         }
+    //     } catch (IOException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 }

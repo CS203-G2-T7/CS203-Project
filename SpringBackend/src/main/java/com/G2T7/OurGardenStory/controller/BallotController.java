@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
+import com.G2T7.OurGardenStory.service.AlgorithmServiceImpl;
 import com.G2T7.OurGardenStory.service.BallotService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,9 @@ public class BallotController {
 
     @Autowired
     private BallotService ballotService;
+
+    @Autowired
+    private AlgorithmServiceImpl algorithmServiceImpl;
 
     @GetMapping(path = "/window/{winId}/allBallot")
     public ResponseEntity<List<Relationship>> findAllBallotsInWindowGarden(@PathVariable String winId,
@@ -110,6 +114,11 @@ public class BallotController {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @PostMapping(path = "/doMagic")
+    public void doMagic(@RequestBody JsonNode payload) {
+        algorithmServiceImpl.doMagic(payload.get("winId").asText());
     }
 
 }

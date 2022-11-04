@@ -2,11 +2,13 @@ package com.G2T7.OurGardenStory.service;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.Calendar;
 
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
@@ -17,7 +19,6 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.G2T7.OurGardenStory.geocoder.AlgorithmService;
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
@@ -80,7 +81,7 @@ public class WindowService {
         }
 
         dynamoDBMapper.save(window);
-        scheduleAlgo(window.getWindowId());
+        //scheduleAlgo(window.getWindowId());
         return window;
     }
 
@@ -96,42 +97,55 @@ public class WindowService {
         dynamoDBMapper.delete(toDeleteWindow);
     }
 
-    public void scheduleAlgo(String winId) throws SchedulerException {
-        Window foundWindow = findWindowById(winId).get(0);
-        String startDate = foundWindow.getSK();
+    // public void scheduleAlgo(String winId) throws SchedulerException {
+    //     // Window foundWindow = findWindowById(winId).get(0);
+    //     // String startDate = foundWindow.getSK();
 
-        String winDuration = foundWindow.getWindowDuration();
-        Date endDate = null;
-        if (winDuration.contains("P")) {
-            LocalDate endLocalDate = DateUtil.getWindowEndDateFromStartDateAndDuration(startDate, winDuration);
-            endDate = DateBuilder.dateOf(0, 0, 0, endLocalDate.getDayOfMonth(), endLocalDate.getMonthValue(),
-                    endLocalDate.getYear());
-        } else if (winDuration.contains("minute")) {
-            int index = winDuration.indexOf("minute");
-            int duration = Integer.parseInt(winDuration.substring(0, index));
-            LocalTime time = LocalTime.now();
-            time = time.plusMinutes(duration);
-            int hour = time.getHour();
-            int minute = time.getMinute();
-            int seconds = time.getSecond();
-            endDate = DateBuilder.dateOf(hour, minute, seconds);
-        }
+    //     // String winDuration = foundWindow.getWindowDuration();
+    //     // Calendar endDate = Calendar.getInstance();
+    //     // if (winDuration.contains("P")) {
+    //     //     LocalDate endLocalDate = DateUtil.getWindowEndDateFromStartDateAndDuration(startDate, winDuration);
+    //     //     endDate = DateBuilder.dateOf(0, 0, 0, endLocalDate.getDayOfMonth(), endLocalDate.getMonthValue(),
+    //     //             endLocalDate.getYear());
+    //     //     endDate.set(0, 0, 0, endLocalDate., 0, 0);
+    //     // } else if (winDuration.contains("minute")) {
+    //     //     int index = winDuration.indexOf("minute");
+    //     //     int duration = Integer.parseInt(winDuration.substring(0, index));
+    //     //     LocalTime time = LocalTime.now();
+    //     //     time = time.plusMinutes(duration);
+    //     //     int hour = time.getHour();
+    //     //     int minute = time.getMinute();
+    //     //     int seconds = time.getSecond();
+    //     //     endDate = DateBuilder.dateOf(hour, minute, seconds);
+    //     // }
 
-        SchedulerFactory schedulerFactory = new StdSchedulerFactory();
-        Scheduler scheduler = schedulerFactory.getScheduler();
-        JobDetail job = newJob(BallotService.class)
-                .withIdentity("doAlgo")
-                .usingJobData("winId", winId)
-                .build();
+    //     // SchedulerFactory schedulerFactory = new StdSchedulerFactory();
+    //     // Scheduler scheduler = schedulerFactory.getScheduler();
+    //     // JobDetail job = newJob(BallotService.class)
+    //     //         .withIdentity("doAlgo")
+    //     //         .usingJobData("winId", winId)
+    //     //         .build();
 
-        SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
-                .withIdentity("doAlgo")
-                .startAt(endDate)
-                .forJob(job)
-                .build();
+    //     // SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+    //     //         .withIdentity("doAlgo")
+    //     //         .startAt(endDate)
+    //     //         .forJob(job)
+    //     //         .build();
 
-        scheduler.start();
-        scheduler.scheduleJob(job, trigger);
-    }
+    //     // scheduler.start();
+    //     // scheduler.scheduleJob(job, trigger);
+
+    //     Timer T = new Timer();
+    //     TimerTask doAlgo = new TimerTask() {
+    //         @Override
+    //         public void run() {
+    //             algorithmServiceImpl.doMagic(winId);
+    //         }
+    //     };
+    //     Calendar date = Calendar.getInstance();
+    //     LocalDateTime time = LocalDateTime.now();
+    //     date.set(time.getYear(), time.getMonthValue(), time.getDayOfMonth(), time.getHour(), time.getMinute() + 3, time.getSecond());
+    //     T.schedule(doAlgo, date.getTime());
+    // }
 
 }

@@ -28,6 +28,7 @@ public class WinGardenService {
   // Relationship services
   public List<Relationship> findAllGardensInWindow(String windowId) {
     String capWinId = StringUtils.capitalize(windowId);
+    System.out.println("capwinid: " + capWinId);
     if (!validateWinExist(capWinId)) {
       throw new ResourceNotFoundException("Window " + capWinId + " cannot be found");
     }
