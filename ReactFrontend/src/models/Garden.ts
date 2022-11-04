@@ -1,17 +1,30 @@
 export type Garden = {
-  gardenId: string; //PKey
+  // gardenId: string; //PKey
+  // latitude: string;
+  // location: string;
+  // longitude: string;
+  // name: string;
+  // numPlots: number;
+  gardenAddress: string;
   latitude: string;
-  location: string;
   longitude: string;
-  name: string;
   numPlots: number;
+  pk: string;
+  sk: string;
 };
 
 export const defaultGarden: Garden = {
-  gardenId: "",
+  // gardenId: "",
+  // latitude: "",
+  // location: "",
+  // longitude: "",
+  // name: "",
+  // numPlots: 0,
+  gardenAddress: "",
   latitude: "",
-  location: "",
   longitude: "",
-  name: "",
   numPlots: 0,
+  pk: "",
+  sk: "",
+
 };

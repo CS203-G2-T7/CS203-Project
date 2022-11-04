@@ -1,23 +1,44 @@
+import internal from "stream";
 import { defaultGarden, Garden } from "./Garden";
 
 export type Ballot = {
-  ballotId: string; //PKey
-  submitDateTime: string;
-  leaseStart: string;
+  // ballotId: string; //PKey
+  // submitDateTime: string;
+  // leaseStart: string;
+  // leaseDuration: string;
+  // status: string;
+  // garden: Garden; //FKey embed: Garden
+  // startDateTime: string; //FKey: windowId
+  // username: string;
   leaseDuration: string;
-  status: string;
-  garden: Garden; //FKey embed: Garden
-  startDateTime: string; //FKey: windowId
-  username: string;
+  NumPlotsForBalloting: number;
+  BallotId: string;
+  BallotDateTime: string;
+  Distance: number;
+  ballotStatus: String;
+  pk: string;
+  sk: string;
+
+
+
 };
 
 export const defaultBallot = {
-  ballotId: "",
-  submitDateTime: "",
-  leaseStart: "",
+  // ballotId: "",
+  // submitDateTime: "",
+  // leaseStart: "",
+  // leaseDuration: "",
+  // status: "",
+  // garden: defaultGarden,
+  // startDateTime: "",
+  // username: "",
   leaseDuration: "",
-  status: "",
-  garden: defaultGarden,
-  startDateTime: "",
-  username: "",
+  NumPlotsForBalloting: 0,
+  BallotId: "",
+  BallotDateTime: "",
+  Distance: 0,
+  ballotStatus: "",
+  pk: "",
+  sk: "",
+
 };
