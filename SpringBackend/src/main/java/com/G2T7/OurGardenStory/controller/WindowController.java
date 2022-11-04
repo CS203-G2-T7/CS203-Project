@@ -8,7 +8,6 @@ import com.G2T7.OurGardenStory.service.WindowService;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,8 +43,6 @@ public class WindowController {
         try {
             return ResponseEntity.ok(windowService.createWindow(postedWindow));
         } catch (DynamoDBMappingException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (SchedulerException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             System.out.println(e);
