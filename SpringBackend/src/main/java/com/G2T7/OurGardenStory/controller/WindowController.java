@@ -3,7 +3,6 @@ package com.G2T7.OurGardenStory.controller;
 import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 import com.G2T7.OurGardenStory.service.AlgorithmServiceImpl;
-import com.G2T7.OurGardenStory.service.BallotService;
 import com.G2T7.OurGardenStory.service.WinGardenService;
 import com.G2T7.OurGardenStory.service.WindowService;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
