@@ -2,8 +2,6 @@ package com.G2T7.OurGardenStory.service;
 
 import java.util.*;
 
-import org.springframework.stereotype.Service;
-
 public interface AlgorithmService {
     
     //get the username of the successful ballots of a window for a garden

@@ -1,29 +1,14 @@
 package com.G2T7.OurGardenStory.service;
 
-import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Period;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.Calendar;
 
-import org.quartz.*;
-import org.quartz.impl.StdSchedulerFactory;
-import static org.quartz.JobBuilder.*;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.G2T7.OurGardenStory.model.Garden;
-import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
-import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
-import com.G2T7.OurGardenStory.utils.DateUtil;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
