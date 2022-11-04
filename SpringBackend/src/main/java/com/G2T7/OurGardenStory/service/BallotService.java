@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.G2T7.OurGardenStory.controller.GeocodeService;
 import com.G2T7.OurGardenStory.exception.CustomException;
-import com.G2T7.OurGardenStory.geocoder.AlgorithmServiceImpl;
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
@@ -64,12 +63,6 @@ public class BallotService {
      *         3. Garden is in window
      *         4. Ballots List not empty
      */
-
-    @Autowired
-    private AlgorithmServiceImpl algorithmService;
-
-    @Autowired
-    private MailService mailService;
 
     public List<Relationship> findAllBallotsInWindowGarden(String windowId, String gardenName) {
         String capWinId = StringUtils.capitalize(windowId);
