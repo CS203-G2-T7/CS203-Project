@@ -21,13 +21,16 @@ export default function Content({}: Props) {
 
   useEffect(() => {
     Promise.all([
-      homeService.getLatestWindow(),
-      homeService.getBallotsLatestWindow(),
+      homeService.getGardenInLastestWindow(),
+      homeService.getGardenByName("Jeff-Park"),
+      //homeService.getAllBallotsInWindGarden(),
     ])
       .then((resArr) => {
-        console.log(resArr);
-        setWindowData(resArr[0].data);
-        setLatestWindowBallotList(resArr[1].data);
+        // console.log(resArr);
+        // setWindowData(resArr[0].data);
+        // setLatestWindowBallotList(resArr[1].data);
+        console.log(resArr[0].data);
+        console.log(resArr[1].data);
         setLoading(false);
       })
       .catch((err) => {
