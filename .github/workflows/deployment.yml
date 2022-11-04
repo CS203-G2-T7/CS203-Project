@@ -44,7 +44,7 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/d3w9a6e2
-          docker build -t $ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t $ECR_REPOSITORY:$IMAGE_TAG ./SpringBackend
           docker push $ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REPOSITORY:$IMAGE_TAG"
           aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment 
