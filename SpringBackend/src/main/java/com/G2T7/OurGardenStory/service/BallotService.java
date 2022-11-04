@@ -23,12 +23,8 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
-import io.quarkus.arc.Arc;
-import io.quarkus.arc.ManagedContext;
-
 import java.util.*;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

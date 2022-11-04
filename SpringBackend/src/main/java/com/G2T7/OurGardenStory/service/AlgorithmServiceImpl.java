@@ -14,7 +14,7 @@ import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 
 @Service
-public class AlgorithmServiceImpl implements AlgorithmService {
+public class AlgorithmServiceImpl {
     @Autowired
     private WinGardenService winGardenService;
     @Autowired
@@ -146,23 +146,4 @@ public class AlgorithmServiceImpl implements AlgorithmService {
         T.schedule(doAlgo, date.getTime());
         System.out.println(date.getTime().toString());
     }
-
-    // public String getNextInWaitList (List<String> waitList) {
-    //     String output = waitList.get(0);
-    //     waitList.remove(0);
-    //     return output;
-    // }
-
-    // public ArrayList<String> getWaitList (ArrayList<String> successes, HashMap<String,Double> balloters) {
-    //     for (String success : successes) {
-    //         balloters.remove(success);
-    //     }
-    //     int size = balloters.size();
-
-    //     if (size >= 10) {
-    //         return new AlgorithmServiceImpl().getBallotSuccess(balloters, 10);
-    //     } 
-
-    //     return new AlgorithmServiceImpl().getBallotSuccess(balloters, size);
-    // }
 }
