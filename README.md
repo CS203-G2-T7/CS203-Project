@@ -12,7 +12,7 @@ we learnt that the current balloting system for allotment gardens is inefficient
 fewer people are enticed to grow their own produce, impeding efforts toward increased local 
 food production and ultimately our climate change goals. 
 
----
+
 
 ## Our Solution
 
@@ -20,7 +20,7 @@ Our web application, OurGardenStory, aims to provide users with a comprehensive 
 to ballot for allotment gardens and manage their plants. This helps Singaporeans grow more 
 food and play a part in combating climate change. 
 
----
+
 
 ## Why is it needed?
 
@@ -38,7 +38,7 @@ build a greener community that promotes healthy gardening practices, especially 
 that are inexperienced in gardening. Our solution will be impactful in helping Singapore be 
 more self-reliant on food production and reduce GHG emissions. 
 
----
+
 
 ## Main Features
 
@@ -48,7 +48,7 @@ more self-reliant on food production and reduce GHG emissions.
 4) Plant encyclopedia to track the plants that we are currently planting and the details of each plant
 5) Community page able to connect with other garden users within your community garden
 
----
+
 
 ## Built With
 
@@ -62,7 +62,7 @@ more self-reliant on food production and reduce GHG emissions.
 * [Figma](https://www.figma.com/)
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
----
+
 
 ## Project By: SMU CS203 G2T7
  - [Jin Han](https://github.com/jinhanloh2021)
@@ -72,4 +72,3 @@ more self-reliant on food production and reduce GHG emissions.
  - [Wai Hong](https://github.com/wahoong123) 
  - [Wei Han](https://github.com/gohweihan1) 
 
----
