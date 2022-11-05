@@ -65,11 +65,11 @@ more self-reliant on food production and reduce GHG emissions.
 ---
 
 ## Project By: SMU CS203 G2T7
-> - [Jin Han](https://github.com/jinhanloh2021)
-> - [Ginn Munn](https://github.com/WongGinnMunn)
-> - [Felicia](http://github.com/Feliciaeng29)
-> - [Sean](https://github.com/haloxil)
-> - [Wai Hong](https://github.com/wahoong123) 
-> - [Wei Han](https://github.com/gohweihan1) 
+ - [Jin Han](https://github.com/jinhanloh2021)
+ - [Ginn Munn](https://github.com/WongGinnMunn)
+ - [Felicia](http://github.com/Feliciaeng29)
+ - [Sean](https://github.com/haloxil)
+ - [Wai Hong](https://github.com/wahoong123) 
+ - [Wei Han](https://github.com/gohweihan1) 
 
 ---
