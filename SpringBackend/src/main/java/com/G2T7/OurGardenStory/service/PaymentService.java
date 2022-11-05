@@ -1,14 +1,20 @@
 package com.G2T7.OurGardenStory.service;
 
-import com.stripe.model.Customer;
-import com.stripe.model.CustomerSearchResult;
+import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
+import com.G2T7.OurGardenStory.model.Window;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+
+import com.stripe.model.*;
+import com.stripe.Stripe;
 import com.stripe.param.CustomerSearchParams;
-import org.springframework.beans.factory.annotation.Value;
+
+import net.minidev.json.JSONObject;
+
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
-
-import com.stripe.Stripe;
-import com.stripe.model.Charge;
 
 import java.util.*;
 
@@ -17,7 +23,52 @@ public class PaymentService {
     @Value(value = "${stripe.keys.secret}")
     private String STRIPE_API_KEY;
 
-    // TODO: business logic of only successful ballots to make payment
+    private BallotService ballotService;
+    private WindowService windowService;
+    private DynamoDBMapper dynamoDBMapper;
+
+    @Autowired
+    public PaymentService(BallotService ballotService, WindowService windowService, DynamoDBMapper dynamoDBMapper) {
+        this.ballotService = ballotService;
+        this.windowService = windowService;
+        this.dynamoDBMapper = dynamoDBMapper;
+    }
+
+    public JSONObject findCharge(String username) {
+        if (username == null) {
+            throw new AuthenticationCredentialsNotFoundException("User is not authenticated");
+        }
+
+        String winId_GardenName = null;
+        Map<String, Object> chargeParams = new HashMap<>();
+        List<Window> windowList = windowService.findAllWindows();
+
+        for (Window window : windowList) {
+            try {
+                Relationship ballot = ballotService.findUserBallotInWindow(window.getWindowId(), username);
+                if (ballot.getBallotStatus().equals("SUCCESS") && ballot.getPaymentStatus().equals("PENDING")) {
+                    winId_GardenName = ballot.getWinId_GardenName();
+                    break;
+                }
+            } catch (ResourceNotFoundException e) {
+                System.out.println(e); // not sure what to do in this catch
+            }
+        }
+
+        try {
+            Stripe.apiKey = STRIPE_API_KEY;
+            int amount = 69; // amount is in cents
+            chargeParams.put("amount", amount);
+            chargeParams.put("currency", "sgd");
+            chargeParams.put("description", winId_GardenName);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return new JSONObject(chargeParams);
+    }
+
     public Charge checkout(String username){
         if (username == null) {
             throw new AuthenticationCredentialsNotFoundException("User is not authenticated");
@@ -33,9 +84,10 @@ public class PaymentService {
         try {
             Stripe.apiKey = STRIPE_API_KEY;
             Map<String, Object> chargeParams = new HashMap<>();
-            chargeParams.put("amount", 69);
-            chargeParams.put("currency", "sgd");
-            chargeParams.put("description", "{Ballot_Name} and {Window_Name}");
+            JSONObject chargeObject = findCharge(username);
+            chargeParams.put("amount", chargeObject.getAsString("amount"));
+            chargeParams.put("currency", chargeObject.getAsString("currency"));
+            chargeParams.put("description", chargeObject.getAsString("description"));
 
             if (customerId != null) {
                 chargeParams.put("customer", customerId);
