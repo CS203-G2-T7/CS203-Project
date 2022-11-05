@@ -1,5 +1,5 @@
 import React from "react";
-import { LinkStateType } from "pages/Garden/Garden";
+import { LinkStateType } from "pages/BallotGarden/BallotGarden";
 import ballotService from "service/ballotService";
 import formatDateTimeToDate from "utils/formatDateTimeToDate";
 import { DetailsRowStyled } from "./DetailRow.styled";

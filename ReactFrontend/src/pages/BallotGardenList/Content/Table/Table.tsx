@@ -1,6 +1,4 @@
 import React from "react";
-import { Ballot } from "models/Ballot";
-import { Window } from "models/Window";
 import { Row as RowType } from "../Content";
 import HeaderRow from "./HeaderRow/HeaderRow";
 import Row from "./Row/Row";

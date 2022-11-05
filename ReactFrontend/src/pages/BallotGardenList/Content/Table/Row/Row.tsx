@@ -1,8 +1,6 @@
 import React from "react";
-import { Garden } from "models/Garden";
 import { RowStyled } from "./Row.styled";
 import { RowGardenEntryStyled } from "./RowGardenEntry.styled";
-import { Window } from "models/Window";
 import { Row as RowType } from "../../Content";
 
 type Props = {
@@ -10,8 +8,9 @@ type Props = {
 };
 
 export default function Row({ rowItem }: Props) {
+  const urlName: string = rowItem.gardenName.replace(" ", "-").toLowerCase();
   return (
-    <RowStyled to={"/garden?id="}>
+    <RowStyled to={`/ballot?name=${urlName}`}>
       <RowGardenEntryStyled>
         <span>{rowItem.gardenName}</span>
         <span>{rowItem.gardenAddress}</span>

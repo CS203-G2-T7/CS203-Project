@@ -10,12 +10,10 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <React.StrictMode>
     <BrowserRouter>
       <GlobalStyles />
       <ThemeProvider theme={muiTheme}>
         <App />
       </ThemeProvider>
     </BrowserRouter>
-  </React.StrictMode>
 );

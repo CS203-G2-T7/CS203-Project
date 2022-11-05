@@ -43,10 +43,13 @@ export default function Content({}: Props) {
       const latestWinNumber: number = Number(
         latestWindow.windowId.substring(3)
       );
+      console.log(latestWindow);
 
       const latestGardenArr: GarWin[] = (
         await homeService.getGardenInLatestWindow(latestWinNumber)
       ).data;
+
+      console.log(latestGardenArr);
 
       await latestGardenArr.forEach(async (garWinRelation) => {
         const garden: Garden = (

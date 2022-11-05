@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const GardenStyled = styled.div`
+export const BallotGardenStyled = styled.div`
   main {
     padding: 3rem 8rem 8rem 8rem;
     margin: 0;
