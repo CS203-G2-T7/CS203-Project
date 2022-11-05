@@ -64,8 +64,7 @@ more self-reliant on food production and reduce GHG emissions.
 
 
 
-## SMU CS203 G2T7
-## Project By:
+## (SMU CS203 G2T7) Project By:
  - [Jin Han](https://github.com/jinhanloh2021)
  - [Ginn Munn](https://github.com/WongGinnMunn)
  - [Felicia](http://github.com/Feliciaeng29)
