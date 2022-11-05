@@ -29,13 +29,12 @@ public class BallotController {
     @Autowired
     private BallotService ballotService;
 
-    @GetMapping(path = "/window/{winId}/allBallot")
+    @GetMapping(path = "/window/{winId}/{gardenName}/allBallot")
     public ResponseEntity<List<Relationship>> findAllBallotsInWindowGarden(@PathVariable String winId,
-            @RequestBody JsonNode payload,
-            @RequestHeader Map<String, String> headers) {
+            @PathVariable String gardenName, @RequestHeader Map<String, String> headers) {
         try {
             return ResponseEntity
-                    .ok(ballotService.findAllBallotsInWindowGarden(winId, payload.get("gardenName").asText()));
+                    .ok(ballotService.findAllBallotsInWindowGarden(winId, gardenName));
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.notFound().build();

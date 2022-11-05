@@ -39,6 +39,19 @@ public class WindowController {
         }
     }
 
+    @GetMapping(path = "/window/latest")
+    public ResponseEntity<?> findLatestWindow() {
+        try {
+            return ResponseEntity.ok(windowService.findLatestWindow());
+        } catch (ResourceNotFoundException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @PostMapping(path = "/window")
     public ResponseEntity<?> saveWindow(@RequestBody Window postedWindow) {
         try {

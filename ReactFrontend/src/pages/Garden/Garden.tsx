@@ -23,10 +23,10 @@ export default function Garden({}: Props) {
 
   return (
     <GardenStyled>
-      <Header
+      {/* <Header
         name={linkState.gardenObject.name}
         address={linkState.gardenObject.location}
-      />
+      /> */}
       <main>
         <Summary linkState={linkState}/>
         <Details />

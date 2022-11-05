@@ -57,7 +57,7 @@ public class WindowService {
 
     public List<Window> findAllWindows() {
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-        eav.put(":WIN", new AttributeValue().withS("Window"));
+        eav.put(":WIN", new AttributeValue().withS(Window.entityName));
         DynamoDBQueryExpression<Window> qe = new DynamoDBQueryExpression<Window>()
                 .withKeyConditionExpression("PK = :WIN").withExpressionAttributeValues(eav);
 
@@ -68,8 +68,20 @@ public class WindowService {
         return foundWindowList;
     }
 
+    public Window findLatestWindow() {
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":WIN", new AttributeValue().withS(Window.entityName));
+        DynamoDBQueryExpression<Window> qe = new DynamoDBQueryExpression<Window>()
+                .withKeyConditionExpression("PK = :WIN").withExpressionAttributeValues(eav).withScanIndexForward(false);
+        PaginatedQueryList<Window> winListDescending = dynamoDBMapper.query(Window.class, qe);
+        if (winListDescending.isEmpty()) {
+            throw new ResourceNotFoundException("There are no windows.");
+        }
+        return winListDescending.get(0);
+    }
+
     public Window createWindow(final Window window) throws SchedulerException {
-        window.setPK("Window");
+        window.setPK(Window.entityName);
         window.setWindowId("Win" + ++Window.numInstance);
 
         // Find if already exist in table. Throw error.

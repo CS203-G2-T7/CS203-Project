@@ -84,7 +84,7 @@ public class BallotService implements Job {
             throw new ResourceNotFoundException(capWinId + " does not exist.");
         }
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-        eav.put(":GardenWinValue", new AttributeValue().withS(capWinId + "_" + gardenName));
+        eav.put(":GardenWinValue", new AttributeValue().withS(capWinId + "_" + gardenName.replace("-", " ")));
         DynamoDBQueryExpression<Relationship> qe = new DynamoDBQueryExpression<Relationship>()
                 .withIndexName("WinId_GardenName-index")
                 .withConsistentRead(false)
@@ -260,22 +260,6 @@ public class BallotService implements Job {
             throw new IllegalArgumentException("User " + username + " has already balloted in window " + capWinId);
         }
     }
-
-    // public void validateIfGardenFull(Garden garden, String winId) {
-    // List<Relationship> ballots = findAllBallotsInWindowForGarden(winId,
-    // garden.getSK());
-    // int numBallots = ballots.size();
-
-    // Relationship gardenWin = dynamoDBMapper.load(Relationship.class, winId,
-    // garden.getSK());
-
-    // int numPlotsForBalloting = gardenWin.getNumPlotsForBalloting();
-
-    // if (numBallots >= numPlotsForBalloting) {
-    // throw new CustomException("Plots are full");
-    // }
-    // return;
-    // }
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
