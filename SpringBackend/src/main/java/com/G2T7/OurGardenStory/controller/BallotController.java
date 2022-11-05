@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
+import com.G2T7.OurGardenStory.service.AlgorithmServiceImpl;
 import com.G2T7.OurGardenStory.service.BallotService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpStatus;
@@ -29,11 +30,16 @@ public class BallotController {
     @Autowired
     private BallotService ballotService;
 
+    @Autowired
+    private AlgorithmServiceImpl algorithmServiceImpl;
+
     @GetMapping(path = "/window/{winId}/allBallot")
-    public ResponseEntity<List<Relationship>> findAllBallots(@PathVariable String winId, @RequestBody JsonNode payload,
-        @RequestHeader Map<String, String> headers) {
+    public ResponseEntity<List<Relationship>> findAllBallotsInWindowGarden(@PathVariable String winId,
+            @RequestBody JsonNode payload,
+            @RequestHeader Map<String, String> headers) {
         try {
-            return ResponseEntity.ok(ballotService.findAllBallotsInWindowForGarden(winId, payload.get("gardenName").asText()));
+            return ResponseEntity
+                    .ok(ballotService.findAllBallotsInWindowGarden(winId, payload.get("gardenName").asText()));
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.notFound().build();
@@ -44,10 +50,9 @@ public class BallotController {
     }
 
     @GetMapping(path = "/window/{winId}/ballot")
-    public ResponseEntity<?> findUserBallotInWindow(@PathVariable String winId, 
+    public ResponseEntity<?> findUserBallotInWindow(@PathVariable String winId,
             @RequestHeader Map<String, String> headers) {
         try {
-            // System.out.println(headers.get("username"));
             Relationship ballot = ballotService.findUserBallotInWindow(winId, headers.get("username"));
             return ResponseEntity.ok(ballot);
         } catch (ResourceNotFoundException e) {
@@ -61,20 +66,20 @@ public class BallotController {
     }
 
     @PostMapping(path = "/window/{winId}/ballot")
-    public ResponseEntity<?> addBallotInWindow(@PathVariable String winId, @RequestBody JsonNode payload,
+    public ResponseEntity<?> addBallotInWindowGarden(@PathVariable String winId, @RequestBody JsonNode payload,
             @RequestHeader Map<String, String> headers) {
         try {
-            System.out.println(headers.get("username"));
-            Relationship ballotRelations = ballotService.addBallotInWindow(winId, headers.get("username"), payload);
-            return ResponseEntity.ok(ballotRelations);
+            Relationship ballot = ballotService.addBallotInWindowGarden(winId, headers.get("username"), payload);
+            return ResponseEntity.ok(ballot);
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.internalServerError().build();
+            System.out.println(e);
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
@@ -99,7 +104,8 @@ public class BallotController {
             @RequestHeader Map<String, String> headers) {
         try {
             ballotService.deleteBallotInWindow(winId, headers.get("username"));
-            return ResponseEntity.noContent().build();
+            // return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().body("Ballot deleted");
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {
@@ -109,4 +115,10 @@ public class BallotController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @PostMapping(path = "/doMagic")
+    public void doMagic(@RequestBody JsonNode payload) {
+        algorithmServiceImpl.doMagic(payload.get("winId").asText());
+    }
+
 }

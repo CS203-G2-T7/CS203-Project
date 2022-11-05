@@ -1,9 +1,8 @@
 package com.G2T7.OurGardenStory.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -55,7 +54,7 @@ public class WindowService {
         return foundWindowList;
     }
 
-    public Window createWindow(final Window window) {
+    public Window createWindow(final Window window) throws SchedulerException {
         window.setPK("Window");
         window.setWindowId("Win" + ++Window.numInstance);
 
@@ -63,10 +62,11 @@ public class WindowService {
         Window findWindow = findWindowByPkSk(window.getPK(), window.getSK());
         if (findWindow != null && findWindow.getSK().equals(window.getSK())) {
             --Window.numInstance;
-            throw new RuntimeException("Window already exists.");
-            // Can make custom exceptions here, Then catch and throw 400 bad req
+            throw new RuntimeException("Window with start date " + window.getSK() + " already exists.");
         }
+
         dynamoDBMapper.save(window);
+        //scheduleAlgo(window.getWindowId());
         return window;
     }
 
@@ -81,4 +81,56 @@ public class WindowService {
         Window toDeleteWindow = findWindowById(windowId).get(0);
         dynamoDBMapper.delete(toDeleteWindow);
     }
+
+    // public void scheduleAlgo(String winId) throws SchedulerException {
+    //     // Window foundWindow = findWindowById(winId).get(0);
+    //     // String startDate = foundWindow.getSK();
+
+    //     // String winDuration = foundWindow.getWindowDuration();
+    //     // Calendar endDate = Calendar.getInstance();
+    //     // if (winDuration.contains("P")) {
+    //     //     LocalDate endLocalDate = DateUtil.getWindowEndDateFromStartDateAndDuration(startDate, winDuration);
+    //     //     endDate = DateBuilder.dateOf(0, 0, 0, endLocalDate.getDayOfMonth(), endLocalDate.getMonthValue(),
+    //     //             endLocalDate.getYear());
+    //     //     endDate.set(0, 0, 0, endLocalDate., 0, 0);
+    //     // } else if (winDuration.contains("minute")) {
+    //     //     int index = winDuration.indexOf("minute");
+    //     //     int duration = Integer.parseInt(winDuration.substring(0, index));
+    //     //     LocalTime time = LocalTime.now();
+    //     //     time = time.plusMinutes(duration);
+    //     //     int hour = time.getHour();
+    //     //     int minute = time.getMinute();
+    //     //     int seconds = time.getSecond();
+    //     //     endDate = DateBuilder.dateOf(hour, minute, seconds);
+    //     // }
+
+    //     // SchedulerFactory schedulerFactory = new StdSchedulerFactory();
+    //     // Scheduler scheduler = schedulerFactory.getScheduler();
+    //     // JobDetail job = newJob(BallotService.class)
+    //     //         .withIdentity("doAlgo")
+    //     //         .usingJobData("winId", winId)
+    //     //         .build();
+
+    //     // SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
+    //     //         .withIdentity("doAlgo")
+    //     //         .startAt(endDate)
+    //     //         .forJob(job)
+    //     //         .build();
+
+    //     // scheduler.start();
+    //     // scheduler.scheduleJob(job, trigger);
+
+    //     Timer T = new Timer();
+    //     TimerTask doAlgo = new TimerTask() {
+    //         @Override
+    //         public void run() {
+    //             algorithmServiceImpl.doMagic(winId);
+    //         }
+    //     };
+    //     Calendar date = Calendar.getInstance();
+    //     LocalDateTime time = LocalDateTime.now();
+    //     date.set(time.getYear(), time.getMonthValue(), time.getDayOfMonth(), time.getHour(), time.getMinute() + 3, time.getSecond());
+    //     T.schedule(doAlgo, date.getTime());
+    // }
+
 }

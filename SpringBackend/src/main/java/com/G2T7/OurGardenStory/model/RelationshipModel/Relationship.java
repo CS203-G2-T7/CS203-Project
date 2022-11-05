@@ -33,11 +33,13 @@ public class Relationship {
   @DynamoDBAttribute
   private double Distance;
   @DynamoDBAttribute
-  private BallotStatus ballotStatus;
+  private String ballotStatus;
+  @DynamoDBAttribute
+  private String paymentStatus;
 
-  public enum BallotStatus {
-    PENDING, SUCCESS, FAILED, INVALID
-  };
+  // public enum BallotStatus {
+  //   PENDING, SUCCESS, FAILED, INVALID
+  // };
 
   @DynamoDBHashKey(attributeName = "PK")
   public String getPK() {
@@ -57,7 +59,7 @@ public class Relationship {
     this.SK = SK;
   }
 
-  @DynamoDBIndexHashKey(attributeName = "WindId|GardenName", globalSecondaryIndexName = "WinId_GardenName-index")
+  @DynamoDBIndexHashKey(attributeName = "WinId_GardenName", globalSecondaryIndexName = "WinId_GardenName-index")
   public String getWinId_GardenName() {
     return this.WinId_GardenName;
   }
@@ -67,6 +69,6 @@ public class Relationship {
   }
 
   public Relationship(String winId, String username, String winId_GardenName2, Object leaseDuration2, Object object,
-      String ballotID2, String ballotDateTime2, double distance2, String ballotStatus2) {
+      String ballotID2, String ballotDateTime2, double distance2, String ballotStatus2, String paymentStatus) {
   }
 }
