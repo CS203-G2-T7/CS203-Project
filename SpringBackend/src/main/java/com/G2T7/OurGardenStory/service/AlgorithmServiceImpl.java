@@ -28,6 +28,16 @@ public class AlgorithmServiceImpl {
     @Autowired
     private WindowService windowService;
 
+    /**
+    * This method is an algorithm that chooses a number of successful ballots our of all ballots for a garden and window.
+    * The algorithm takes into account the distance between the balloter and the garden, where the 
+    * shorter the distance between the user and the garden, the more likely their ballot will be successful.
+    *
+    * @param balloters a map with the key being the username, and the corresponding value being the distance between the user's address
+    *                  and the address of the garden that the ballot is for
+    * @param numSuccess the maximum number of successful ballots
+    * @return a list of all successful balloters for a GardenWindow
+    */
     public ArrayList<String> getBallotSuccess(HashMap<String,Double> balloters, int numSuccess) {
         ArrayList<String> list = new ArrayList<>(balloters.keySet());
         for (String key : balloters.keySet()) {
@@ -56,9 +66,16 @@ public class AlgorithmServiceImpl {
         return output;
     }
 
+    /**
+    * For a window, get all the successful ballots for all the gardens in the window, 
+    * update the ballot status for all balloters (SUCCESS or FAIL), and send the 
+    * respective emails.
+    *
+    * @param winId a String
+    * @return no content
+    */
     public void doMagic(String winId) {
         try {
-            System.out.println("testing");
             List<Relationship> relationships = winGardenService.findAllGardensInWindow(winId);
             List<String> gardens = new ArrayList<>();
 
@@ -66,8 +83,6 @@ public class AlgorithmServiceImpl {
                 System.out.println(r.getSK());
                 gardens.add(r.getSK());
             }
-
-            System.out.println("======");
 
             for (String gardenName : gardens) {
                 List<Relationship> ballots = ballotService.findAllBallotsInWindowGarden(winId, gardenName);
@@ -100,6 +115,13 @@ public class AlgorithmServiceImpl {
         }
     }
 
+    /**
+    * Schedules doMagic() to be called at a particular time for a window. This time will be the startDate of the window,
+    * added with the windowDuration.
+    *
+    * @param winId a String
+    * @return no content
+    */
     public void scheduleAlgo(String winId) {
         Timer T = new Timer();
         TimerTask doAlgo = new TimerTask() {
