@@ -19,6 +19,12 @@ public class PlantController {
     @Autowired
     private PlantService plantService;
 
+    /**
+    * Adds a new Plant object
+    *
+    * @param Plant a Plant object
+    * @return a new Plant object that is successfully 
+    */
     @PostMapping(path = "/plant")
     public ResponseEntity<?> savePlant(@RequestBody Plant plant) {
         try {
@@ -30,6 +36,13 @@ public class PlantController {
         }
     }
 
+    /**
+    * Get the Plant object that corresponds with gardenName. If No plantName is provided, gets all plants
+    * If the Plant is not found, throw a ResourceFoundException
+    *
+    * @param plantName an optional String
+    * @return a Plant object if corresponding plantName matches, or all plants if no plantName given
+    */
     @GetMapping(path = "/plant")
     public ResponseEntity<?> findPlant(@RequestParam(name = "name") Optional<String> plantName) {
         try {
@@ -44,6 +57,14 @@ public class PlantController {
         }
     }
 
+    /**
+    * Update the description of a Plant object that corresponds to the given plantName
+    * If the plantName does not correspond to an existing Plant object, throw ResourceNotFoundException
+    *
+    * @param payload includes a String description
+    * @param plantName a String
+    * @return the updated Plant object
+    */
     @PutMapping(path = "/plant")
     public ResponseEntity<?> updatePlant(@RequestBody JsonNode payload,
             @RequestParam(name = "name") String plantName) {
@@ -60,6 +81,13 @@ public class PlantController {
         }
     }
 
+    /**
+    * Delete the Plant object that was previously posted
+    * If the Plant object to be deleted is not found, throw an exception
+    *
+    * @param plantName a String
+    * @return no content
+    */
     @DeleteMapping(path = "/plant")
     public ResponseEntity<String> deletePlant(@RequestParam(name = "name") String plantName) {
         try {

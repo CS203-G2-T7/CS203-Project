@@ -28,6 +28,12 @@ public class WindowController {
     @Autowired
     private AlgorithmServiceImpl algorithmServiceImpl;
 
+    /**
+    * Gets all windows that exist
+    * If there are no windows, throw a ResourceNotFoundException
+    *
+    * @return a list of all Windows
+    */
     @GetMapping(path = "/window")
     public ResponseEntity<List<Window>> findAllWindows() {
         try {
@@ -41,6 +47,13 @@ public class WindowController {
         }
     }
 
+    /**
+    * Post a new Window, and start a schedule for when to do algorithm on ballots posted in this window
+    * If Window with the same start date already exists, throw an Exception
+    *
+    * @param postedWindow a Window object
+    * @return the Window object if added successfully
+    */
     @PostMapping(path = "/window")
     public ResponseEntity<?> saveWindow(@RequestBody Window postedWindow) {
         try {
@@ -58,6 +71,14 @@ public class WindowController {
         }
     }
 
+    /**
+    * Update the windowDuration of an already existing Window
+    * If Window does not exist, throw a ResourceNotFoundException
+    *
+    * @param payload includes a String windowDuration
+    * @param id a String
+    * @return the updated Window object
+    */
     @PutMapping(path = "/window") // with request param {:id}
     public ResponseEntity<?> updateWindow(@RequestBody JsonNode payload, @RequestParam String id) {
         try {
@@ -70,6 +91,13 @@ public class WindowController {
         }
     }
 
+    /**
+    * Delete an existing Window object
+    * If Window does not exist, throw a ResourceNotFoundException
+    *
+    * @param id a String
+    * @return no content
+    */
     @DeleteMapping(path = "/window")
     public ResponseEntity<String> deleteWindow(@RequestParam String id) {
         try {
@@ -83,6 +111,17 @@ public class WindowController {
     }
 
     // Relationships
+
+    /**
+    * Get a list of all GardenWin Relationship objects that correspond to a particular windowId.
+    * If gardenName is provided, return the GardenWin Relationship object corresponding to the winId and gardenName
+    * If Window is not found, or there are no Gardens posted in that Window, throw ResourceNotFoundException
+    *
+    * @param winId a String
+    * @param gardenName an optional String
+    * @return a list of Relationship objects corresponding to all gardens in a Window, or a Relationship object 
+    *         corresponding to the winId and gardenName, if gardenName is given
+    */
     @GetMapping(path = "/window/{winId}/garden")
     public ResponseEntity<?> findAllGardensInWindow(@PathVariable String winId,
             @RequestParam(name = "name") Optional<String> gardenName) {
@@ -103,6 +142,14 @@ public class WindowController {
         }
     }
 
+    /**
+    * Post a new Garden in a Window
+    * If Window does not exist, throw ResourceNotFoundException
+    *
+    * @param winId a String
+    * @param payload an array where every object includes a String gardenName, a String leaseDuration, an int numPlotsForBalloting
+    * @return a list of all newly added GardenWin Relationship objects, if all added successfully
+    */
     @PostMapping(path = "/window/{winId}/garden")
     public ResponseEntity<?> addGardensInWindow(@PathVariable String winId, @RequestBody JsonNode payload) {
         try {
@@ -118,6 +165,15 @@ public class WindowController {
         }
     }
 
+    /**
+    * Update the leaseDuration and numPlotsForBalloting for a GardenWin Relationship object
+    * If Garden is not found inside this Window, throw an error
+    *
+    * @param winId a String
+    * @param gardenName a String
+    * @param payload includes a String leaseDuration and an int numPlotsForBalloting
+    * @return the updated GardenWin Relationship object, if update was successful
+    */
     @PutMapping(path = "/window/{winId}/garden")
     public ResponseEntity<?> updateGardenInWindow(@PathVariable String winId,
             @RequestParam(name = "name") String gardenName, @RequestBody JsonNode payload) {
@@ -134,6 +190,14 @@ public class WindowController {
         }
     }
 
+    /**
+    * Delete an existing GardenWin Relationship object
+    * If the GardenWin Relationship object does not exist, throw ResourceNotFOundException
+    *
+    * @param winId a String
+    * @param gardenName a String
+    * @return no content
+    */
     @DeleteMapping(path = "/window/{winId}/garden")
     public ResponseEntity<String> deleteGardenInWindow(@PathVariable String winId,
             @RequestParam(name = "name") Optional<String> gardenName) {

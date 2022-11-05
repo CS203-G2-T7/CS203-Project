@@ -18,6 +18,14 @@ public class UserPlantController {
     @Autowired
     private UserService userService;
 
+    /**
+    * Get the user's plant that corresponds to the given plantName. If plant is not found, get all of user's plants
+    *
+    * @param plantName an optional String
+    * @param headers containing the username as a key
+    * @return a Plant object if user's Plant corresponding to plantName exists,
+    *         or a list of all user's plants if no plantName is provided
+    */
     @GetMapping(path = "/my-plant")
     public ResponseEntity<?> findMyPlant(@RequestParam(name = "name") Optional<String> plantName,
                     @RequestHeader Map<String, String> headers) {
@@ -33,6 +41,14 @@ public class UserPlantController {
         }
     }
 
+    /**
+    * Post a new plant into the list of user's plants
+    * Throws exception if plantName given does not exist
+    *
+    * @param payload includes an array of plantNames
+    * @param headers containing the username as a key
+    * @return the updated list of the user's plants
+    */
     @PostMapping(path = "/my-plant")
     public ResponseEntity<?> saveMyPlant(@RequestBody JsonNode payload, @RequestHeader Map<String, String> headers) {
         try {
@@ -45,6 +61,14 @@ public class UserPlantController {
         }
     }
 
+    /**
+    * Delete a plant belonging in the list of user's plants
+    * Throws exception if plantName does not correspond to a plant that already exists in the list of user's plants
+    *
+    * @param payload includes an array of plantNames
+    * @param headers containing the username as a key
+    * @return the updated list of the user's plants
+    */
     @DeleteMapping(path = "/my-plant")
     public ResponseEntity<?> deleteMyPlant(@RequestBody JsonNode payload,
             @RequestHeader Map<String, String> headers) {

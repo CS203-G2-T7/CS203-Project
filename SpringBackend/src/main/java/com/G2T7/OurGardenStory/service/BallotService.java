@@ -53,8 +53,8 @@ public class BallotService {
      * Finds all ballots given a window and a garden
      * Has to query GSI of WinId_GardenName-index to get ballots.
      * 
-     * @windowId ID of window
-     * @gardenName name of garden
+     * @param windowId ID of window
+     * @param gardenName name of garden
      * @return List of found ballots
      * 
      *         Validations:
