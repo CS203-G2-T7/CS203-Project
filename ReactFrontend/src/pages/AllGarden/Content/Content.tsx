@@ -3,6 +3,7 @@ import Table from "./Table/Table";
 import { ContentStyled } from "./Content.styled";
 import allGardenService from "service/allgardenService";
 import { defaultGarden, Garden } from "models/Garden";
+import WindowLabel from "./WindowLabel/WindowLabel";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
@@ -30,6 +31,7 @@ export default function Content({}: Props) {
 
   return (
     <ContentStyled>
+      <WindowLabel />
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <CircularProgress />

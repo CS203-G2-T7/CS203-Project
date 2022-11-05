@@ -1,18 +1,13 @@
 import React from "react";
 import { WindowLabelStyled } from "./WindowLabel.styled";
 
-type Props = {
-  windowDate: string;
-};
-
-export default function WindowLabel({ windowDate }: Props) {
-  //Use this file and the WindowLabel.styled.ts file to create the window label. Refer to figma for the exact design.
+export default function WindowLabel() {
   return (
     <WindowLabelStyled>
       <div>
-        <h1>Window</h1>
+        <h1>All Allotment Gardens</h1>
+        <p>Simply click on any gardens to view them in detail</p>
       </div>
-      <p>{windowDate || "loading..."}</p>
     </WindowLabelStyled>
   );
 }
