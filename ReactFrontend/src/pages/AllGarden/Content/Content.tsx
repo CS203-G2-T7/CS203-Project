@@ -21,7 +21,6 @@ export default function Content({}: Props) {
       .then((resArr) => {
         console.log(resArr[0].data);
         setallGardenDataList(resArr[0].data);
-        console.log(allGardenDataList);
         setLoading(false);
       })
       .catch((err) => {

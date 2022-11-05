@@ -10,10 +10,6 @@ class AllGarden {
   getAllGarden(): Promise<AxiosResponse<any, any>> {
     return axios.get(GET_ALL_GARDEN_URL);
   }
-
-  getGardenByName(gardenName: String): Promise<AxiosResponse<any, any>> {
-    return axios.get(GET_GARDEN_BY_NAME_URL + gardenName);
-  }
 }
 
 export default new AllGarden();

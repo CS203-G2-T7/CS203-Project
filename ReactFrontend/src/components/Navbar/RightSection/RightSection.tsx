@@ -21,9 +21,9 @@ export default function RightSection({}: Props) {
   };
   return (
     <RightSectionStyled>
-      <a href="/">Home</a>
-      <a href="/">About</a>
-      <a href="/">Gardens</a>
+      <a href="/myplants">MyPlants</a>
+      <a href="/Home">Ballot</a>
+      <a href="/allgarden">Gardens</a>
       <AccountButton onClick={() => chooseBallotHandler()} />
     </RightSectionStyled>
   );

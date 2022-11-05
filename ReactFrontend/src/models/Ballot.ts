@@ -5,6 +5,7 @@ export type Ballot = {
   ballotDateTime: string;
   distance: number;
   ballotStatus: String;
+  winId_GardenName : String;
   pk: string;
   sk: string;
 };
@@ -16,6 +17,7 @@ export const defaultBallot = {
   BallotDateTime: "",
   Distance: 0,
   ballotStatus: "",
+  winId_GardenName : "",
   pk: "",
   sk: "",
 };
