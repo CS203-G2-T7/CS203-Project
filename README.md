@@ -50,7 +50,7 @@ more self-reliant on food production and reduce GHG emissions.
 
 ---
 
-### Built With
+## Built With
 
 * [SpringBoot](https://spring.io/)
 * [Postman](https://www.postman.com/)
@@ -64,7 +64,7 @@ more self-reliant on food production and reduce GHG emissions.
 
 ---
 
-> Project By: SMU CS203 G2T7
+## Project By: SMU CS203 G2T7
 > - [Jin Han](https://github.com/jinhanloh2021)
 > - [Ginn Munn](https://github.com/WongGinnMunn)
 > - [Felicia](http://github.com/Feliciaeng29)
