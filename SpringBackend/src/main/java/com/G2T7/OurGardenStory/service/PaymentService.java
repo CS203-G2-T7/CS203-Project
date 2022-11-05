@@ -66,8 +66,8 @@ public class PaymentService {
             chargeParams.put("currency", "sgd");
             chargeParams.put("description", winId_GardenName);
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return new JSONObject(chargeParams);
@@ -100,9 +100,15 @@ public class PaymentService {
             }
 
             charge = Charge.create(chargeParams);
+            String winId = chargeObject.getAsString("description").substring(0, 4);
+            Relationship ballot = ballotService.findUserBallotInWindow(winId, username);
+            ballot.setPaymentStatus("SUCCESS");
+            dynamoDBMapper.save(ballot);
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (NullPointerException e) {
+            throw new NullPointerException("No ballot to be charged.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return charge;
