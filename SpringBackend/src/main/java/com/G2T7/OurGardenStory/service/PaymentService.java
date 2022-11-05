@@ -55,6 +55,10 @@ public class PaymentService {
             }
         }
 
+        if (winId_GardenName == null) {
+            return null;
+        }
+
         try {
             Stripe.apiKey = STRIPE_API_KEY;
             int amount = 69; // amount is in cents

@@ -23,7 +23,7 @@ public class PaymentController {
         try {
             JSONObject chargeObject = paymentService.findCharge(headers.get("username"));
             if (chargeObject == null) {
-                return ResponseEntity.badRequest().body("There is no charge amount.");
+                return ResponseEntity.badRequest().body("There are no ballots to be charged.");
             }
             return ResponseEntity.ok(chargeObject);
         } catch (RuntimeException e) {
