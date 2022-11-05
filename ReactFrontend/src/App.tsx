@@ -6,6 +6,8 @@ import SignUp from "pages/SignUp/SignUp";
 import Garden from "pages/Garden/Garden";
 import Landing from "pages/Landing/Landing";
 import MyPlants from "pages/MyPlants/MyPlants";
+import AllGarden from "pages/AllGarden/AllGarden";
+
 
 
 
@@ -22,7 +24,9 @@ function App() {
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/garden" element={<Garden />} />
       <Route path="/myplants" element={<MyPlants />} />
+      <Route path="/allgarden" element={<AllGarden />} />
 
+      
       {/* Accessible to NOT logged in users */}
 
       <Route path="*" element={<Login />} />
