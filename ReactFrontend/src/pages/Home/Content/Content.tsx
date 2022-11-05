@@ -4,6 +4,7 @@ import { ContentStyled } from "./Content.styled";
 import WindowLabel from "./WindowLabel/WindowLabel";
 import homeService from "service/homeService";
 import { defaultWindow, Window } from "models/Window";
+import { defaultGardenWin, GardenWin } from "models/GardenWin";
 import formatDateTimeToDate from "utils/formatDateTimeToDate";
 import { Ballot, defaultBallot } from "models/Ballot";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -12,25 +13,34 @@ import { Box } from "@mui/material";
 type Props = {};
 
 export default function Content({}: Props) {
-  //get latest window
-  const [windowData, setWindowData] = useState<Window>(defaultWindow);
+
+  const [GardenWinList, setGardenWinList] = useState<
+    GardenWin[]
+  >([defaultGardenWin]);
+
   const [latestWindowBallotList, setLatestWindowBallotList] = useState<
     Ballot[]
   >([defaultBallot]);
+
+  const [windowData, setWindowData] = useState<Window>(defaultWindow);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       homeService.getGardenInLatestWindow(),
-      homeService.getGardenByName("Jeff-Park"),
       // homeService.getAllBallotsInWindGarden(),
+      homeService.getLatestWindow(),
     ])
       .then((resArr) => {
         // console.log(resArr);
         // setWindowData(resArr[0].data);
-        // setLatestWindowBallotList(resArr[1].data);
         console.log(resArr[0].data);
+        setGardenWinList(resArr[0].data);
         console.log(resArr[1].data);
+        setLatestWindowBallotList([]);
+        setWindowData(resArr[1].data);
+
         setLoading(false);
       })
       .catch((err) => {
@@ -55,7 +65,7 @@ export default function Content({}: Props) {
         </Box>
       ) : (
         <Table
-          gardenList={windowData.gardenList ?? []}
+          gardenWinList={GardenWinList ?? []}
           ballotList={latestWindowBallotList ?? []}
           windowData={windowData}
         />
