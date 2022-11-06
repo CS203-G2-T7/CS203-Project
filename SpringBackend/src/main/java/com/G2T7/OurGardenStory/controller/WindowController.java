@@ -63,8 +63,6 @@ public class WindowController {
             return ResponseEntity.ok(window);
         } catch (DynamoDBMappingException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (SchedulerException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             System.out.println(e);
             return ResponseEntity.internalServerError().body(e.getMessage());
