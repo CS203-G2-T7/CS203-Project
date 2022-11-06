@@ -64,7 +64,6 @@ public class BallotService {
      *         4. Ballots List not empty
      */
 
-
     public List<Relationship> findAllBallotsInWindowGarden(String windowId, String gardenName) {
         String capWinId = StringUtils.capitalize(windowId);
 
@@ -281,21 +280,4 @@ public class BallotService {
             throw new IllegalArgumentException("User " + username + " has already balloted in window " + capWinId);
         }
     }
-
-    // public void validateIfGardenFull(Garden garden, String winId) {
-    // List<Relationship> ballots = findAllBallotsInWindowForGarden(winId,
-    // garden.getSK());
-    // int numBallots = ballots.size();
-
-    // Relationship gardenWin = dynamoDBMapper.load(Relationship.class, winId,
-    // garden.getSK());
-
-    // int numPlotsForBalloting = gardenWin.getNumPlotsForBalloting();
-
-    // if (numBallots >= numPlotsForBalloting) {
-    // throw new CustomException("Plots are full");
-    // }
-    // return;
-    // }
-
 }

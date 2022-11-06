@@ -2,7 +2,6 @@ package com.G2T7.OurGardenStory.service;
 
 import java.util.*;
 
-import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -74,6 +73,7 @@ public class WindowService {
         return foundWindowList;
     }
 
+
     /**
     * Saves a Window object into the database
     * If a Window with the same startDate already exists, throw Exception
@@ -122,5 +122,4 @@ public class WindowService {
         Window toDeleteWindow = findWindowById(windowId).get(0);
         dynamoDBMapper.delete(toDeleteWindow);
     }
-
 }
