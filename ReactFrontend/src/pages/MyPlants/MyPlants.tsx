@@ -7,11 +7,6 @@ import PlantCard from "./Content/PlantCard";
 import { ContentStyled } from "./Content/Content.styled";
 import plantService from "service/plantService";
 
-// export type rowObject = {
-//   plantName: string;
-//   species: string;
-// };
-
 export type Plant = {
   plantSpecies: string;
   description: string;
@@ -26,36 +21,9 @@ export const defaultPlant: Plant = {
   pk: "",
 };
 
-const fakeDatabase: rowObject[] = [
-  {
-    plantName: "Lettuce",
-    species: "Lactuca sativa",
-  },
-  {
-    plantName: "Sweet Potato",
-    species: "Ipomoea batatas",
-  },
-  {
-    plantName: "Brinjal",
-    species: "Solanum melongena",
-  },
-
-  {
-    plantName: "Brinjal",
-    species: "Solanum melongena",
-  },
-
-  {
-    plantName: "Brinjal",
-    species: "Solanum melongena",
-  },
-];
-
 type Props = {};
 export default function MyPlants({}: Props) {
-  const [plantDataList, setPlantDataList] = useState<Plant[]>([
-    defaultPlant,
-  ]);
+  const [plantDataList, setPlantDataList] = useState<Plant[]>([defaultPlant]);
 
   useEffect(() => {
     Promise.all([plantService.getAllUserPlants()])
@@ -68,7 +36,6 @@ export default function MyPlants({}: Props) {
       });
   }, []);
 
-
   return (
     <MyPlantsStyled>
       <NavBarStyled>
@@ -79,8 +46,8 @@ export default function MyPlants({}: Props) {
         <p>View all the plants you are growing in your allotment garden here</p>
       </HeaderStyled>
       <ContentStyled>
-        {fakeDatabase.map((rowObject) => (
-          <PlantCard rowObject={rowObject} />
+        {plantDataList.map((Plant) => (
+          <PlantCard plant={Plant} />
         ))}
       </ContentStyled>
     </MyPlantsStyled>

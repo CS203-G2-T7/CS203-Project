@@ -5,16 +5,16 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import { PlantCardStyled } from "./PlantCard.styled";
-import { rowObject } from "../MyPlants";
+import { Plant } from "../MyPlants";
 
 type Props = {
-  rowObject: rowObject;
+  plant: Plant;
 };
 
-export default function PlantCard({ rowObject }: Props) {
+export default function PlantCard({ plant }: Props) {
   return (
     <PlantCardStyled>
-      <Card sx={{ maxWidth: 400, height:280}}>
+      <Card sx={{ maxWidth: 400, height: 280 }}>
         <CardActionArea>
           <CardMedia
             component="img"
@@ -25,10 +25,10 @@ export default function PlantCard({ rowObject }: Props) {
 
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
-              {rowObject.plantName}
+              {plant.sk}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              {rowObject.species}
+              {plant.plantSpecies}
             </Typography>
           </CardContent>
         </CardActionArea>
