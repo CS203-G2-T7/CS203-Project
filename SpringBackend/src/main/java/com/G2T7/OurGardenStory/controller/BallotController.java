@@ -1,50 +1,39 @@
 package com.G2T7.OurGardenStory.controller;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.data.repository.query.Param;
+import org.springframework.http.*;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
-import com.G2T7.OurGardenStory.service.AlgorithmServiceImpl;
 import com.G2T7.OurGardenStory.service.BallotService;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.http.HttpStatus;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class BallotController {
 
-    @Autowired
     private BallotService ballotService;
 
     @Autowired
-    private AlgorithmServiceImpl algorithmServiceImpl;
+    public BallotController(BallotService ballotService) {
+        this.ballotService = ballotService;
+    }
 
     /**
     * Gets a list of all ballots for a particular window and garden
     * If there are no ballots in the window garden, throw a ResourceNotFoundException
     *
     * @param winId a String
-    * @param payload which includes a String gardenName
+    * @param gardenName a String
     * @return the list of current ballots for window garden
     */
     @GetMapping(path = "/window/{winId}/{gardenName}/allBallot")
     public ResponseEntity<List<Relationship>> findAllBallotsInWindowGarden(@PathVariable String winId,
-            @PathVariable String gardenName, @RequestHeader Map<String, String> headers) {
+            @PathVariable String gardenName) {
         try {
             return ResponseEntity
                     .ok(ballotService.findAllBallotsInWindowGarden(winId, gardenName));
@@ -157,10 +146,4 @@ public class BallotController {
             return ResponseEntity.internalServerError().build();
         }
     }
-
-    // @PostMapping(path = "/doMagic")
-    // public void doMagic(@RequestBody JsonNode payload) {
-    //     algorithmServiceImpl.doMagic(payload.get("winId").asText());
-    // }
-
 }
