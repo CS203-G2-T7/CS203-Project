@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from "axios";
+import { prod_url } from "urlConstants";
 
-const GET_ALL_USER_PLANTS_URL = "http://localhost:5000/my-plant";
-const POST_NEW_PLANT_USER_URL = "http://localhost:5000/my-plant";
+const GET_ALL_USER_PLANTS_URL = `${prod_url}/my-plant`;
+const POST_NEW_PLANT_USER_URL = `${prod_url}/my-plant`;
 
 class Plant {
   getAllUserPlants(): Promise<AxiosResponse<any, any>> {

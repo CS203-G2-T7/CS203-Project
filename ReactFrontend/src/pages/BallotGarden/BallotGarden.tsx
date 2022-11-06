@@ -101,6 +101,7 @@ export default function BallotGarden() {
     status: "Open",
     ballotsPlaced: ballotArr.length,
   };
+  console.log(process.env.REACT_APP_DEV_API_URL);
 
   return (
     <BallotGardenStyled>

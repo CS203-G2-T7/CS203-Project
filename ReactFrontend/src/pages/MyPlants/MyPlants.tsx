@@ -7,10 +7,10 @@ import PlantCard from "./Content/PlantCard";
 import { ContentStyled } from "./Content/Content.styled";
 import plantService from "service/plantService";
 
-// export type rowObject = {
-//   plantName: string;
-//   species: string;
-// };
+export type rowObject = {
+  plantName: string;
+  species: string;
+};
 
 export type Plant = {
   plantSpecies: string;

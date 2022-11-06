@@ -15,7 +15,6 @@ function App() {
     <Routes location={location}>
       {/* Accessible to all */}
       <Route path="/" element={<Landing />} />
-      <Route path="/landing" element={<Landing />} />
       <Route path="/ballot" element={<BallotGardenList />}/>
       <Route path="/ballot/:gardenName" element={<BallotGarden />} />
       <Route path="/login" element={<Login />} />

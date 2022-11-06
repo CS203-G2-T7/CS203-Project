@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from "axios";
+import { prod_url } from "urlConstants";
 
-const PLACE_BALLOT_URL = "http://localhost:5000/window/win%w/ballot";
-const GET_GARDEN_WIN_RELATION = "http://localhost:5000/window/win%w/garden?name=%n";
+const PLACE_BALLOT_URL = `${prod_url}/window/win%w/ballot`;
+const GET_GARDEN_WIN_RELATION = `${prod_url}/window/win%w/garden?name=%n`;
 
 const config = {
   headers: {
@@ -10,7 +11,10 @@ const config = {
 };
 
 class Ballot {
-  placeBallot(gardenName: String, windowNum: number): Promise<AxiosResponse<any, any>> {
+  placeBallot(
+    gardenName: String,
+    windowNum: number
+  ): Promise<AxiosResponse<any, any>> {
     return axios.post(
       PLACE_BALLOT_URL.replace("%w", windowNum.toString()),
       {
