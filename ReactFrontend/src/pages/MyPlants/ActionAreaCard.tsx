@@ -5,23 +5,34 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
 import { ActionAreaStyled } from "./ActionArea.styled";
+import { rowObject } from "./MyPlants";
 
-export default function ActionAreaCard() {
+type Props = {
+  rowObject: rowObject;
+};
+
+export default function ActionAreaCard({ rowObject }: Props) {
   return (
-    <Card sx={{}} variant="outlined">
-      <CardActionArea>
-        <ActionAreaStyled>
-          <img src={require("assets/imgs/LettuceImage.jpg")} alt="Lettuce Image" />
+    <ActionAreaStyled>
+      <Card sx={{ maxWidth: 345 }}>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            height="140"
+            image={require("assets/imgs/LettuceImage.jpg")}
+            alt="Lettuce Image"
+          />
+
           <CardContent>
-            <Typography gutterBottom variant="h6" component="div">
-              Lettuce
+            <Typography gutterBottom variant="h5" component="div">
+              {rowObject.plantName}
             </Typography>
-            <Typography variant="body1" color="text.secondary">
-              letucsius gerloris
+            <Typography variant="body2" color="text.secondary">
+              {rowObject.species}
             </Typography>
           </CardContent>
-        </ActionAreaStyled>
-      </CardActionArea>
-    </Card>
+        </CardActionArea>
+      </Card>
+    </ActionAreaStyled>
   );
 }
