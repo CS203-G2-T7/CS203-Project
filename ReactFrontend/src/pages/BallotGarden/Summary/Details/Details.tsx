@@ -1,46 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ballotService from "service/ballotService";
-import formatDateTimeToDate from "utils/formatDateTimeToDate";
-import { DetailsRowStyled } from "./DetailRow.styled";
 import { DetailsGroupStyled } from "./DetailsGroup.styled";
 import { DetailsRightStyled } from "./DetailsRight.styled";
 import { SummaryButtonStyled } from "./SummaryButton.styled";
-import { Alert, Button, IconButton, Snackbar } from "@mui/material";
+import { Alert, IconButton, Snackbar } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { DetailsType } from "pages/BallotGarden/BallotGarden";
+import { DetailsRowStyled } from "./DetailRow.styled";
 
 type Props = {
+  details: DetailsType;
+  gardenName: string;
+  winNum: number;
 };
 
-export default function Details({}: Props) {
-  const [open, setOpen] = React.useState(false); //open state of snackbar
-  //Format data to display
-  // let leaseStartDate: string = formatDateTimeToDate(
-  //   linkState.windowData.leaseStart
-  // );
-  // const leaseEndYear = Number(leaseStartDate.substring(6)) + 3 + "";
-  // leaseStartDate =
-  //   leaseStartDate + " - " + leaseStartDate.slice(0, 6) + leaseEndYear;
+export default function Details({ details, gardenName, winNum }: Props) {
+  const [open, setOpen] = useState(false);
+  const [numBallot, setNumBallot] = useState(details.ballotsPlaced);
 
-  // const windowDate: string =
-  //   formatDateTimeToDate(linkState.windowData.startDateTime ?? "") +
-  //   " - " +
-  //   formatDateTimeToDate(linkState.windowData.leaseStart ?? "");
+  useEffect(() => {
+    setNumBallot(details.ballotsPlaced);
+  }, [details.ballotsPlaced]);
 
-  // const ballotsPlaced = linkState.numBallotsPlaced;
 
-  // //Place ballot
-  // const submitBallotHandler = () => {
-  //   console.log("Submitted");
-  //   setOpen(true);
-  //   ballotService
-  //     .placeBallot(linkState.gardenObject.name)
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
+  console.log(details);
+
+  //Place ballot
+  const submitBallotHandler = () => {
+    console.log("Submitted");
+    setOpen(true);
+    setNumBallot((prevNumBallot) => {
+      if (prevNumBallot === details.ballotsPlaced + 1) {
+        return prevNumBallot;
+      }
+      return ++prevNumBallot;
+    });
+    ballotService
+      .placeBallot(gardenName, winNum)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const action = (
     <>
@@ -58,63 +61,63 @@ export default function Details({}: Props) {
   );
 
   return (
-    // <DetailsRightStyled>
-    //   <DetailsGroupStyled>
-    //     <DetailsRowStyled>
-    //       <h3>Garden Details</h3>
-    //     </DetailsRowStyled>
-    //     <DetailsRowStyled>
-    //       <p>Number of plots</p>
-    //       <p>{linkState.gardenObject.numPlots}</p>
-    //     </DetailsRowStyled>
-    //     <DetailsRowStyled>
-    //       <p>Available plots</p>
-    //       <p>1</p>
-    //     </DetailsRowStyled>
-    //     <DetailsRowStyled>
-    //       <p>Lease date</p>
-    //       <p>{leaseStartDate}</p>
-    //     </DetailsRowStyled>
-    //   </DetailsGroupStyled>
-    //   <DetailsGroupStyled>
-    //     <DetailsRowStyled>
-    //       <h3>Ballot Details</h3>
-    //     </DetailsRowStyled>
-    //     <DetailsRowStyled>
-    //       <p>Window</p>
-    //       <p>{windowDate}</p>
-    //     </DetailsRowStyled>
-    //     <DetailsRowStyled>
-    //       <p>Ballots Placed</p>
-    //       <p>{ballotsPlaced}</p>
-    //     </DetailsRowStyled>
-    //   </DetailsGroupStyled>
-    //   <SummaryButtonStyled
-    //     variant="contained"
-    //     onClick={() => submitBallotHandler()}
-    //   >
-    //     Place Ballot
-    //   </SummaryButtonStyled>
-    //   <Snackbar
-    //     open={open}
-    //     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-    //     autoHideDuration={6000}
-    //     onClose={() => {
-    //       setOpen(false);
-    //     }}
-    //     action={action}
-    //   >
-    //     <Alert
-    //       onClose={() => {
-    //         setOpen(false);
-    //       }}
-    //       severity="success"
-    //       sx={{ width: "100%" }}
-    //     >
-    //       Ballot Placed
-    //     </Alert>
-    //   </Snackbar>
-    // </DetailsRightStyled>
-    <></>
+    <DetailsRightStyled>
+      <DetailsGroupStyled>
+        <DetailsRowStyled>
+          <h3>Garden Details</h3>
+        </DetailsRowStyled>
+        <DetailsRowStyled>
+          <p>Total number of plots</p>
+          <p>{details.numPlots}</p>
+        </DetailsRowStyled>
+        <DetailsRowStyled>
+          <p>Lease date</p>
+          <p>{details.leaseDate}</p>
+        </DetailsRowStyled>
+      </DetailsGroupStyled>
+      <DetailsGroupStyled>
+        <DetailsRowStyled>
+          <h3>Ballot Details</h3>
+        </DetailsRowStyled>
+        <DetailsRowStyled>
+          <p>Window</p>
+          <p>{details.window}</p>
+        </DetailsRowStyled>
+        <DetailsRowStyled>
+          <p>Available plots</p>
+          <p>{details.availablePlots}</p>
+        </DetailsRowStyled>
+        <DetailsRowStyled>
+          <p>Ballots Placed</p>
+          <p>{numBallot}</p>
+        </DetailsRowStyled>
+      </DetailsGroupStyled>
+      <SummaryButtonStyled
+        variant="contained"
+        onClick={() => submitBallotHandler()}
+        disabled={numBallot > details.ballotsPlaced}
+      >
+        Place Ballot
+      </SummaryButtonStyled>
+      <Snackbar
+        open={open}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        autoHideDuration={6000}
+        onClose={() => {
+          setOpen(false);
+        }}
+        action={action}
+      >
+        <Alert
+          onClose={() => {
+            setOpen(false);
+          }}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Ballot Placed
+        </Alert>
+      </Snackbar>
+    </DetailsRightStyled>
   );
 }

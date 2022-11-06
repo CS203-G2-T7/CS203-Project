@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 
-const PLACE_BALLOT_URL = "http://localhost:5000/ballot";
+const PLACE_BALLOT_URL = "http://localhost:5000/window/win%w/ballot";
 const GET_GARDEN_WIN_RELATION = "http://localhost:5000/window/win%w/garden?name=%n";
 
 const config = {
@@ -10,10 +10,9 @@ const config = {
 };
 
 class Ballot {
-  placeBallot(gardenName: String): Promise<AxiosResponse<any, any>> {
-    // console.log(config.headers.Authorization);
+  placeBallot(gardenName: String, windowNum: number): Promise<AxiosResponse<any, any>> {
     return axios.post(
-      PLACE_BALLOT_URL,
+      PLACE_BALLOT_URL.replace("%w", windowNum.toString()),
       {
         gardenName: gardenName,
       },
