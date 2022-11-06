@@ -46,8 +46,8 @@ export default function MyPlants({}: Props) {
         <p>View all the plants you are growing in your allotment garden here</p>
       </HeaderStyled>
       <ContentStyled>
-        {plantDataList.map((Plant) => (
-          <PlantCard plant={Plant} />
+        {plantDataList.map((Plant, index) => (
+          <PlantCard plant={Plant} key={index}/>
         ))}
       </ContentStyled>
     </MyPlantsStyled>
