@@ -17,7 +17,7 @@ function App() {
       <Route path="/" element={<Landing />} />
       <Route path="/landing" element={<Landing />} />
       <Route path="/ballot" element={<BallotGardenList />}/>
-      <Route path="/ballot/:name" element={<BallotGarden />} />
+      <Route path="/ballot/:gardenName" element={<BallotGarden />} />
       <Route path="/login" element={<Login />} />
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/my-plants" element={<MyPlants />} />

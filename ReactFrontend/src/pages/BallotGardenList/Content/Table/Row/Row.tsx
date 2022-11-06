@@ -8,7 +8,7 @@ type Props = {
 };
 
 export default function Row({ rowItem }: Props) {
-  const urlName: string = rowItem.gardenName.replace(" ", "-").toLowerCase();
+  const urlName: string = rowItem.gardenName.replace(" ", "-");
   return (
     <RowStyled to={`/ballot/${urlName}`}>
       <RowGardenEntryStyled>
