@@ -24,6 +24,16 @@ const fakeDatabase: rowObject[] = [
     plantName: "Brinjal",
     species: "Solanum melongena",
   },
+
+  {
+    plantName: "Brinjal",
+    species: "Solanum melongena",
+  },
+
+  {
+    plantName: "Brinjal",
+    species: "Solanum melongena",
+  },
 ];
 
 type Props = {};
