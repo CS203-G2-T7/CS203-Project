@@ -10,10 +10,9 @@ import Details from "./Details/Details";
 import { LinkStateType } from "../BallotGarden";
 
 type Props = {
-  linkState: LinkStateType;
 };
 
-export default function Summary({ linkState }: Props) {
+export default function Summary({  }: Props) {
   return (
     <SectionBoxStyled>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -23,7 +22,7 @@ export default function Summary({ linkState }: Props) {
       </Box>
       <HorizontalContainerStyled>
         <Carousel />
-        <Details linkState={linkState} />
+        <Details />
       </HorizontalContainerStyled>
     </SectionBoxStyled>
   );

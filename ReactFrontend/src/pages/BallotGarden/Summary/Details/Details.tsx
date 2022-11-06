@@ -1,5 +1,4 @@
 import React from "react";
-import { LinkStateType } from "pages/BallotGarden/BallotGarden";
 import ballotService from "service/ballotService";
 import formatDateTimeToDate from "utils/formatDateTimeToDate";
 import { DetailsRowStyled } from "./DetailRow.styled";
@@ -10,10 +9,9 @@ import { Alert, Button, IconButton, Snackbar } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 type Props = {
-  linkState: LinkStateType;
 };
 
-export default function Details({ linkState }: Props) {
+export default function Details({}: Props) {
   const [open, setOpen] = React.useState(false); //open state of snackbar
   //Format data to display
   // let leaseStartDate: string = formatDateTimeToDate(

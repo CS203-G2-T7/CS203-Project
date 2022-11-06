@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 const PLACE_BALLOT_URL = "http://localhost:5000/ballot";
-const CHOOSE_BALLOT_URL = "http://localhost:5000/magic";
+const GET_GARDEN_WIN_RELATION = "http://localhost:5000/window/win%w/garden?name=%n";
 
 const config = {
   headers: {
@@ -19,13 +19,22 @@ class Ballot {
       },
       {
         headers: {
-          Authorization: "Bearer " + localStorage.getItem('jwtAccessToken'),
+          Authorization: "Bearer " + localStorage.getItem("jwtAccessToken"),
         },
       }
     );
   }
-  chooseBallot(): Promise<AxiosResponse<any, any>> {
-    return axios.get(CHOOSE_BALLOT_URL);
+
+  getGardenWinRelation(
+    windowNum: number,
+    gardenName: string
+  ): Promise<AxiosResponse<any, any>> {
+    return axios.get(
+      GET_GARDEN_WIN_RELATION.replace("%w", windowNum.toString()).replace(
+        "%n",
+        gardenName.replace(" ", "-")
+      )
+    );
   }
 }
 
