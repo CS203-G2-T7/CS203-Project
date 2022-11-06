@@ -6,10 +6,7 @@ WORKDIR /opt/app
 
 COPY . .
 
-# Build all dependencies in preparation to go offline
-RUN ./mvnw dependency:go-offline -B
-
 # Package the application
-RUN ./mvnw package -DskipTests
+RUN ./mvnw install -DskipTests
 
-ENTRYPOINT ["./mvnw", "spring-boot:run"]
+CMD ["./mvnw", "spring-boot:run"]
