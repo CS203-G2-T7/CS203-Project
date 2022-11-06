@@ -94,8 +94,15 @@ public class AlgorithmServiceImpl {
                 }
                 Relationship r = winGardenService.findGardenInWindow(winId, gardenName);
                 int numPlotsAvailable = r.getNumPlotsForBalloting();
-                ArrayList<String> ballotSuccesses = getBallotSuccess(usernameDistance,
-                        numPlotsAvailable);
+                ArrayList<String> ballotSuccesses = new ArrayList<>();
+                if (ballots.size() < numPlotsAvailable) {
+                    Set<String> usernamesSet = usernameDistance.keySet();
+                    for (String s : usernamesSet) {
+                        ballotSuccesses.add(s);
+                    }
+                } else {
+                    ballotSuccesses = getBallotSuccess(usernameDistance, numPlotsAvailable);
+                }
                 for (Relationship ballot : ballots) {
                     if (ballotSuccesses.contains(ballot.getSK())) {
                         ballot.setBallotStatus("SUCCESS");

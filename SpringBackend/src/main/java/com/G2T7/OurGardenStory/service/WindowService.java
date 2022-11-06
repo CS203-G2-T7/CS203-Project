@@ -19,10 +19,24 @@ public class WindowService {
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
 
+    /**
+    * Get a Window object based on the PK and SK in the database
+    *
+    * @param pk which is the partition key in database
+    * @param sk which is the sort key in database
+    * @return the Window object corresponding to the pk and sk
+    */
     private Window findWindowByPkSk(final String pk, final String sk) {
         return dynamoDBMapper.load(Window.class, pk, sk);
     }
 
+    /**
+    * Get the Window object corresponding to the given windowId
+    * If no Window object is returned, throw ResourceNotFoundException
+    *
+    * @param windowId
+    * @return a list containing only the Window object corresponding to the given windowId
+    */
     public List<Window> findWindowById(final String windowId) { // queries must always return a paginated list
         String capWinId = StringUtils.capitalize(windowId);
 
@@ -41,6 +55,12 @@ public class WindowService {
         return foundWindowList;
     }
 
+    /**
+    * Get all Window objects in database
+    * If there are no Windows in database, throw ResourceNotFoundException
+    *
+    * @return a list of all Window objects in database
+    */
     public List<Window> findAllWindows() {
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
         eav.put(":WIN", new AttributeValue().withS("Window"));
@@ -54,7 +74,14 @@ public class WindowService {
         return foundWindowList;
     }
 
-    public Window createWindow(final Window window) throws SchedulerException {
+    /**
+    * Saves a Window object into the database
+    * If a Window with the same startDate already exists, throw Exception
+    *
+    * @param window
+    * @return the newly created Window object
+    */
+    public Window createWindow(final Window window) {
         window.setPK("Window");
         window.setWindowId("Win" + ++Window.numInstance);
 
@@ -66,10 +93,17 @@ public class WindowService {
         }
 
         dynamoDBMapper.save(window);
-        //scheduleAlgo(window.getWindowId());
         return window;
     }
 
+    /**
+    * Update the windowDuration of an existing Window
+    * If the windowId does not correspond to an already existing Window, throw ResourceNotFoundException
+    *
+    * @param windowDuration to be updated
+    * @param windowId
+    * @return the updated Window object, if update was successful
+    */
     public Window putWindow(final String windowDuration, final String windowId) {
         Window window = findWindowById(windowId).get(0);
         window.setWindowDuration(windowDuration);
@@ -77,60 +111,16 @@ public class WindowService {
         return window;
     }
 
+    /**
+    * Delete an already existing Window, corresponding to the given windowId
+    * If the windowId does not correspond t an already existing Window, throw ResourceNotFoundException
+    *
+    * @param windowId
+    * @return no content
+    */
     public void deleteWindow(final String windowId) {
         Window toDeleteWindow = findWindowById(windowId).get(0);
         dynamoDBMapper.delete(toDeleteWindow);
     }
-
-    // public void scheduleAlgo(String winId) throws SchedulerException {
-    //     // Window foundWindow = findWindowById(winId).get(0);
-    //     // String startDate = foundWindow.getSK();
-
-    //     // String winDuration = foundWindow.getWindowDuration();
-    //     // Calendar endDate = Calendar.getInstance();
-    //     // if (winDuration.contains("P")) {
-    //     //     LocalDate endLocalDate = DateUtil.getWindowEndDateFromStartDateAndDuration(startDate, winDuration);
-    //     //     endDate = DateBuilder.dateOf(0, 0, 0, endLocalDate.getDayOfMonth(), endLocalDate.getMonthValue(),
-    //     //             endLocalDate.getYear());
-    //     //     endDate.set(0, 0, 0, endLocalDate., 0, 0);
-    //     // } else if (winDuration.contains("minute")) {
-    //     //     int index = winDuration.indexOf("minute");
-    //     //     int duration = Integer.parseInt(winDuration.substring(0, index));
-    //     //     LocalTime time = LocalTime.now();
-    //     //     time = time.plusMinutes(duration);
-    //     //     int hour = time.getHour();
-    //     //     int minute = time.getMinute();
-    //     //     int seconds = time.getSecond();
-    //     //     endDate = DateBuilder.dateOf(hour, minute, seconds);
-    //     // }
-
-    //     // SchedulerFactory schedulerFactory = new StdSchedulerFactory();
-    //     // Scheduler scheduler = schedulerFactory.getScheduler();
-    //     // JobDetail job = newJob(BallotService.class)
-    //     //         .withIdentity("doAlgo")
-    //     //         .usingJobData("winId", winId)
-    //     //         .build();
-
-    //     // SimpleTrigger trigger = (SimpleTrigger) TriggerBuilder.newTrigger()
-    //     //         .withIdentity("doAlgo")
-    //     //         .startAt(endDate)
-    //     //         .forJob(job)
-    //     //         .build();
-
-    //     // scheduler.start();
-    //     // scheduler.scheduleJob(job, trigger);
-
-    //     Timer T = new Timer();
-    //     TimerTask doAlgo = new TimerTask() {
-    //         @Override
-    //         public void run() {
-    //             algorithmServiceImpl.doMagic(winId);
-    //         }
-    //     };
-    //     Calendar date = Calendar.getInstance();
-    //     LocalDateTime time = LocalDateTime.now();
-    //     date.set(time.getYear(), time.getMonthValue(), time.getDayOfMonth(), time.getHour(), time.getMinute() + 3, time.getSecond());
-    //     T.schedule(doAlgo, date.getTime());
-    // }
 
 }

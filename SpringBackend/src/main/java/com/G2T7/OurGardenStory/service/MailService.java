@@ -17,6 +17,15 @@ public class MailService {
     @Value(value = "${sendgrid.api.key}")
     private String SENDGRID_API_KEY;
 
+    /**
+    * Sends either a success or a fail email to the user of a ballot, depending on their ballot status
+    *
+    * @param emailTo the email address of the User
+    * @param username
+    * @param status the ballot status of the User
+    * @param winId_GardenName the GSI of the ballot
+    * @return the response String
+    */
     public String sendTextEmail(String emailTo, String username, String status, String winId_GardenName) throws IOException {
         // the sender email should be the same as we used to Create a Single Sender Verification
         Email from = new Email("jinhan.loh.2021@scis.smu.edu.sg");

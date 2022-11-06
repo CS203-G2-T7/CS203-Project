@@ -26,6 +26,15 @@ public class WinGardenService {
   private DynamoDBMapper dynamoDBMapper;
 
   // Relationship services
+
+  /**
+    * Get all Gardens that belong to a Window corresponding to the given windowId
+    * If there is no Window corresponding to the given windowId, or if there are no Gardens 
+    * posted to this Window, throw ResourceNotFoundException
+    *
+    * @param windowId
+    * @return a list of all GardenWin Relationship objects that belong to the Window
+    */
   public List<Relationship> findAllGardensInWindow(String windowId) {
     String capWinId = StringUtils.capitalize(windowId);
     System.out.println("capwinid: " + capWinId);
@@ -54,6 +63,15 @@ public class WinGardenService {
 
   }
 
+  /**
+    * Get a specific Garden in a Window
+    * If there is no Window corresponding to the given windowId, or if there is no Garden
+    * corresponding to the gardenName in this Window, throw ResourceNotFoundException
+    *
+    * @param windowId
+    * @param gardenName
+    * @return the GardenWin RelationSHip object corresponding to the windowId and gardenName
+    */
   public Relationship findGardenInWindow(String windowId, String gardenName) {
     String capWinId = StringUtils.capitalize(windowId);
     String formatGardenName = gardenName.replace("-", " ");
@@ -67,6 +85,14 @@ public class WinGardenService {
     return foundRelationship;
   }
 
+  /**
+    * Add an array of Gardens into the Window corresponding to the given windowId
+    * If there is no Window object corresponding to the given windowId, throw ResourceNotFoundException
+    *
+    * @param windowId
+    * @param payload containing an array of gardenNames
+    * @return the added GardenWin Relationship objects
+    */
   public List<Relationship> addGardensInWindow(String windowId, JsonNode payload) {
     String capWinId = StringUtils.capitalize(windowId);
     if (!validateWinExist(capWinId)) {
@@ -85,6 +111,15 @@ public class WinGardenService {
     return toAddRelationshipList;
   }
 
+  /**
+    * Update the leaseDuration and numPlotsForBalloting for a specific GardenWin Relationship object
+    * If there is no GardenWin Relationship object corresponding to the windowId and gardenName, throw ResourceNotFoundException
+    *
+    * @param windowId
+    * @param gardenName
+    * @param payload includes a String leaseDuration and an int numPlotsForBalloting
+    * @return the Updated GardenWin Relationship object, if update was successful
+    */
   public Relationship updateGardenInWindow(String windowId, String gardenName, JsonNode payload) throws Exception {
     String capWinId = StringUtils.capitalize(windowId);
     String formatGardenName = gardenName.replace("-", " ");
@@ -97,11 +132,26 @@ public class WinGardenService {
     return toUpdateGarden;
   }
 
+  /**
+    * Delete a specific Garden in the Window corresponding to given windowId
+    * If there is no GardenWin Relationship object corresponding to the windowId and gardenName, throw ResourceNotFoundException
+    *
+    * @param windowId
+    * @param gardenName
+    * @return no content
+    */
   public void deleteGardenInWindow(String windowId, String gardenName) {
     Relationship gardenWinToDelete = findGardenInWindow(windowId, gardenName);
     dynamoDBMapper.delete(gardenWinToDelete);
   }
 
+  /**
+    * Delete all Gardens in the Window corresponding to given windowId
+    * If there is no GardenWin Relationship object corresponding to the windowId and gardenName, throw ResourceNotFoundException
+    *
+    * @param windowId
+    * @return no content
+    */
   public void deleteAllGardensInWindow(String windowId) {
     List<Relationship> allGardensToDelete = findAllGardensInWindow(windowId);
     dynamoDBMapper.batchDelete(allGardensToDelete);

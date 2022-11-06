@@ -29,6 +29,13 @@ public class UserService {
     @Autowired
     private PlantService plantService;
 
+    /**
+    * Get the User object corresponding to a username
+    * If the username does not correspond to a registered User, throw ResourceNotFoundException
+    *
+    * @param username
+    * @return the User object corresponding to the given username
+    */
     public User findUserByUsername(final String username) {
         User foundUser = dynamoDBMapper.load(User.class, "User", username);
         if (foundUser == null) {
@@ -37,6 +44,12 @@ public class UserService {
         return foundUser;
     }
 
+    /**
+    * Get all registered Users in the database
+    * If there are no registered Users, throw ResourceNotFoundException
+    *
+    * @return a list of all Users 
+    */
     public List<User> findAllUsers() {
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
         eav.put(":USR", new AttributeValue().withS("User"));
@@ -50,6 +63,13 @@ public class UserService {
         return foundUserList;
     }
 
+    /**
+    * Create and save a new User object into database
+    * If User already exists, throw IllegalArgumentException
+    *
+    * @param userSignUpRequest containing the user's signup details
+    * @return no content
+    */
     // Package accessible. Used by signUpService.
     void createUser(final UserSignUpRequest userSignUpRequest) {
         User foundUser = dynamoDBMapper.load(User.class, "User", userSignUpRequest.getUsername());
@@ -66,17 +86,23 @@ public class UserService {
         dynamoDBMapper.save(newUser);
     }
 
-    // TODO Plant user relation. Should separate into different file.
-    // called on /my-plants. Authenticated. Get username from JWT Token.
-    // can have another service for plant related user operations. CRUD on
-    // user-plant O2M relationship.
+    // Plant user relation
+
+    /**
+    * Add an array of plants to a user's plantList
+    * If the plantName does not correspond to an existing Plant object in database, throw ResourceNotFoundException
+    *
+    * @param username
+    * @param payload containing an array of plantNames
+    * @return the updated List of plantNames for the user
+    */
     public List<String> addUserPlantName(final String username, JsonNode payload) {
         User foundUser = findUserByUsername(username);
         List<String> updatedPlantIdList = new ArrayList<String>(foundUser.getPlant());
         payload.forEach(relation -> {
             String plantName = relation.get("plantName").asText();
             if (dynamoDBMapper.load(Plant.class, "Plant", plantName) == null) {
-                throw new CustomException("Plant not found");
+                throw new ResourceNotFoundException("Plant not found");
             }
             updatedPlantIdList.add(plantName);
         });
@@ -86,6 +112,13 @@ public class UserService {
         return foundUser.getPlant();
     }
 
+    /**
+    * Get all of the user's Plants
+    * If the username does not correspond to a registered user, throw ResourceNotFoundException
+    *
+    * @param username
+    * @return a list of all Plants belonging to a user
+    */
     public List<Plant> findAllUserPlants(final String username) {
         User user = findUserByUsername(username);
         List<String> plantNames = user.getPlant();
@@ -97,6 +130,15 @@ public class UserService {
         return returnPlants;
     }
 
+    /**
+    * Get a specific Plant object that belong to a user, given a plantName
+    * If the username does not correspond to a registered User in database, or if the plantName does not
+    * correspond to a plant in the user's plant list, throw an Exception
+    *
+    * @param username
+    * @param plantName
+    * @return the Plant object corresponding to the given plantName that belongs to a user
+    */
     public Plant findUserPlant(final String username, final String plantName) {
         User user = findUserByUsername(username);
         List<String> plantNames = user.getPlant();
@@ -107,6 +149,15 @@ public class UserService {
         return p;
     }
 
+    /**
+    * Delete a specific Plant object that belong to a user, given a plantName
+    * If the username does not correspond to a registered User in database, or if the plantName does not
+    * correspond to a plant in the user's plant list, throw an Exception
+    *
+    * @param username
+    * @param plantName
+    * @return the deleted Plant object corresponding to the given plantName that belongs to a user, if deletion was successful
+    */
     public List<String> removeUserPlantName(final String username, JsonNode payload) {
         User foundUser = findUserByUsername(username);
         List<String> updatedPlantIdList = new ArrayList<String>(foundUser.getPlant());

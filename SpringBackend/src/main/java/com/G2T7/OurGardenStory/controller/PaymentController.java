@@ -18,6 +18,13 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
+    /**
+    * Find out the payment details for a User, for all their ballots where ballotStatus is SUCCESS and paymentStatus is PENDING
+    * If username does not belong to a registered user, throw AuthenticationCredentialsNotFoundException
+    *
+    * @param headers containing the username as a key
+    * @return a JSONObject the amount, currency, and description of the payment
+    */
     @GetMapping(path = "/payment")
     public ResponseEntity<?> findPayment(@RequestHeader Map<String, String> headers) {
         try {
@@ -33,6 +40,13 @@ public class PaymentController {
         }
     }
 
+    /**
+    * Charges a USer for all his outstanding ballot Charges
+    * If username does not belong to a registered user, throw AuthenticationCredentialsNotFoundException
+    *
+    * @param headers containing the username as a key
+    * @return a Charge object corresponding to the amount paid by User
+    */
     @PostMapping(path = "/payment")
     public ResponseEntity<?> makePayment(@RequestHeader Map<String, String> headers) {
         try {
