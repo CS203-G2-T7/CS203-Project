@@ -21,8 +21,7 @@ export const defaultPlant: Plant = {
   pk: "",
 };
 
-type Props = {};
-export default function MyPlants({}: Props) {
+export default function MyPlants() {
   const [plantDataList, setPlantDataList] = useState<Plant[]>([defaultPlant]);
 
   useEffect(() => {

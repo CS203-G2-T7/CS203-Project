@@ -12,7 +12,7 @@ export default function Navbar({}: Props) {
       <LeftSection />
       <RightSectionStyled>
         <a href="/">Home</a>
-        <a href="/gardens">Gardens</a>
+        <a href="/garden">Gardens</a>
         <a href="/ballot">Ballot</a>
         <a href="/my-plant">My Plant</a>
         <AccountButton />
