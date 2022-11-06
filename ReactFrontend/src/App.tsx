@@ -20,7 +20,7 @@ function App() {
       <Route path="/ballot/:gardenName" element={<BallotGarden />} />
       <Route path="/login" element={<Login />} />
       <Route path="/sign-up" element={<SignUp />} />
-      <Route path="/my-plants" element={<MyPlants />} />
+      <Route path="/my-plant" element={<MyPlants />} />
       <Route path="/gardens" element={<AllGarden />} />
 
       {/* Accessible to NOT logged in users */}
