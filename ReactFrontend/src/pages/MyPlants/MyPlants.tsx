@@ -4,6 +4,7 @@ import Navbar from "components/Navbar/Navbar";
 import { NavBarStyled } from "pages/Landing/NavBar.styled";
 import { HeaderStyled } from "pages/MyPlants/Header.styled";
 import ActionAreaCard from "./ActionAreaCard";
+import { ActionAreaStyled } from "./ActionArea.styled";
 
 export type rowObject = {
   plantName: string;
@@ -37,7 +38,9 @@ export default function MyPlants({}: Props) {
         <p>My Plants</p>
         <p>View all the plants you are growing in your allotment garden here</p>
       </HeaderStyled>
-      <ActionAreaCard />
+      {fakeDatabase.map((rowObject) => (
+        <ActionAreaCard rowObject={rowObject} />
+      ))}
     </MyPlantsStyled>
   );
 }
