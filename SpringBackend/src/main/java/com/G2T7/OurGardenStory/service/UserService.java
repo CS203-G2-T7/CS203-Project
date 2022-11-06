@@ -104,6 +104,9 @@ public class UserService {
             if (dynamoDBMapper.load(Plant.class, "Plant", plantName) == null) {
                 throw new ResourceNotFoundException("Plant not found");
             }
+            if (foundUser.getPlant().contains(plantName)) {
+                throw new CustomException("Plant already added");
+            }
             updatedPlantIdList.add(plantName);
         });
 
