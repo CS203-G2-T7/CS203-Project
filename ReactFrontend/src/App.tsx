@@ -16,12 +16,10 @@ function App() {
       {/* Accessible to all */}
       <Route path="/" element={<Landing />} />
       <Route path="/landing" element={<Landing />} />
-      <Route path="/ballot" element={<BallotGardenList />}>
-        <Route path=":name" element={<BallotGarden />} />
-      </Route>
+      <Route path="/ballot" element={<BallotGardenList />}/>
+      <Route path="/ballot/:name" element={<BallotGarden />} />
       <Route path="/login" element={<Login />} />
       <Route path="/sign-up" element={<SignUp />} />
-      {/* <Route path="/garden" element={<></>} /> */}
       <Route path="/my-plants" element={<MyPlants />} />
       <Route path="/gardens" element={<AllGarden />} />
 

@@ -10,7 +10,7 @@ type Props = {
 export default function Row({ rowItem }: Props) {
   const urlName: string = rowItem.gardenName.replace(" ", "-").toLowerCase();
   return (
-    <RowStyled to={`/ballot?name=${urlName}`}>
+    <RowStyled to={`/ballot/${urlName}`}>
       <RowGardenEntryStyled>
         <span>{rowItem.gardenName}</span>
         <span>{rowItem.gardenAddress}</span>
