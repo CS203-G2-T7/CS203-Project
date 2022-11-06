@@ -1,4 +1,4 @@
-package com.G2T7.OurGardenStory.controller;
+package com.G2T7.OurGardenStory.service;
 
 import com.G2T7.OurGardenStory.geocoder.GeocodeDistance;
 
@@ -18,6 +18,15 @@ public class GeocodeService {
 
     HashMap<String, Double> map = new HashMap<>();
 
+    /**
+    * Calls the distanceCalculator method which calculates the distance between a user's address and the garden's address
+    *
+    * @param username
+    * @param userAddress
+    * @param gardenLng the longitude of the Garden's address
+    * @param gardenLat the latitude of the Garden's address
+    * @return the distance in km
+    */
     public double saveDistance(String username, String userAddress, String gardenLng, String gardenLat) {
         double distance = 0.0;
 
