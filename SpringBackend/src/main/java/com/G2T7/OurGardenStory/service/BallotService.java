@@ -147,7 +147,7 @@ public class BallotService {
         String capWinId = StringUtils.capitalize(windowId);
 
         // Basic existence validations
-        winGardenService.findGardenInWindow(capWinId, payload.get("gardenName").asText());
+        Relationship winGarden = winGardenService.findGardenInWindow(capWinId, payload.get("gardenName").asText());
         if (username == null) {
             throw new AuthenticationCredentialsNotFoundException("User is not authenticated");
         }
@@ -168,7 +168,7 @@ public class BallotService {
         Relationship ballot = new Ballot(capWinId, username, garden.getSK(),
                 "Ballot" + String.valueOf(++Ballot.numInstance),
                 DateUtil.convertLocalDateToString(LocalDate.now()),
-                distance, Ballot.BallotStatus.PENDING.value, Ballot.PaymentStatus.PENDING.value);
+                distance, winGarden.getNumPlotsForBalloting(), Ballot.BallotStatus.PENDING.value, Ballot.PaymentStatus.PENDING.value);
 
         dynamoDBMapper.save(ballot);
         return ballot;
@@ -201,8 +201,7 @@ public class BallotService {
         // garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
         // Relationship.BallotStatus.PENDING);
         Relationship ballot = new Ballot(capWinId, username, garden.getSK(), toUpdateBallot.getBallotId(), currentDate,
-                distance,
-                Ballot.BallotStatus.PENDING.value, Ballot.BallotStatus.PENDING.value);
+                distance, toUpdateBallot.getNumPlotsForBalloting(), Ballot.BallotStatus.PENDING.value, Ballot.BallotStatus.PENDING.value);
 
         dynamoDBMapper.save(ballot);
         return ballot;
