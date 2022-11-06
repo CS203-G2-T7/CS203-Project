@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
+import com.G2T7.OurGardenStory.service.AlgorithmServiceImpl;
 import com.G2T7.OurGardenStory.service.BallotService;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,17 @@ public class BallotController {
     @Autowired
     private BallotService ballotService;
 
+    @Autowired
+    private AlgorithmServiceImpl algorithmServiceImpl;
+
+    /**
+    * Gets a list of all ballots for a particular window and garden
+    * If there are no ballots in the window garden, throw a ResourceNotFoundException
+    *
+    * @param winId a String
+    * @param payload which includes a String gardenName
+    * @return the list of current ballots for window garden
+    */
     @GetMapping(path = "/window/{winId}/allBallot")
     public ResponseEntity<List<Relationship>> findAllBallotsInWindowGarden(@PathVariable String winId,
             @RequestBody JsonNode payload,
@@ -45,6 +58,14 @@ public class BallotController {
         }
     }
 
+    /**
+    * Gets a ballot corresponding to a username in a window
+    * If there is no ballot corresponding to the username in the window, throw a ResourceNotFoundException.
+    *
+    * @param winId a String
+    * @param headers containing the username as a key
+    * @return the ballot corresponding to the username, in the window
+    */
     @GetMapping(path = "/window/{winId}/ballot")
     public ResponseEntity<?> findUserBallotInWindow(@PathVariable String winId,
             @RequestHeader Map<String, String> headers) {
@@ -61,6 +82,15 @@ public class BallotController {
         }
     }
 
+    /**
+    * Adds a ballot for a user, in a window for a garden
+    * If the window or garden is not found, throw an exception
+    *
+    * @param winId a String
+    * @param payload which includes a String gardenName
+    * @param headers containing the username as a key
+    * @return the newly posted ballot in that window garden
+    */
     @PostMapping(path = "/window/{winId}/ballot")
     public ResponseEntity<?> addBallotInWindowGarden(@PathVariable String winId, @RequestBody JsonNode payload,
             @RequestHeader Map<String, String> headers) {
@@ -79,6 +109,15 @@ public class BallotController {
         }
     }
 
+    /**
+    * Update the garden in which the ballot is posted for
+    * If the requested garden is not available, throw an exception
+    *
+    * @param winId a String
+    * @param payload which includes a String gardenName
+    * @param headers containing the username as a key
+    * @return the updated Ballot object
+    */
     @PutMapping(path = "/window/{winId}/ballot")
     public ResponseEntity<?> updateBallotInWindow(@PathVariable String winId, @RequestBody JsonNode payload,
             @RequestHeader Map<String, String> headers) {
@@ -95,6 +134,14 @@ public class BallotController {
         }
     }
 
+    /**
+    * Delete the ballot that was posted previously in a window
+    * If the ballot to be deleted is invalid or not found, throw an exception
+    *
+    * @param winId a String
+    * @param headers containing the username as a key
+    * @return a message "Ballot deleted" if deleted successfully
+    */
     @DeleteMapping(path = "/window/{winId}/ballot")
     public ResponseEntity<String> deleteBallotInWindow(@PathVariable String winId,
             @RequestHeader Map<String, String> headers) {
@@ -111,5 +158,10 @@ public class BallotController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    // @PostMapping(path = "/doMagic")
+    // public void doMagic(@RequestBody JsonNode payload) {
+    //     algorithmServiceImpl.doMagic(payload.get("winId").asText());
+    // }
 
 }

@@ -18,10 +18,24 @@ public class WindowService {
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
 
+    /**
+    * Get a Window object based on the PK and SK in the database
+    *
+    * @param pk which is the partition key in database
+    * @param sk which is the sort key in database
+    * @return the Window object corresponding to the pk and sk
+    */
     private Window findWindowByPkSk(final String pk, final String sk) {
         return dynamoDBMapper.load(Window.class, pk, sk);
     }
 
+    /**
+    * Get the Window object corresponding to the given windowId
+    * If no Window object is returned, throw ResourceNotFoundException
+    *
+    * @param windowId
+    * @return a list containing only the Window object corresponding to the given windowId
+    */
     public List<Window> findWindowById(final String windowId) { // queries must always return a paginated list
         String capWinId = StringUtils.capitalize(windowId);
 
@@ -40,6 +54,12 @@ public class WindowService {
         return foundWindowList;
     }
 
+    /**
+    * Get all Window objects in database
+    * If there are no Windows in database, throw ResourceNotFoundException
+    *
+    * @return a list of all Window objects in database
+    */
     public List<Window> findAllWindows() {
         Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
         eav.put(":WIN", new AttributeValue().withS("Window"));
@@ -53,6 +73,14 @@ public class WindowService {
         return foundWindowList;
     }
 
+
+    /**
+    * Saves a Window object into the database
+    * If a Window with the same startDate already exists, throw Exception
+    *
+    * @param window
+    * @return the newly created Window object
+    */
     public Window createWindow(final Window window) {
         window.setPK("Window");
         window.setWindowId("Win" + ++Window.numInstance);
@@ -68,6 +96,14 @@ public class WindowService {
         return window;
     }
 
+    /**
+    * Update the windowDuration of an existing Window
+    * If the windowId does not correspond to an already existing Window, throw ResourceNotFoundException
+    *
+    * @param windowDuration to be updated
+    * @param windowId
+    * @return the updated Window object, if update was successful
+    */
     public Window putWindow(final String windowDuration, final String windowId) {
         Window window = findWindowById(windowId).get(0);
         window.setWindowDuration(windowDuration);
@@ -75,6 +111,13 @@ public class WindowService {
         return window;
     }
 
+    /**
+    * Delete an already existing Window, corresponding to the given windowId
+    * If the windowId does not correspond t an already existing Window, throw ResourceNotFoundException
+    *
+    * @param windowId
+    * @return no content
+    */
     public void deleteWindow(final String windowId) {
         Window toDeleteWindow = findWindowById(windowId).get(0);
         dynamoDBMapper.delete(toDeleteWindow);
