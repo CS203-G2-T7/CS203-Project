@@ -10,7 +10,6 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.G2T7.OurGardenStory.controller.GeocodeService;
 import com.G2T7.OurGardenStory.exception.CustomException;
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;
@@ -54,8 +53,8 @@ public class BallotService {
      * Finds all ballots given a window and a garden
      * Has to query GSI of WinId_GardenName-index to get ballots.
      * 
-     * @windowId ID of window
-     * @gardenName name of garden
+     * @param windowId ID of window
+     * @param gardenName name of garden
      * @return List of found ballots
      * 
      *         Validations:
@@ -148,13 +147,15 @@ public class BallotService {
         String capWinId = StringUtils.capitalize(windowId);
 
         // Basic existence validations
-        winGardenService.findGardenInWindow(capWinId, payload.get("gardenName").asText());
+        Relationship winGarden = winGardenService.findGardenInWindow(capWinId, payload.get("gardenName").asText());
         if (username == null) {
             throw new AuthenticationCredentialsNotFoundException("User is not authenticated");
         }
 
         // Advanced validations
-        validateBallotPostDate(capWinId, LocalDate.now());
+        if (windowService.findWindowById(capWinId).get(0).getWindowDuration().charAt(1) != 'T') {
+            validateBallotPostDate(capWinId, LocalDate.now());
+        }
         validateUserMultipleBallots(capWinId, username);
 
         // Passed all validations, then create call geocode. Create ballot and save.
@@ -167,12 +168,20 @@ public class BallotService {
         Relationship ballot = new Ballot(capWinId, username, garden.getSK(),
                 "Ballot" + String.valueOf(++Ballot.numInstance),
                 DateUtil.convertLocalDateToString(LocalDate.now()),
-                distance, Ballot.BallotStatus.PENDING.value, Ballot.PaymentStatus.PENDING.value);
+                distance, winGarden.getNumPlotsForBalloting(), Ballot.BallotStatus.PENDING.value, Ballot.PaymentStatus.PENDING.value);
 
         dynamoDBMapper.save(ballot);
         return ballot;
     }
 
+    /**
+    * Update the Garden that the ballot is balloting for
+    *
+    * @param windowId
+    * @param username
+    * @param payload includes a String gardenName
+    * @return the updated Ballot, if update is successful
+    */
     public Relationship updateGardenInBallot(String windowId, String username, JsonNode payload) {
         String capWinId = StringUtils.capitalize(windowId);
         Relationship toUpdateBallot = findUserBallotInWindow(capWinId, username);
@@ -192,13 +201,19 @@ public class BallotService {
         // garden.getSK(), toUpdateBallot.getBallotId(), currentDate, distance,
         // Relationship.BallotStatus.PENDING);
         Relationship ballot = new Ballot(capWinId, username, garden.getSK(), toUpdateBallot.getBallotId(), currentDate,
-                distance,
-                Ballot.BallotStatus.PENDING.value, Ballot.BallotStatus.PENDING.value);
+                distance, toUpdateBallot.getNumPlotsForBalloting(), Ballot.BallotStatus.PENDING.value, Ballot.BallotStatus.PENDING.value);
 
         dynamoDBMapper.save(ballot);
         return ballot;
     }
 
+    /**
+    * Update a ballot that was previously posted
+    *
+    * @param windowId
+    * @param username
+    * @return the deleted Ballot
+    */
     public void deleteBallotInWindow(String windowId, String username) {
         String capWinId = StringUtils.capitalize(windowId);
 
@@ -206,6 +221,11 @@ public class BallotService {
         dynamoDBMapper.delete(ballotToDelete);
     }
 
+    /**
+    * checks whether a user that is attempting to place a ballot is a registered user, and is at least 18 years old
+    *
+    * @param username
+    */
     public void validateUser(String username) {
         System.out.println("Validating user exists");
         User user = userService.findUserByUsername(username);
@@ -249,6 +269,12 @@ public class BallotService {
         // reach here no error
     }
 
+    /**
+    * Checks whether the user posting a ballot has already posted a ballot in the same window previously
+    *
+    * @param capWinId a String
+    * @param username a String
+    */
     public void validateUserMultipleBallots(String capWinId, String username) {
         Relationship foundBallot = dynamoDBMapper.load(Ballot.class, capWinId, username);
         if (foundBallot != null) {
@@ -272,62 +298,4 @@ public class BallotService {
     // return;
     // }
 
-    
-
-    // public void execute(JobExecutionContext context) throws JobExecutionException {
-    //     try {
-    //         ManagedContext requestContext = Arc.container().requestContext();
-    //         if (!requestContext.isActive()) {
-    //             requestContext.activate();
-    //         }
-    //         WinGardenService relationshipService = Arc.container().instance(WinGardenService.class).get();
-    //         // MailService relationshipService =
-    //         // Arc.container().instance(RelationshipService.class).get();
-    //         // RelationshipService relationshipService =
-    //         // Arc.container().instance(RelationshipService.class).get();
-    //         // RelationshipService relationshipService =
-    //         // Arc.container().instance(RelationshipService.class).get();
-    //         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-    //         String winId = dataMap.getString("winId");
-    //         System.out.println(winId);
-    //         List<Relationship> relationships = relationshipService.findAllGardensInWindow(winId);
-    //         List<String> gardens = new ArrayList<>();
-
-    //         for (Relationship r : relationships) {
-    //             System.out.println(r.getSK());
-    //             gardens.add(r.getSK());
-    //         }
-
-    //         System.out.println("======");
-
-    //         for (String gardenName : gardens) {
-    //             List<Relationship> ballots = findAllBallotsInWindowGarden(winId, gardenName);
-    //             HashMap<String, Double> usernameDistance = new HashMap<>();
-    //             for (Relationship ballot : ballots) {
-    //                 String username = ballot.getSK();
-    //                 Double distance = ballot.getDistance();
-    //                 usernameDistance.put(username, distance);
-    //             }
-    //             Relationship r = relationshipService.findGardenInWindow(winId, gardenName);
-    //             int numPlotsAvailable = r.getNumPlotsForBalloting();
-    //             ArrayList<String> ballotSuccesses = algorithmService.getBallotSuccess(usernameDistance,
-    //                     numPlotsAvailable);
-    //             for (Relationship ballot : ballots) {
-    //                 if (ballotSuccesses.contains(ballot.getSK())) {
-    //                     ballot.setBallotStatus("SUCCESS");
-    //                     dynamoDBMapper.save(ballot);
-    //                     String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-    //                     mailService.sendTextEmail(email, "SUCCESS"); // this throws IOException
-    //                 } else {
-    //                     ballot.setBallotStatus("FAIL");
-    //                     dynamoDBMapper.save(ballot);
-    //                     String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-    //                     mailService.sendTextEmail(email, "FAIL"); // this throws IOException
-    //                 }
-    //             }
-    //         }
-    //     } catch (IOException e) {
-    //         e.printStackTrace();
-    //     }
-    // }
 }

@@ -31,6 +31,13 @@ public class UserController {
         this.signUpService = signUpService;
     }
 
+    /**
+    * This is a sign-up service for new users who do not have an account yet
+    * If user is not above 18, or password is less than 8 characters long, throw an exception
+    *
+    * @param userSignUpRequest which is a UserSignUpRequest object
+    * @return a message "'givenName' signed up successfully" if sign up was successful
+    */
     @PostMapping(path = "/sign-up")
     public ResponseEntity<String> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
         try {
@@ -47,6 +54,13 @@ public class UserController {
         }
     }
 
+    /**
+    * This is a sign-in service 
+    * If an invalid username or password is given, throw IllegalArgumentException
+    *
+    * @param userSignInRequest which is a UserSignInRequest object
+    * @return a UserSignInResponse object if user is successfully signed in
+    */
     @PostMapping(path = "/sign-in")
     public ResponseEntity<?> signIn(@RequestBody UserSignInRequest userSignInRequest) {
         try {
@@ -62,6 +76,13 @@ public class UserController {
         }
     }
 
+    /**
+    * Returns a User object corresponding to the given username
+    * If an invalid username is given, throw ResourceNotFoundException
+    *
+    * @param username an optional String
+    * @return a User object if there is an existing user signed up with the given username
+    */
     @GetMapping(path = "/user")
     public ResponseEntity<?> findUser(@RequestParam(name = "username") Optional<String> username) {
         try {

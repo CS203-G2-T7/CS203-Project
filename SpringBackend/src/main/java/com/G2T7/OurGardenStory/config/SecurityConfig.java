@@ -49,7 +49,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(permitAllEndpointList.toArray(new String[permitAllEndpointList.size()])).permitAll()
-
+                .antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers(HttpMethod.GET, "/garden").permitAll()
                 .antMatchers(HttpMethod.POST, "/garden").permitAll()
                 .antMatchers(HttpMethod.PUT, "/garden").permitAll()
@@ -80,6 +80,9 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.PUT, "/window/{winId}/ballot").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/window/{winId}/ballot").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/window/{winId}/allBallot").permitAll()
+
+                .antMatchers(HttpMethod.GET, "/payment").authenticated()
+                .antMatchers(HttpMethod.POST, "/payment").authenticated()
 
                 .anyRequest().permitAll();
 
