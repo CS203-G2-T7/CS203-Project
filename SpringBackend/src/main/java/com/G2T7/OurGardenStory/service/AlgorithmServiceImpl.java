@@ -101,12 +101,14 @@ public class AlgorithmServiceImpl {
                         ballot.setBallotStatus("SUCCESS");
                         dynamoDBMapper.save(ballot);
                         String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-                        mailService.sendTextEmail(email, "SUCCESS"); // this throws IOException
+                        String username = userService.findUserByUsername(ballot.getSK()).getSK();
+                        mailService.sendTextEmail(email, username, "SUCCESS", ballot.getWinId_GardenName()); // this throws IOException
                     } else {
                         ballot.setBallotStatus("FAIL");
                         dynamoDBMapper.save(ballot);
                         String email = userService.findUserByUsername(ballot.getSK()).getEmail();
-                        mailService.sendTextEmail(email, "FAIL"); // this throws IOException
+                        String username = userService.findUserByUsername(ballot.getSK()).getSK();
+                        mailService.sendTextEmail(email, username, "FAIL", ballot.getWinId_GardenName()); // this throws IOException
                     }
                 }
             }

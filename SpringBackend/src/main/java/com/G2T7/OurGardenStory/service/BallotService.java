@@ -177,8 +177,8 @@ public class BallotService {
     /**
     * Update the Garden that the ballot is balloting for
     *
-    * @param winId
-    * @param gardenName
+    * @param windowId
+    * @param username
     * @param payload includes a String gardenName
     * @return the updated Ballot, if update is successful
     */
