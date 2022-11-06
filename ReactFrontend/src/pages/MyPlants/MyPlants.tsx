@@ -3,8 +3,8 @@ import { MyPlantsStyled } from "./MyPlants.styled";
 import Navbar from "components/Navbar/Navbar";
 import { NavBarStyled } from "pages/Landing/NavBar.styled";
 import { HeaderStyled } from "pages/MyPlants/Header.styled";
-import ActionAreaCard from "./ActionAreaCard";
-import { ActionAreaStyled } from "./ActionArea.styled";
+import PlantCard from "./Content/PlantCard";
+import { ContentStyled } from "./Content/Content.styled";
 
 export type rowObject = {
   plantName: string;
@@ -38,9 +38,11 @@ export default function MyPlants({}: Props) {
         <p>My Plants</p>
         <p>View all the plants you are growing in your allotment garden here</p>
       </HeaderStyled>
-      {fakeDatabase.map((rowObject) => (
-        <ActionAreaCard rowObject={rowObject} />
-      ))}
+      <ContentStyled>
+        {fakeDatabase.map((rowObject) => (
+          <PlantCard rowObject={rowObject} />
+        ))}
+      </ContentStyled>
     </MyPlantsStyled>
   );
 }
