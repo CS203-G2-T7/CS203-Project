@@ -14,12 +14,12 @@ type Props = {
 export default function PlantCard({ plant }: Props) {
   return (
     <PlantCardStyled>
-      <Card sx={{ maxWidth: 400, height: 280 }}>
+      <Card sx={{ maxWidth: 400, height: 268 }}>
         <CardActionArea>
           <CardMedia
             component="img"
             height="180"
-            image={require("assets/imgs/LettuceImage.jpg")}
+            image={require("assets/imgs/" + plant.sk + ".jpg")}
             alt="Lettuce Image"
           />
 
