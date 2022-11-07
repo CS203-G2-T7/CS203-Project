@@ -18,7 +18,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 @Api(value = "User Controller", description = "Operations pertaining to User model")
-@CrossOrigin(origins = {"https://ourgardenstory.me/", "https://backend.ourgardenstory.me/api/users/sign-in", "https://ourgardenstory.me/login", "*"})
+@CrossOrigin(origins = {"https://ourgardenstory.me/", "*"})
 @RestController
 @RequestMapping(path = "/api/users")
 public class UserController {

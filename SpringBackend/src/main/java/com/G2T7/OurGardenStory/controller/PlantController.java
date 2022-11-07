@@ -18,7 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @Api(value = "Plant Controller", description = "Operations pertaining to Plant model")
-@CrossOrigin({"https://ourgardenstory.me/my-plant", "*"})
+@CrossOrigin({"https://ourgardenstory.me/", "*"})
 @RestController
 public class PlantController {
 
