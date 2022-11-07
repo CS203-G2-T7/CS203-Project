@@ -35,13 +35,8 @@ public class CommunityService {
      * @param username a String
      * @return the list of users with successful ballots for a particular garden
      */
-<<<<<<< HEAD
     public List<User> findUserWithSuccessfulBallotInGarden(String username) {
         List<Window> allWindows = windowService.findAllWindows();
-=======
-    public List<JSONObject> findUserWithSuccessfulBallotInGarden(String username) {
-        List<String> allWinId = new ArrayList<>();
->>>>>>> 0730ea776e68b703e9ba2608e073ce3c28110a15
         List<Relationship> allSuccessfulBallots = new ArrayList<>();
         List<User> allUsers = new ArrayList<>();
         String gardenName = "";
