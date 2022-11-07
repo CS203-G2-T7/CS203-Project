@@ -52,11 +52,6 @@ more self-reliant on food production and reduce GHG emissions.
 
 
 
-## Architecture Diagram
-
-![architecture](https://user-images.githubusercontent.com/95681243/200373924-7df17643-4e29-43b2-93a5-5826ba3b6be8.png)
-
-
 
 ## Built With
 
@@ -69,6 +64,12 @@ more self-reliant on food production and reduce GHG emissions.
 * [VSCode](https://code.visualstudio.com/)
 * [Figma](https://www.figma.com/)
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/)
+
+
+
+## Architecture Diagram
+
+![New](https://user-images.githubusercontent.com/95681243/200374726-709f9967-cd19-4752-8638-a93548f34f52.png)
 
 
 
