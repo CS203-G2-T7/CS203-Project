@@ -3,24 +3,25 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { CardActionArea } from "@mui/material";
 import { ProfileStyled } from "./Profile.styled";
 import { User } from "../Community";
-import Box from '@mui/material/Box';
-import CardActions from '@mui/material/CardActions';
+import SocialMedia from "./SocialMedia/SocialMedia";
+import Box from "@mui/material/Box";
+import CardActions from "@mui/material/CardActions";
+import { Avatar } from "assets/svgs";
 
 type Props = {
   user: User;
 };
 
 export default function Profile({ user }: Props) {
-  if (user.sk === "") {
-    user.sk = "Lettuce";
-  }
-
   return (
     <ProfileStyled>
-      <Card sx={{ maxWidth: 400, height: 268 }}>
+      <Avatar />
+      <p>{user.sk}</p>
+      <SocialMedia email={user.email}/>
+
+      {/* <Card sx={{ maxWidth: 400, height: 268 }}>
         <CardActionArea>
           <CardMedia
             component="img"
@@ -38,9 +39,7 @@ export default function Profile({ user }: Props) {
             </Typography>
           </CardContent>
         </CardActionArea>
-      </Card>
+      </Card> */}
     </ProfileStyled>
   );
 }
-
-

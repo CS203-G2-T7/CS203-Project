@@ -37,7 +37,7 @@ const fakeDatabase: User[] = [
   {
     address: "38748",
     sk: "seanthan",
-    email: "sean@sean.com",
+    email: "gmwong.2021@scis.smu.edu.sg",
     dob: "1994-10-10",
     pk: "User",
     plant: [],

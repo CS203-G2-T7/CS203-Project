@@ -14,7 +14,9 @@ export default function Navbar({}: Props) {
         <a href="/">Home</a>
         <a href="/garden">Gardens</a>
         <a href="/ballot">Ballot</a>
-        <a href="/my-plant">My Plant</a>
+        <a href="/my-plant">MyPlant</a>
+        <a href="/community">MyCommunity</a>
+
         <AccountButton />
       </RightSectionStyled>
     </NavbarStyled>
