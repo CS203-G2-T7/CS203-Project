@@ -12,7 +12,7 @@ import com.G2T7.OurGardenStory.service.CommunityService;
 
 import io.swagger.annotations.*;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "https://ourgardenstory.me")
 @RestController
 @Api(value = "Community Controller", description = "Operations pertaining to Community model")
 public class CommunityController {

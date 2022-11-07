@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@CrossOrigin("*")
+@CrossOrigin("https://ourgardenstory.me")
 @RestController
 @Api(value = "Payment Controller", description = "Operations pertaining to Payment model")
 public class PaymentController {

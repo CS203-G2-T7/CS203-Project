@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 
-@CrossOrigin("*")
+@CrossOrigin("https://ourgardenstory.me")
 @RestController
 @ApiIgnore
 public class HealthCheckController {
