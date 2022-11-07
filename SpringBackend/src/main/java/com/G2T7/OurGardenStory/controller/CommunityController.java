@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.service.CommunityService;
 
 import io.swagger.annotations.*;
@@ -19,12 +20,14 @@ public class CommunityController {
 
     private final CommunityService communityService;
 
-    @Autowired public CommunityController(CommunityService communityService) {
+    @Autowired
+    public CommunityController(CommunityService communityService) {
         this.communityService = communityService;
     }
 
     /**
-     * Gets a list of users with successful ballots for their own garden to connect with
+     * Gets a list of users with successful ballots for their own garden to connect
+     * with
      * If the garden is not found, throw an exception
      *
      * @param headers containing logged in user
@@ -35,10 +38,11 @@ public class CommunityController {
     public ResponseEntity<?> findSuccessfulBallotsInGarden(@RequestHeader Map<String, String> headers) {
         try {
             System.out.println("here");
-            JSONArray jsonArray = communityService.findUserWithSuccessfulBallotInGarden(headers.get("username"));
-            System.out.println(jsonArray);
-            return ResponseEntity.ok(jsonArray);
+            List<User> userList = communityService.findUserWithSuccessfulBallotInGarden(headers.get("username"));
+            System.out.println(userList);
+            return ResponseEntity.ok(userList);
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.internalServerError().build();
         }
     }
