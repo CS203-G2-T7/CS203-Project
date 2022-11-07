@@ -14,6 +14,10 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(value = "Plant Controller", description = "Operations pertaining to Plant model")
 @CrossOrigin("*")
 @RestController
 public class PlantController {
@@ -31,6 +35,7 @@ public class PlantController {
     * @param plant a Plant object
     * @return a new Plant object that is successfully 
     */
+    @ApiOperation(value = "Save a new plant into the database")
     @PostMapping(path = "/plant")
     public ResponseEntity<?> savePlant(@RequestBody Plant plant) {
         try {
@@ -49,6 +54,7 @@ public class PlantController {
     * @param plantName an optional String
     * @return a Plant object if corresponding plantName matches, or all plants if no plantName given
     */
+    @ApiOperation(value = "Get a Plant given its plantName, or get all Plants if no plantName given")
     @GetMapping(path = "/plant")
     public ResponseEntity<?> findPlant(@RequestParam(name = "name") Optional<String> plantName) {
         try {
@@ -71,6 +77,7 @@ public class PlantController {
     * @param plantName a String
     * @return the updated Plant object
     */
+    @ApiOperation(value = "Update the description of a Plant")
     @PutMapping(path = "/plant")
     public ResponseEntity<?> updatePlant(@RequestBody JsonNode payload,
             @RequestParam(name = "name") String plantName) {
@@ -94,6 +101,7 @@ public class PlantController {
     * @param plantName a String
     * @return no content
     */
+    @ApiOperation(value = "Delete an exisiting Plant")
     @DeleteMapping(path = "/plant")
     public ResponseEntity<String> deletePlant(@RequestParam(name = "name") String plantName) {
         try {

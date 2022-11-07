@@ -8,6 +8,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import java.util.*;
 
+@Api(value = "Window Controller", description = "Operations pertaining to Window and GardenWin model")
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class WindowController {
@@ -36,6 +40,7 @@ public class WindowController {
     *
     * @return a list of all Windows
     */
+    @ApiOperation(value = "Get all Windows")
     @GetMapping(path = "/window")
     public ResponseEntity<List<Window>> findAllWindows() {
         try {
@@ -49,6 +54,13 @@ public class WindowController {
         }
     }
 
+    /**
+    * Find the latest Window based on the start date
+    * If there are no Windows in the database, throw ResourceNotFoundException
+    *
+    * @return an existing Window object that is the latest based on start date
+    */
+    @ApiOperation(value = "Get the latest Window based on date")
     @GetMapping(path = "/window/latest")
     public ResponseEntity<?> findLatestWindow() {
         try {
@@ -69,6 +81,7 @@ public class WindowController {
     * @param postedWindow a Window object
     * @return the Window object if added successfully
     */
+    @ApiOperation(value = "Save a Window into the database")
     @PostMapping(path = "/window")
     public ResponseEntity<?> saveWindow(@RequestBody Window postedWindow) {
         try {
@@ -92,6 +105,7 @@ public class WindowController {
     * @param id a String
     * @return the updated Window object
     */
+    @ApiOperation(value = "Update the windowDuration of a Window given the windowId")
     @PutMapping(path = "/window") // with request param {:id}
     public ResponseEntity<?> updateWindow(@RequestBody JsonNode payload, @RequestParam String id) {
         try {
@@ -111,6 +125,7 @@ public class WindowController {
     * @param id a String
     * @return no content
     */
+    @ApiOperation(value = "Delete an existing Window")
     @DeleteMapping(path = "/window")
     public ResponseEntity<String> deleteWindow(@RequestParam String id) {
         try {
@@ -135,6 +150,7 @@ public class WindowController {
     * @return a list of Relationship objects corresponding to all gardens in a Window, or a Relationship object 
     *         corresponding to the winId and gardenName, if gardenName is given
     */
+    @ApiOperation(value = "Get all Gardens for a Window given the windowId")
     @GetMapping(path = "/window/{winId}/garden")
     public ResponseEntity<?> findAllGardensInWindow(@PathVariable String winId,
             @RequestParam(name = "name") Optional<String> gardenName) {
@@ -163,6 +179,7 @@ public class WindowController {
     * @param payload an array where every object includes a String gardenName, a String leaseDuration, an int numPlotsForBalloting
     * @return a list of all newly added GardenWin Relationship objects, if all added successfully
     */
+    @ApiOperation(value = "Add a Garden to a Window given the windowId and gardenName")
     @PostMapping(path = "/window/{winId}/garden")
     public ResponseEntity<?> addGardensInWindow(@PathVariable String winId, @RequestBody JsonNode payload) {
         try {
@@ -187,6 +204,7 @@ public class WindowController {
     * @param payload includes a String leaseDuration and an int numPlotsForBalloting
     * @return the updated GardenWin Relationship object, if update was successful
     */
+    @ApiOperation(value = "Update the leaseDuration and numPlotsForBalloting for a GardenWin, given the gardenName and windowId")
     @PutMapping(path = "/window/{winId}/garden")
     public ResponseEntity<?> updateGardenInWindow(@PathVariable String winId,
             @RequestParam(name = "name") String gardenName, @RequestBody JsonNode payload) {
@@ -211,6 +229,7 @@ public class WindowController {
     * @param gardenName a String
     * @return no content
     */
+    @ApiOperation(value = "Delete a Garden from a Window")
     @DeleteMapping(path = "/window/{winId}/garden")
     public ResponseEntity<String> deleteGardenInWindow(@PathVariable String winId,
             @RequestParam(name = "name") Optional<String> gardenName) {

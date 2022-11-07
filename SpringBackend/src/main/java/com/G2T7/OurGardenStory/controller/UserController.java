@@ -5,6 +5,9 @@ import com.G2T7.OurGardenStory.service.*;
 
 import com.amazonaws.AmazonServiceException;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 import java.time.format.DateTimeParseException;
 
 import java.util.Optional;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+@Api(value = "User Controller", description = "Operations pertaining to User model")
 @CrossOrigin("*")
 @RestController
 @RequestMapping(path = "/api/users")
@@ -36,6 +40,7 @@ public class UserController {
     * @param userSignUpRequest which is a UserSignUpRequest object
     * @return a message "'givenName' signed up successfully" if sign up was successful
     */
+    @ApiOperation(value = "Signs up a new User")
     @PostMapping(path = "/sign-up")
     public ResponseEntity<String> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
         try {
@@ -58,6 +63,7 @@ public class UserController {
     * @param userSignInRequest which is a UserSignInRequest object
     * @return a UserSignInResponse object if user is successfully signed in
     */
+    @ApiOperation(value = "Sign in a registered User")
     @PostMapping(path = "/sign-in")
     public ResponseEntity<?> signIn(@RequestBody UserSignInRequest userSignInRequest) {
         try {
@@ -79,6 +85,7 @@ public class UserController {
     * @param username an optional String
     * @return a User object if there is an existing user signed up with the given username
     */
+    @ApiOperation(value = "Get a User given their Username")
     @GetMapping(path = "/user")
     public ResponseEntity<?> findUser(@RequestParam(name = "username") Optional<String> username) {
         try {

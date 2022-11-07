@@ -13,6 +13,10 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+@Api(value = "UserPlant Controller", description = "Operations pertaining to a User's Plants")
 @CrossOrigin("*")
 @RestController
 public class UserPlantController {
@@ -31,6 +35,7 @@ public class UserPlantController {
     * @return a Plant object if user's Plant corresponding to plantName exists,
     *         or a list of all user's plants if no plantName is provided
     */
+    @ApiOperation(value = "Get a all of a User's Plants given their username")
     @GetMapping(path = "/my-plant")
     public ResponseEntity<?> findMyPlant(@RequestParam(name = "name") Optional<String> plantName,
                     @RequestHeader Map<String, String> headers) {
@@ -54,6 +59,7 @@ public class UserPlantController {
     * @param headers containing the username as a key
     * @return the updated list of the user's plants
     */
+    @ApiOperation(value = "Add Plants to a User given their username")
     @PostMapping(path = "/my-plant")
     public ResponseEntity<?> saveMyPlant(@RequestBody JsonNode payload, @RequestHeader Map<String, String> headers) {
         try {
@@ -74,6 +80,7 @@ public class UserPlantController {
     * @param headers containing the username as a key
     * @return the updated list of the user's plants
     */
+    @ApiOperation(value = "Delete Plants from a User given their username")
     @DeleteMapping(path = "/my-plant")
     public ResponseEntity<?> deleteMyPlant(@RequestBody JsonNode payload,
             @RequestHeader Map<String, String> headers) {
