@@ -16,9 +16,7 @@ food production and ultimately our climate change goals.
 
 ## Our Solution
 
-Our web application, OurGardenStory, aims to provide users with a comprehensive solution 
-to ballot for allotment gardens and manage their plants. This helps Singaporeans grow more 
-food and play a part in combating climate change. 
+Our web application, OurGardenStory, aims to provide users with a comprehensive solution to ballot for allotment gardens, manage their plants, and connect with like-minded people. This encourages Singaporeans to grow more food and play a part in combating climate change.
 
 
 
@@ -44,7 +42,7 @@ more self-reliant on food production and reduce GHG emissions.
 
 1) Ballot for an allotment garden 
 2) Payment after the successful ballot 
-3) Track the status of your allotment garden application
+3) Track the status of your allotment garden  application, both on the application as well as through email updates
 4) Plant encyclopedia to track the plants that we are currently planting and the details of each plant
 5) Community page able to connect with other garden users within your community garden
 
