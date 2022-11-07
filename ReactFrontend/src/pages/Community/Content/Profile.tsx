@@ -19,7 +19,7 @@ export default function Profile({ user }: Props) {
     <ProfileStyled>
       <Avatar />
       <p>{user.sk}</p>
-      <SocialMedia />
+      <SocialMedia email={user.email}/>
 
       {/* <Card sx={{ maxWidth: 400, height: 268 }}>
         <CardActionArea>

@@ -6,7 +6,12 @@ import {
   EmailIcon,
 } from "assets/svgs";
 
-export default function SocialMedia() {
+type Props = {
+  email: string;
+};
+
+export default function SocialMedia({ email }: Props) {
+  const emailURL = "mailto:" + email;
   return (
        <SocialMediaStyled>
         <a href="https://www.facebook.com/nparksbuzz/">
@@ -21,7 +26,7 @@ export default function SocialMedia() {
           <TwitterIcon />
         </a>
 
-        <a href="https://twitter.com/nparksbuzz?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">
+        <a href= {emailURL}>
           <EmailIcon />
         </a>
       </SocialMediaStyled>
