@@ -12,8 +12,12 @@ import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 import com.G2T7.OurGardenStory.service.BallotService;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
+@Api(value = "Ballot Controller", description = "Operations pertaining to Ballot model")
 public class BallotController {
 
     private final BallotService ballotService;
@@ -31,6 +35,7 @@ public class BallotController {
     * @param gardenName a String
     * @return the list of current ballots for window garden
     */
+    @ApiOperation(value = "Get all Ballots for a particular Garden in a Window")
     @GetMapping(path = "/window/{winId}/{gardenName}/allBallot")
     public ResponseEntity<List<Relationship>> findAllBallotsInWindowGarden(@PathVariable String winId,
             @PathVariable String gardenName) {
@@ -54,6 +59,7 @@ public class BallotController {
     * @param headers containing the username as a key
     * @return the ballot corresponding to the username, in the window
     */
+    @ApiOperation(value = "Get a Ballots for a particular username in a Window")
     @GetMapping(path = "/window/{winId}/ballot")
     public ResponseEntity<?> findUserBallotInWindow(@PathVariable String winId,
             @RequestHeader Map<String, String> headers) {
@@ -79,6 +85,7 @@ public class BallotController {
     * @param headers containing the username as a key
     * @return the newly posted ballot in that window garden
     */
+    @ApiOperation(value = "Add a Ballot for a particular Garden in a Window")
     @PostMapping(path = "/window/{winId}/ballot")
     public ResponseEntity<?> addBallotInWindowGarden(@PathVariable String winId, @RequestBody JsonNode payload,
             @RequestHeader Map<String, String> headers) {
@@ -106,6 +113,7 @@ public class BallotController {
     * @param headers containing the username as a key
     * @return the updated Ballot object
     */
+    @ApiOperation(value = "Update the Garden in which the Ballot is posted for")
     @PutMapping(path = "/window/{winId}/ballot")
     public ResponseEntity<?> updateBallotInWindow(@PathVariable String winId, @RequestBody JsonNode payload,
             @RequestHeader Map<String, String> headers) {
@@ -130,6 +138,7 @@ public class BallotController {
     * @param headers containing the username as a key
     * @return a message "Ballot deleted" if deleted successfully
     */
+    @ApiOperation(value = "Delete a Ballot in a Window")
     @DeleteMapping(path = "/window/{winId}/ballot")
     public ResponseEntity<String> deleteBallotInWindow(@PathVariable String winId,
             @RequestHeader Map<String, String> headers) {

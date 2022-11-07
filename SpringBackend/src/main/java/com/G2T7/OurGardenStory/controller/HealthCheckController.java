@@ -2,9 +2,12 @@ package com.G2T7.OurGardenStory.controller;
 
 import org.springframework.web.bind.annotation.*;
 
+import springfox.documentation.annotations.ApiIgnore;
+
 
 @CrossOrigin("*")
 @RestController
+@ApiIgnore
 public class HealthCheckController {
 
     @GetMapping(path = "/")

@@ -3,6 +3,8 @@ package com.G2T7.OurGardenStory.controller;
 import com.G2T7.OurGardenStory.service.PaymentService;
 import com.stripe.model.Charge;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import net.minidev.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import java.util.Map;
 
 @CrossOrigin("*")
 @RestController
+@Api(value = "Payment Controller", description = "Operations pertaining to Payment model")
 public class PaymentController {
     private final PaymentService paymentService;
 
@@ -25,6 +28,7 @@ public class PaymentController {
     * @param headers containing the username as a key
     * @return a JSONObject the amount, currency, and description of the payment
     */
+    @ApiOperation(value = "Find all Payment details for a User")
     @GetMapping(path = "/payment")
     public ResponseEntity<?> findPayment(@RequestHeader Map<String, String> headers) {
         try {
@@ -47,6 +51,7 @@ public class PaymentController {
     * @param headers containing the username as a key
     * @return a Charge object corresponding to the amount paid by User
     */
+    @ApiOperation(value = "Charge User for the outstanding Ballot charges")
     @PostMapping(path = "/payment")
     public ResponseEntity<?> makePayment(@RequestHeader Map<String, String> headers) {
         try {

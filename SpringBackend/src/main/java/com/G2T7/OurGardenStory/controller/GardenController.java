@@ -8,6 +8,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
+@Api(value = "Community Controller", description = "Operations pertaining to Community model")
 public class GardenController {
 
     private final GardenService gardenService;
@@ -32,6 +36,7 @@ public class GardenController {
     * @param garden a Garden object
     * @return a Garden object that is newly created
     */
+    @ApiOperation(value = "Add a Garden")
     @PostMapping(path = "/garden")
     public ResponseEntity<?> saveGarden(@RequestBody Garden garden) {
         try {
@@ -50,6 +55,7 @@ public class GardenController {
     * @return a Garden object if Garden corresponding to gardenName exists,
     *         or a list of all gardens if no gardenName is provided
     */
+    @ApiOperation(value = "Find a Garden based on Garden Name")
     @GetMapping(path = "/garden")
     public ResponseEntity<?> findGarden(@RequestParam(name = "name") Optional<String> gardenName) {
         try {
@@ -72,6 +78,7 @@ public class GardenController {
     * @param gardenName an optional String
     * @return the updated Garden object
     */
+    @ApiOperation(value = "Updates the Garden Address and Number of Plots in a garden")
     @PutMapping(path = "/garden")
     public ResponseEntity<?> updateGarden(@RequestBody JsonNode payload,
             @RequestParam(name = "name") String gardenName) {
@@ -97,6 +104,7 @@ public class GardenController {
     * @param gardenName an optional String
     * @return no content
     */
+    @ApiOperation(value = "Delete a Garden")
     @DeleteMapping(path = "/garden")
     public ResponseEntity<String> deleteGarden(@RequestParam(name = "name") String gardenName) {
         try {
