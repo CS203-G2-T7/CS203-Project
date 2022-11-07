@@ -34,7 +34,7 @@ public class CommunityService {
      * @param username a String
      * @return the list of users with successful ballots for a particular garden
      */
-    public JSONArray findUserWithSuccessfulBallotInGarden(String username) {
+    public List<JSONObject> findUserWithSuccessfulBallotInGarden(String username) {
         List<String> allWinId = new ArrayList<>();
         List<Relationship> allSuccessfulBallots = new ArrayList<>();
         List<User> allUsers = new ArrayList<>();
@@ -66,7 +66,8 @@ public class CommunityService {
             allUsers.add(userService.findUserByUsername(successfulBallots.getSK()));
         }
 
-        JSONArray arr = new JSONArray();
+        //JSONArray arr = new JSONArray();
+        List<JSONObject> arr = new ArrayList<>();
         for (User user: allUsers) {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username", user.getSK());
