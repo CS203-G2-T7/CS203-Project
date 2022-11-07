@@ -2,7 +2,7 @@ package com.G2T7.OurGardenStory.controller;
 
 import java.util.*;
 
-import net.minidev.json.JSONObject;
+import net.minidev.json.JSONArray;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +34,8 @@ public class CommunityController {
     @GetMapping(path = "/community")
     public ResponseEntity<?> findSuccessfulBallotsInGarden(@RequestHeader Map<String, String> headers) {
         try {
-            JSONObject jsonObject = communityService.findUserWithSuccessfulBallotInGarden(headers.get("username"));
-            return ResponseEntity.ok(jsonObject);
+            JSONArray jsonArray = communityService.findUserWithSuccessfulBallotInGarden(headers.get("username"));
+            return ResponseEntity.ok(jsonArray);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }

@@ -2,6 +2,7 @@ package com.G2T7.OurGardenStory.service;
 
 import java.util.*;
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +34,11 @@ public class CommunityService {
      * @param username a String
      * @return the list of users with successful ballots for a particular garden
      */
-    public JSONObject findUserWithSuccessfulBallotInGarden(String username) {
+    public JSONArray findUserWithSuccessfulBallotInGarden(String username) {
         List<String> allWinId = new ArrayList<>();
         List<Relationship> allSuccessfulBallots = new ArrayList<>();
         List<User> allUsers = new ArrayList<>();
-        JSONObject jsonObject = new JSONObject();
-        JSONObject userJsonObject = new JSONObject();
+        String gardenName = "";
 
         for (Window window : windowService.findAllWindows()) {
             allWinId.add(window.getWindowId());
@@ -47,8 +47,7 @@ public class CommunityService {
         for (String winId : allWinId) {
             Relationship ballot = ballotService.findUserBallotInWindow(winId, username);
             if (ballot.getBallotStatus().equals("SUCCESS")) {
-                String gardenName = ballot.getWinId_GardenName().substring(5);
-                jsonObject.put("gardenName", gardenName);
+                gardenName = ballot.getWinId_GardenName().substring(5);
                 allSuccessfulBallots.addAll(ballotService.findAllBallotsInWindowGarden(winId, gardenName));
             }
         }
@@ -67,12 +66,15 @@ public class CommunityService {
             allUsers.add(userService.findUserByUsername(successfulBallots.getSK()));
         }
 
+        JSONArray arr = new JSONArray();
         for (User user: allUsers) {
-            userJsonObject.put("username", user.getSK());
-            userJsonObject.put("email", user.getEmail());
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("username", user.getSK());
+            jsonObject.put("email", user.getEmail());
+            jsonObject.put("gardenName", gardenName);
+            arr.add(jsonObject);
         }
 
-        jsonObject.put("User", userJsonObject);
-        return jsonObject;
+        return arr;
     }
 }
