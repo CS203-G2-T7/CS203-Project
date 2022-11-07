@@ -3,14 +3,11 @@ package com.G2T7.OurGardenStory.controller;
 import java.util.*;
 
 import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.G2T7.OurGardenStory.model.Garden;
-import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.service.CommunityService;
 
 import io.swagger.annotations.*;
@@ -22,29 +19,25 @@ public class CommunityController {
 
     private final CommunityService communityService;
 
-    @Autowired
-    public CommunityController(CommunityService communityService) {
+    @Autowired public CommunityController(CommunityService communityService) {
         this.communityService = communityService;
     }
 
     /**
-     * Gets a list of users with successful ballots for their own garden to connect
-     * with
+     * Gets a list of users with successful ballots for their own garden to connect with
      * If the garden is not found, throw an exception
      *
      * @param headers containing logged in user
      * @return the list of users with successful ballots for their own garden
      */
-//    @ApiOperation(value = "Get all successful Ballots in a Garden")
-//    @GetMapping(path = "/community")
-//    public ResponseEntity<?> findSuccessfulBallotsInGarden(@RequestHeader Map<String, String> headers) {
-//        try {
-////            List<User> userLit = communityService.findUserWithSuccessfulBallotInGarden(headers.get("username"));
-////            System.out.println(userList);
-//            return ResponseEntity.ok("test");
-//        } catch (Exception e) {
-//            System.out.println(e);
-//            return ResponseEntity.internalServerError().build();
-//        }
-//    }
+    @ApiOperation(value = "Get all successful Ballots in a Garden")
+    @GetMapping(path = "/community")
+    public ResponseEntity<?> findSuccessfulBallotsInGarden(@RequestHeader Map<String, String> headers) {
+        try {
+            JSONArray jsonArray = communityService.findUserWithSuccessfulBallotInGarden(headers.get("username"));
+            return ResponseEntity.ok(jsonArray);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

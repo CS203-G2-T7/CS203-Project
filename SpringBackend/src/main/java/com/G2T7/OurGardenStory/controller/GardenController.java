@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -111,21 +110,6 @@ public class GardenController {
         try {
             gardenService.deleteGarden(gardenName);
             return ResponseEntity.noContent().build();
-        } catch (DynamoDBMappingException | ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    @ApiOperation(value = "Get all successful Ballots in a Garden")
-    @GetMapping(path = "/friends")
-    public ResponseEntity<?> findCommunity(@RequestParam(name = "name") Optional<String> gardenName, @RequestHeader Map<String, String> headers) {
-        try {
-            if (gardenName.isPresent()) {
-                return ResponseEntity.ok(gardenService.findGardenByGardenName(gardenName.get()));
-            }
-            return ResponseEntity.ok(gardenService.findAllGardens());
         } catch (DynamoDBMappingException | ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
