@@ -1,23 +1,23 @@
 package com.G2T7.OurGardenStory.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.G2T7.OurGardenStory.model.Garden;
+
 import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 @Service
 public class GardenService {
-  @Autowired
-  private DynamoDBMapper dynamoDBMapper;
+
+  private final DynamoDBMapper dynamoDBMapper;
+
+  public GardenService (DynamoDBMapper dynamoDBMapper) {
+    this.dynamoDBMapper = dynamoDBMapper;
+  }
 
   /**
     * When gardenName is an input from the RequestParam, we cannot have space in the name.
@@ -48,12 +48,12 @@ public class GardenService {
 
   /**
     * Gets all Garden objects in database
-    * If no Garden objects exist,, throw ResourceNotFoundException
+    * If no Garden objects exist, throw ResourceNotFoundException
     *
     * @return a list of all Garden objects
     */
   public List<Garden> findAllGardens() {
-    Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+    Map<String, AttributeValue> eav = new HashMap<>();
     eav.put(":GDN", new AttributeValue().withS("Garden"));
     DynamoDBQueryExpression<Garden> qe = new DynamoDBQueryExpression<Garden>()
         .withKeyConditionExpression("PK = :GDN").withExpressionAttributeValues(eav);
@@ -116,7 +116,6 @@ public class GardenService {
     * if gardenName does not correspond to an existing Garden object, throw ResourceNotFoundException
     *
     * @param gardenName a String
-    * @return no content
     */
   public void deleteGarden(final String gardenName) {
     Garden toDeleteGarden = findGardenByGardenName(parseGardenName(gardenName));

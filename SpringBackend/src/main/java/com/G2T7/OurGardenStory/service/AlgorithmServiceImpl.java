@@ -1,9 +1,7 @@
 package com.G2T7.OurGardenStory.service;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.Period;
+import java.time.*;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +13,24 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 
 @Service
 public class AlgorithmServiceImpl {
+
+    private final WinGardenService winGardenService;
+    private final BallotService ballotService;
+    private final MailService mailService;
+    private final UserService userService;
+    private final DynamoDBMapper dynamoDBMapper;
+    private final WindowService windowService;
+
     @Autowired
-    private WinGardenService winGardenService;
-    @Autowired
-    private BallotService ballotService;
-    @Autowired
-    private MailService mailService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private DynamoDBMapper dynamoDBMapper;
-    @Autowired
-    private WindowService windowService;
+    public AlgorithmServiceImpl(WinGardenService winGardenService, BallotService ballotService, MailService mailService,
+                                UserService userService, DynamoDBMapper dynamoDBMapper, WindowService windowService) {
+        this.winGardenService = winGardenService;
+        this.ballotService = ballotService;
+        this.mailService = mailService;
+        this.userService = userService;
+        this.dynamoDBMapper = dynamoDBMapper;
+        this.windowService = windowService;
+    }
 
     /**
     * This method is an algorithm that chooses a number of successful ballots our of all ballots for a garden and window.
@@ -72,7 +76,6 @@ public class AlgorithmServiceImpl {
     * respective emails.
     *
     * @param winId a String
-    * @return no content
     */
     public void doMagic(String winId) {
         try {
@@ -97,9 +100,7 @@ public class AlgorithmServiceImpl {
                 ArrayList<String> ballotSuccesses = new ArrayList<>();
                 if (ballots.size() < numPlotsAvailable) {
                     Set<String> usernamesSet = usernameDistance.keySet();
-                    for (String s : usernamesSet) {
-                        ballotSuccesses.add(s);
-                    }
+                    ballotSuccesses.addAll(usernamesSet);
                 } else {
                     ballotSuccesses = getBallotSuccess(usernameDistance, numPlotsAvailable);
                 }
@@ -129,7 +130,6 @@ public class AlgorithmServiceImpl {
     * added with the windowDuration.
     *
     * @param winId a String
-    * @return no content
     */
     public void scheduleAlgo(String winId) {
         Timer T = new Timer();
@@ -175,6 +175,6 @@ public class AlgorithmServiceImpl {
         Calendar date = Calendar.getInstance();
         date.set(year, month, day, hour, minute, second);
         T.schedule(doAlgo, date.getTime());
-        System.out.println(date.getTime().toString());
+        System.out.println(date.getTime());
     }
 }

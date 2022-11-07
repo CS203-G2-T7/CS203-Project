@@ -4,6 +4,7 @@ import com.G2T7.OurGardenStory.geocoder.GeocodeDistance;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 import java.io.IOException;
 
@@ -21,8 +22,8 @@ public class GeocodeService {
     /**
     * Calls the distanceCalculator method which calculates the distance between a user's address and the garden's address
     *
-    * @param username
-    * @param userAddress
+    * @param username a String
+    * @param userAddress a String
     * @param gardenLng the longitude of the Garden's address
     * @param gardenLat the latitude of the Garden's address
     * @return the distance in km

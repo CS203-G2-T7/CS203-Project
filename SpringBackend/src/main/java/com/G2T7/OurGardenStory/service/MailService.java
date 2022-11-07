@@ -1,6 +1,5 @@
 package com.G2T7.OurGardenStory.service;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.*;
 import com.sendgrid.*;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.*;
 
 @Service
 public class MailService {
@@ -17,11 +15,17 @@ public class MailService {
     @Value(value = "${sendgrid.api.key}")
     private String SENDGRID_API_KEY;
 
+    @Value(value = "${SENDGRID_SUCCESS_TEMPLATE}")
+    private String SENDGRID_SUCCESS_TEMPLATE;
+
+    @Value(value = "${SENDGRID_FAIL_TEMPLATE}")
+    private String SENDGRID_FAIL_TEMPLATE;
+
     /**
     * Sends either a success or a fail email to the user of a ballot, depending on their ballot status
     *
     * @param emailTo the email address of the User
-    * @param username
+    * @param username a String
     * @param status the ballot status of the User
     * @param winId_GardenName the GSI of the ballot
     * @return the response String
@@ -40,12 +44,12 @@ public class MailService {
         personalization.addDynamicTemplateData("username", username);
         personalization.addDynamicTemplateData("winId", winId);
         personalization.addDynamicTemplateData("gardenName", gardenName);
-        String templateId = "d-0c43bb5bdd224dd589f95d8e73a1d58f";
+        String templateId = "";
 
         if (status.equals("SUCCESS")) {
-            templateId = "d-0c43bb5bdd224dd589f95d8e73a1d58f";
+            templateId = SENDGRID_SUCCESS_TEMPLATE;
         } else if (status.equals("FAIL")) {
-            templateId = "d-a5258f55295e4addb174e782701980ac";
+            templateId = SENDGRID_FAIL_TEMPLATE;
         }
 
         Mail mail = new Mail();
