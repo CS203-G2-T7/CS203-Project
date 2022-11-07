@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CommunityStyled } from "./Community.styled";
+import { CommunityStyled, ParkNameStyled } from "./Community.styled";
 import Navbar from "components/Navbar/Navbar";
 import { NavBarStyled } from "pages/Landing/NavBar.styled";
 import { HeaderStyled } from "pages/Community/Header.styled";
@@ -8,56 +8,46 @@ import { Plant } from "models/Plant";
 import Profile from "./Content/Profile";
 import communityService from "service/communityService";
 
-// export type User = {
-//   userName:string;
-//   email:string;
-// };
-
-// export const defaultUser: User = {
-//   userName:"",
-//   email:"",
-// };
-
-// export type Community = {
-//   users: User[];
-//   gardenName: string;
-// };
-
-// export const defaultCommunity: Community = {
-//   users:[],
-//   gardenName:"",
-// };
-
 export type User = {
-  address: string;
-  sk: string;
+  username: string;
   email: string;
-  dob: string;
-  pk: string;
-  plant: Plant[];
-  phoneNumber: string;
-  firstName: string;
-  lastName: string;
-  accountDateCreated: string;
+  gardenName: string;
 };
 
 export const defaultUser: User = {
-  address: "",
-  sk: "",
+  username: "",
   email: "",
-  dob: "",
-  pk: "",
-  plant: [],
-  phoneNumber: "",
-  firstName: "",
-  lastName: "",
-  accountDateCreated: "",
+  gardenName: "",
 };
 
+// export type User = {
+//   address: string;
+//   sk: string;
+//   email: string;
+//   dob: string;
+//   pk: string;
+//   plant: Plant[];
+//   phoneNumber: string;
+//   firstName: string;
+//   lastName: string;
+//   accountDateCreated: string;
+// };
+
+// export const defaultUser: User = {
+//   address: "",
+//   sk: "",
+//   email: "",
+//   dob: "",
+//   pk: "",
+//   plant: [],
+//   phoneNumber: "",
+//   firstName: "",
+//   lastName: "",
+//   accountDateCreated: "",
+// };
+
 export default function MyPlants() {
-  const [userDataList, setUserDataList] = useState<User[]>([
-    defaultUser,
-  ]);
+  const [userDataList, setUserDataList] = useState<User[]>([defaultUser]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -73,7 +63,6 @@ export default function MyPlants() {
       });
   }, []);
 
-
   return (
     <CommunityStyled>
       <NavBarStyled>
@@ -83,6 +72,10 @@ export default function MyPlants() {
         <p>My Community</p>
         <p>View all the different profiles in your allotment garden</p>
       </HeaderStyled>
+      <ParkNameStyled>
+        {" "}
+        My {userDataList[0].gardenName} Community
+      </ParkNameStyled>
       <ContentStyled>
         {userDataList.map((User, index) => (
           <Profile user={User} key={index} />
