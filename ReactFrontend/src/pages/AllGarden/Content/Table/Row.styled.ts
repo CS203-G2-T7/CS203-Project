@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-export const RowStyled = styled(Link)`
+export const RowStyled = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -10,10 +10,10 @@ export const RowStyled = styled(Link)`
   border-bottom: solid 1px #cccccc;
   text-decoration: none;
 
-  &:hover {
+  /* &:hover {
     background-color: rgb(0, 0, 0, 0.05);
     transition: all 0.2s ease;
-  }
+  } */
 
   p {
     margin: 0;

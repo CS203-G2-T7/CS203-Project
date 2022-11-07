@@ -1,20 +1,21 @@
 import React from "react";
-import { Garden } from "models/Garden";
 import { RowStyled } from "./Row.styled";
 import { RowGardenEntryStyled } from "./RowGardenEntry.styled";
 
 type Props = {
-  gardenObject: Garden;
+  gardenName: string;
+  windowId: string;
+  paymentAmount: number;
 };
 
-export default function Row({ gardenObject }: Props) {
+export default function Row({ gardenName, windowId, paymentAmount }: Props) {
   return (
     <RowStyled>
       <RowGardenEntryStyled>
-        <span>{gardenObject.sk}</span>
-        <span>{gardenObject.gardenAddress}</span>
+        <span>{gardenName}</span>
+        <span>{windowId}</span>
       </RowGardenEntryStyled>
-      <p>{gardenObject.numPlots}</p>
+      <p>{"$" + paymentAmount}</p>
     </RowStyled>
   );
 }
