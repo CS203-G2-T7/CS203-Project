@@ -69,20 +69,6 @@ public class CommunityService {
             allUsers.add(userService.findUserByUsername(successfulBallots.getSK()));
         }
 
-<<<<<<< HEAD
         return allUsers;
-=======
-        //JSONArray arr = new JSONArray();
-        List<JSONObject> arr = new ArrayList<>();
-        for (User user: allUsers) {
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("username", user.getSK());
-            jsonObject.put("email", user.getEmail());
-            jsonObject.put("gardenName", gardenName);
-            arr.add(jsonObject);
-        }
-
-        return arr;
->>>>>>> 0730ea776e68b703e9ba2608e073ce3c28110a15
     }
 }
