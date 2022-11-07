@@ -12,10 +12,11 @@ type Props = {
 };
 
 export default function PlantCard({ plant }: Props) {
-  if (plant.sk === ""){
+  // console.log(plant);
+  if (plant.sk === "") {
     plant.sk = "Lettuce";
   }
-  
+
   return (
     <PlantCardStyled>
       <Card sx={{ maxWidth: 400, height: 268 }}>

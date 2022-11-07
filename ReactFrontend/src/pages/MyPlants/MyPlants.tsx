@@ -22,13 +22,14 @@ export const defaultPlant: Plant = {
 };
 
 export default function MyPlants() {
-  const [plantDataList, setPlantDataList] = useState<Plant[]>([defaultPlant]);
+  const [plantDataList, setPlantDataList] = useState<Plant[]>([]);
 
   useEffect(() => {
-    Promise.all([plantService.getAllUserPlants()])
-      .then((resArr) => {
-        console.log(resArr[0].data);
-        setPlantDataList(resArr[0].data);
+    plantService
+      .getAllUserPlants()
+      .then((res) => {
+        console.log(res.data);
+        setPlantDataList(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -45,9 +46,13 @@ export default function MyPlants() {
         <p>View all the plants you are growing in your allotment garden here</p>
       </HeaderStyled>
       <ContentStyled>
-        {plantDataList.map((Plant, index) => (
-          <PlantCard plant={Plant} key={index}/>
-        ))}
+        {plantDataList.length === 0 ? (
+          <p>You have no plants.</p>
+        ) : (
+          plantDataList.map((Plant, index) => (
+            <PlantCard plant={Plant} key={index} />
+          ))
+        )}
       </ContentStyled>
     </MyPlantsStyled>
   );
