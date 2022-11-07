@@ -4,18 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.G2T7.OurGardenStory.model.Plant;
+
 import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 import java.util.*;
 
 @Service
 public class PlantService {
+
+    private final DynamoDBMapper dynamoDBMapper;
+
     @Autowired
-    private DynamoDBMapper dynamoDBMapper;
+    public PlantService(DynamoDBMapper dynamoDBMapper) {
+        this.dynamoDBMapper = dynamoDBMapper;
+    }
 
     /**
     * Gets a list of all Plant objects in database
@@ -24,7 +28,7 @@ public class PlantService {
     * @return a list of all Plant objects in database
     */
     public List<Plant> findAllPlants() {
-        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        Map<String, AttributeValue> eav = new HashMap<>();
         eav.put(":PLNT", new AttributeValue().withS("Plant"));
         DynamoDBQueryExpression<Plant> qe = new DynamoDBQueryExpression<Plant>()
             .withKeyConditionExpression("PK = :PLNT").withExpressionAttributeValues(eav);
@@ -78,7 +82,7 @@ public class PlantService {
     * Update the description of an already existing Plant object
     * If Plant object corresponding to the given plantName is not found, or description is null, throw an Exception
     *
-    * @param plantName
+    * @param plantName a String
     * @param description the new description to be updated
     * @return the updated Plant object, if update was successful
     */
@@ -97,8 +101,7 @@ public class PlantService {
     * Delete an already existing Plant object from the database
     * If there is no Plant object corresponding to the given plantName, throw ResourceNotFoundException
     *
-    * @param plantName
-    * @return the deleted Plant object, if deletion was successful
+    * @param plantName a String
     */
       public void deletePlant(final String plantName) {
         Plant toDeletePlant = findPlantByName(plantName);

@@ -1,21 +1,24 @@
 package com.G2T7.OurGardenStory.service;
 
-import com.G2T7.OurGardenStory.model.ReqResModel.UserSignInRequest;
-import com.G2T7.OurGardenStory.model.ReqResModel.UserSignInResponse;
+import com.G2T7.OurGardenStory.model.ReqResModel.*;
+
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class SignInService {
+
+  private final AWSCognitoIdentityProvider cognitoClient;
+
   @Autowired
-  private AWSCognitoIdentityProvider cognitoClient;
+  public SignInService(AWSCognitoIdentityProvider cognitoClient) {
+    this.cognitoClient = cognitoClient;
+  }
 
   @Value(value = "${aws.cognito.userPoolId}")
   private String userPoolId;
@@ -40,16 +43,7 @@ public class SignInService {
     System.out.println("User has no challenge");
     AuthenticationResultType authenticationResult = result.getAuthenticationResult();
 
-    // cognitoClient.shutdown(); //This results in user only signing in once.
-    UserSignInResponse userSignInResponse = new UserSignInResponse();
-    userSignInResponse.setAccessToken(authenticationResult.getAccessToken());
-    userSignInResponse.setIdToken(authenticationResult.getIdToken());
-    userSignInResponse.setRefreshToken(authenticationResult.getRefreshToken());
-    userSignInResponse.setTokenType(authenticationResult.getTokenType());
-    userSignInResponse.setExpiresIn(authenticationResult.getExpiresIn());
-    userSignInResponse.setAddress("");
-    
-    return userSignInResponse;
+    return createUserSignInResponse(authenticationResult);
   }
 
   private AdminInitiateAuthRequest createAuthRequest(final UserSignInRequest signInRequest) {
@@ -75,17 +69,8 @@ public class SignInService {
     AdminRespondToAuthChallengeResult challengeResult = cognitoClient
         .adminRespondToAuthChallenge(challengeRequest);
     AuthenticationResultType authenticationResult = challengeResult.getAuthenticationResult();
-
-    UserSignInResponse userSignInResponse = new UserSignInResponse();
-    userSignInResponse.setAccessToken(authenticationResult.getAccessToken());
-    userSignInResponse.setIdToken(authenticationResult.getIdToken());
-    userSignInResponse.setRefreshToken(authenticationResult.getRefreshToken());
-    userSignInResponse.setTokenType(authenticationResult.getTokenType());
-    userSignInResponse.setExpiresIn(authenticationResult.getExpiresIn());
-    userSignInResponse.setAddress("");
     
-    return userSignInResponse;
-    // what is address in signInResponse?
+    return createUserSignInResponse(authenticationResult);
   }
 
   private AdminRespondToAuthChallengeRequest createChallengeRequest(AdminInitiateAuthResult authResult,
@@ -103,6 +88,18 @@ public class SignInService {
         .withChallengeResponses(challengeResponses)
         .withClientId(clientId).withUserPoolId(userPoolId)
         .withSession(authResult.getSession());
+  }
+
+  private UserSignInResponse createUserSignInResponse(AuthenticationResultType authenticationResult) {
+    UserSignInResponse userSignInResponse = new UserSignInResponse();
+    userSignInResponse.setAccessToken(authenticationResult.getAccessToken());
+    userSignInResponse.setIdToken(authenticationResult.getIdToken());
+    userSignInResponse.setRefreshToken(authenticationResult.getRefreshToken());
+    userSignInResponse.setTokenType(authenticationResult.getTokenType());
+    userSignInResponse.setExpiresIn(authenticationResult.getExpiresIn());
+    userSignInResponse.setAddress("");
+
+    return userSignInResponse;
   }
 
 }
