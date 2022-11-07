@@ -8,27 +8,51 @@ import { Plant } from "models/Plant";
 import Profile from "./Content/Profile";
 import communityService from "service/communityService";
 
+// export type User = {
+//   userName:string;
+//   email:string;
+// };
+
+// export const defaultUser: User = {
+//   userName:"",
+//   email:"",
+// };
+
+// export type Community = {
+//   users: User[];
+//   gardenName: string;
+// };
+
+// export const defaultCommunity: Community = {
+//   users:[],
+//   gardenName:"",
+// };
+
 export type User = {
-  userName:string;
-  email:string;
+  address: string;
+  sk: string;
+  email: string;
+  dob: string;
+  pk: string;
+  plant: Plant[];
+  phoneNumber: string;
+  firstName: string;
+  lastName: string;
+  accountDateCreated: string;
 };
 
 export const defaultUser: User = {
-  userName:"",
-  email:"",
+  address: "",
+  sk: "",
+  email: "",
+  dob: "",
+  pk: "",
+  plant: [],
+  phoneNumber: "",
+  firstName: "",
+  lastName: "",
+  accountDateCreated: "",
 };
-
-
-export type Community = {
-  users: User[];
-  gardenName: string;
-};
-
-export const defaultCommunity: Community = {
-  users:[],
-  gardenName:"",
-};
-
 
 // const fakeDatabase: User[] = [
 //   {
@@ -106,17 +130,37 @@ export const defaultCommunity: Community = {
 // ];
 
 export default function MyPlants() {
-  const [userDataList, setUserDataList] = useState<User[]>([defaultUser]);
+  // const [userDataList, setUserDataList] = useState<User[]>([defaultUser]);
+  // useEffect(() => {
+  //   Promise.all([communityService.getAllUsersByGarden()])
+  //     .then((values) => {
+  //       console.log(values[0].data);
+  //       setUserDataList(values[0].data.user);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
+
+
+  const [userDataList, setUserDataList] = useState<User[]>([
+    defaultUser,
+  ]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([communityService.getAllUsersByGarden()])
-      .then((values) => {
-        setUserDataList(values[0].data.user);
+    communityService
+      .getAllUsersByGarden()
+      .then((res) => {
+        console.log(res.data);
+        setUserDataList(res.data);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, []);
+
 
   return (
     <CommunityStyled>
