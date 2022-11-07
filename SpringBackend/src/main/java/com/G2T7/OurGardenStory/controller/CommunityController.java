@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.service.CommunityService;
 
@@ -36,7 +37,7 @@ public class CommunityController {
      */
     @ApiOperation(value = "Get all successful Ballots in a Garden")
     @GetMapping(path = "/community")
-    public ResponseEntity<?> findSuccessfulBallotsInGarden(@RequestHeader Map<String, String> headers) {
+    public ResponseEntity<?> findSuccessfulBallotsInGarden(@RequestHeader Map<String, String> headers, @RequestBody Garden garden) {
         try {
             System.out.println("here");
             List<User> userList = communityService.findUserWithSuccessfulBallotInGarden(headers.get("username"));
