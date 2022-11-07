@@ -2,6 +2,8 @@ package com.G2T7.OurGardenStory.service;
 
 import java.util.*;
 
+import net.minidev.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,15 +13,15 @@ import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 @Service
 public class CommunityService {
 
-    private final UserService userService;
     private final WindowService windowService;
     private final BallotService ballotService;
+    private final UserService userService;
 
     @Autowired
     public CommunityService(UserService userService, WindowService windowService, BallotService ballotService) {
-        this.userService = userService;
         this.windowService = windowService;
         this.ballotService = ballotService;
+        this.userService = userService;
     }
 
     /**
@@ -31,10 +33,12 @@ public class CommunityService {
      * @param username a String
      * @return the list of users with successful ballots for a particular garden
      */
-    public List<User> findUserWithSuccessfulBallotInGarden(String username) {
+    public JSONObject findUserWithSuccessfulBallotInGarden(String username) {
         List<String> allWinId = new ArrayList<>();
         List<Relationship> allSuccessfulBallots = new ArrayList<>();
         List<User> allUsers = new ArrayList<>();
+        JSONObject jsonObject = new JSONObject();
+        JSONObject userJsonObject = new JSONObject();
 
         for (Window window : windowService.findAllWindows()) {
             allWinId.add(window.getWindowId());
@@ -44,6 +48,7 @@ public class CommunityService {
             Relationship ballot = ballotService.findUserBallotInWindow(winId, username);
             if (ballot.getBallotStatus().equals("SUCCESS")) {
                 String gardenName = ballot.getWinId_GardenName().substring(5);
+                jsonObject.put("gardenName", gardenName);
                 allSuccessfulBallots.addAll(ballotService.findAllBallotsInWindowGarden(winId, gardenName));
             }
         }
@@ -61,7 +66,13 @@ public class CommunityService {
         for (Relationship successfulBallots : allSuccessfulBallots) {
             allUsers.add(userService.findUserByUsername(successfulBallots.getSK()));
         }
-        
-        return allUsers;
+
+        for (User user: allUsers) {
+            userJsonObject.put("username", user.getSK());
+            userJsonObject.put("email", user.getEmail());
+        }
+
+        jsonObject.put("User", userJsonObject);
+        return jsonObject;
     }
 }

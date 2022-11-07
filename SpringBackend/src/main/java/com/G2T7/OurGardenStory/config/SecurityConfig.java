@@ -42,7 +42,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain customJwtSecurityChain(HttpSecurity http) throws Exception {
 
-        List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL); // add "/home" etc.?
+        List<String> permitAllEndpointList = Arrays.asList(SIGNUP_URL, SIGNIN_URL);
 
         http.csrf().disable().cors().disable()// .authorizeHttpRequests()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
