@@ -27,7 +27,7 @@ public class CommunityController {
      * Gets a list of users with successful ballots for their own garden to connect with
      * If the garden is not found, throw an exception
      *
-     * @params headers containing logged in user
+     * @param headers containing logged in user
      * @return the list of users with successful ballots for their own garden
      */
     @ApiOperation(value = "Get all successful Ballots in a Garden")
