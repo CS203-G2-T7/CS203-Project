@@ -19,6 +19,7 @@ export const AddPlantModalStyled = styled(animated.div)`
     font-size: 2rem;
     text-align: center;
     margin: 1.5rem;
+    color: #00131e;
   }
 
   ul {

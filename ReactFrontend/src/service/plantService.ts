@@ -22,17 +22,16 @@ class Plant {
   }
 
   addPlant(plantName: String): Promise<AxiosResponse<any, any>> {
-    return axios.post(
-      USER_PLANTS_URL,
+    const requestBody = [
       {
         plantName: plantName,
       },
-      {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwtAccessToken"),
-        },
-      }
-    );
+    ];
+    return axios.post(USER_PLANTS_URL, requestBody, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtAccessToken"),
+      },
+    });
   }
 }
 

@@ -103,7 +103,12 @@ export default function MyPlants() {
           menuShow && (
             <>
               {ReactDOM.createPortal(
-                <AddPlantModal onOverlayClick={setModalShow} style={styles} allPlantList={allPlantList}/>,
+                <AddPlantModal
+                  onOverlayClick={setModalShow}
+                  style={styles}
+                  allPlantList={allPlantList}
+                  setUserPlantList={setUserPlantList}
+                />,
                 portalElement
               )}
             </>

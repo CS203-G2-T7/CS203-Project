@@ -3,9 +3,11 @@ import { AddPlantModalStyled } from "./AddPlantModal.styled";
 import { SpringValue } from "react-spring";
 import { PlantEntryLiStyled } from "./PlantEntryLi.styled";
 import { Plant } from "models/Plant";
+import plantService from "service/plantService";
 
 type Props = {
   onOverlayClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setUserPlantList: React.Dispatch<React.SetStateAction<Plant[]>>;
   style: {
     transform: SpringValue<string>;
   };
@@ -14,6 +16,7 @@ type Props = {
 
 export default function AddPlantModal({
   onOverlayClick,
+  setUserPlantList,
   style,
   allPlantList,
 }: Props) {
@@ -26,19 +29,31 @@ export default function AddPlantModal({
     5. Close modal.
   */
 
-  // const PlantLiClickHandler = (
-  //   e: React.MouseEvent<HTMLLIElement, MouseEvent>
-  // ) => {
-  //   const newActiveCategoryName: string = e.currentTarget.innerHTML;
-  //   onOverlayClick(false);
-  //   const newActiveCategory = categories.find((category) => {
-  //     return category.name === newActiveCategoryName;
-  //   });
-  //   const activeOffsetY =
-  //     newActiveCategory !== undefined ? newActiveCategory.offsetY : 0;
+  const plantLiClickHandler = (
+    e: React.MouseEvent<HTMLLIElement, MouseEvent>
+  ) => {
+    const clickedPlantName: string = e.currentTarget.innerHTML;
 
-  //   window.scrollTo({ top: activeOffsetY - HEADER_HEIGHT, behavior: "smooth" });
-  // };
+    plantService
+      .addPlant(clickedPlantName)
+      .then(() => {
+        setUserPlantList((prevUserPlantList) => {
+          const newUserPlantList: Plant[] = prevUserPlantList.slice(0);
+          const addedPlant: Plant = allPlantList.filter(
+            (plant) =>
+              plant.sk ===
+              clickedPlantName
+          )[0];
+          console.log("Added Plant: " + addedPlant);
+          newUserPlantList.push(addedPlant);
+          return newUserPlantList;
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    onOverlayClick(false);
+  };
 
   return (
     <AddPlantModalStyled style={style}>
@@ -46,7 +61,12 @@ export default function AddPlantModal({
       <ul>
         {allPlantList.map((plantItem, index) => {
           return (
-            <PlantEntryLiStyled key={index} onClick={() => {}}>
+            <PlantEntryLiStyled
+              key={index}
+              onClick={(e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+                plantLiClickHandler(e);
+              }}
+            >
               {plantItem.sk}
             </PlantEntryLiStyled>
           );
