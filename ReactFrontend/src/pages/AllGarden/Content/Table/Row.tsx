@@ -7,19 +7,9 @@ type Props = {
   gardenObject: Garden;
 };
 
-type LinkStateType = {
-  gardenObject: Garden;
-};
-
 export default function Row({ gardenObject }: Props) {
-  const linkState: LinkStateType = {
-    gardenObject: gardenObject,
-  };
   return (
-    <RowStyled
-      state={linkState}
-      to={"/garden/" + gardenObject.sk.replace(" ", "-")}
-    >
+    <RowStyled>
       <RowGardenEntryStyled>
         <span>{gardenObject.sk}</span>
         <span>{gardenObject.gardenAddress}</span>
