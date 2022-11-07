@@ -1,6 +1,7 @@
 import axios from "axios";
+import { prod_url } from "urlConstants";
 
-const SIGN_UP_BASE_URL = "http://localhost:5000/api/users/sign-up";
+const SIGN_UP_BASE_URL = `${prod_url}/api/users/sign-up`;
 
 export type signUpData = {
   email: string;

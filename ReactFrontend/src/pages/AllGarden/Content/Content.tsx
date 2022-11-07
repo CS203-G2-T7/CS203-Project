@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Table from "./Table/Table";
 import { ContentStyled } from "./Content.styled";
 import allGardenService from "service/allgardenService";
 import { defaultGarden, Garden } from "models/Garden";
@@ -7,20 +6,23 @@ import WindowLabel from "./WindowLabel/WindowLabel";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
+import HeaderRow from "./Table/HeaderRow/HeaderRow";
+import Row from "./Table/Row";
 
 type Props = {};
 
 export default function Content({}: Props) {
-  const [allGardenDataList, setallGardenDataList] = useState<Garden[]>([
+  const [allGardenDataList, setAllGardenDataList] = useState<Garden[]>([
     defaultGarden,
   ]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([allGardenService.getAllGarden()])
-      .then((resArr) => {
-        console.log(resArr[0].data);
-        setallGardenDataList(resArr[0].data);
+    allGardenService
+      .getAllGarden()
+      .then((res) => {
+        console.log(res.data);
+        setAllGardenDataList(res.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -36,7 +38,12 @@ export default function Content({}: Props) {
           <CircularProgress />
         </Box>
       ) : (
-        <Table gardenList={allGardenDataList ?? []} />
+        <>
+          <HeaderRow />
+          {allGardenDataList.map((gardenObject, index) => (
+            <Row gardenObject={gardenObject} key={index} />
+          ))}
+        </>
       )}
     </ContentStyled>
   );

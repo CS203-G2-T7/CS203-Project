@@ -4,15 +4,12 @@ import { ContentStyled } from "./Content.styled";
 import WindowLabel from "./WindowLabel/WindowLabel";
 import homeService from "service/homeService";
 import { defaultWindow, Window } from "models/Window";
-import formatDateTimeToDate from "utils/formatDateTimeToDate";
-import { Ballot, defaultBallot } from "models/Ballot";
+import { Ballot } from "models/Ballot";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
 import { AxiosError } from "axios";
 import { Garden } from "models/Garden";
 import { GarWin } from "models/GarWin";
-
-type Props = {};
 
 export type Row = {
   gardenName: string;
@@ -30,7 +27,7 @@ export const defaultRow: Row = {
   status: "closed",
 };
 
-export default function Content({}: Props) {
+export default function Content() {
   //get latest window
   const [rowData, setRowData] = useState<Row[]>([]);
   const [windowData, setWindowData] = useState<Window>(defaultWindow);

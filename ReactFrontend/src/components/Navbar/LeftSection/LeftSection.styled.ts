@@ -8,4 +8,8 @@ export const LeftSectionStyled = styled.div`
   span {
     font-size: 20;
   }
+  a{
+    text-decoration: none;
+    color: white;
+  }
 `;

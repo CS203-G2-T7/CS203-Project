@@ -1,6 +1,7 @@
 import axios from "axios";
+import { prod_url } from "urlConstants";
 
-const LOGIN_BASE_URL = "http://localhost:5000/api/users/sign-in";
+const LOGIN_BASE_URL = `${prod_url}/api/users/sign-in`;
 
 export interface LoginData {
   username: String;
