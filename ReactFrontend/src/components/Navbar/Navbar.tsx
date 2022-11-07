@@ -16,6 +16,7 @@ export default function Navbar({}: Props) {
         <a href="/ballot">Ballot</a>
         <a href="/my-plant">MyPlant</a>
         <a href="/community">MyCommunity</a>
+        <a href="/payment">Payment</a>
 
         <AccountButton />
       </RightSectionStyled>

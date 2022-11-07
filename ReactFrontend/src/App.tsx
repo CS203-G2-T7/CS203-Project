@@ -8,7 +8,7 @@ import AllGarden from "pages/AllGarden/AllGarden";
 import BallotGarden from "pages/BallotGarden/BallotGarden";
 import Garden from "pages/Garden/Garden";
 import Community from "pages/Community/Community";
-
+import Payment from "pages/Payment/Payment";
 
 function App() {
   const location = useLocation();
@@ -25,7 +25,7 @@ function App() {
       <Route path="/garden" element={<AllGarden />} />
       <Route path="/garden/:gardenName" element={<Garden />} />
       <Route path="/community" element={<Community />} />
-
+      <Route path="/payment" element={<Payment />} />
 
       {/* Accessible to NOT logged in users */}
 
