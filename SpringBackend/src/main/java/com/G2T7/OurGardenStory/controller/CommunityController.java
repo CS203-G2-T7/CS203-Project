@@ -4,30 +4,34 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.G2T7.OurGardenStory.model.User;
-import com.G2T7.OurGardenStory.service.BallotService;
 import com.G2T7.OurGardenStory.service.CommunityService;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 @CrossOrigin("*")
 @RestController
 public class CommunityController {
-    
-    @Autowired
+
     private CommunityService communityService;
 
+    @Autowired public CommunityController(CommunityService communityService) {
+        this.communityService = communityService;
+    }
+
+    /**
+     * Gets a list of all users with successful ballots for a particular garden
+     * If the garden is not found, throw an exception
+     *
+     * @param payload which includes a String gardenName
+     * @return the list of users with successful ballots for a particular garden
+     */
     @GetMapping(path = "/community")
-    public ResponseEntity<List<User>> findSuccessfulbBallotsInGarden(@RequestBody JsonNode payload) {
+    public ResponseEntity<List<User>> findSuccessfulBallotsInGarden(@RequestBody JsonNode payload) {
         try {
-            String gardenAddress = payload.get("gardenAddress").asText();
-            
-            return ResponseEntity.ok(communityService.findUserWithSucessfulBallotInGarden(gardenAddress));
+            return ResponseEntity.ok(communityService.findUserWithSuccessfulBallotInGarden(payload));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }

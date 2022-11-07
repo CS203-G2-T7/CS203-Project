@@ -1,35 +1,45 @@
 package com.G2T7.OurGardenStory.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.G2T7.OurGardenStory.model.User;
-import com.G2T7.OurGardenStory.model.Window;
+import com.G2T7.OurGardenStory.model.*;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 
 @Service
 public class CommunityService {
 
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private WindowService windowService;
-
-    @Autowired
     private BallotService ballotService;
 
-    public List<User> findUserWithSucessfulBallotInGarden(String gardenName) {
-        List<Window> allWindow = windowService.findAllWindows();
+    @Autowired
+    public CommunityService(UserService userService, WindowService windowService, BallotService ballotService) {
+        this.userService = userService;
+        this.windowService = windowService;
+        this.ballotService = ballotService;
+    }
+
+    /**
+     * Gets a list of all users with successful ballots for a particular garden
+     * This is done by finding all the windows and all the ballots associated with that particular window and garden
+     * Removes ballots that are not successful
+     * Returns a list of users from those ballots
+     *
+     * @param payload which includes a String gardenName
+     * @return the list of users with successful ballots for a particular garden
+     */
+    public List<User> findUserWithSuccessfulBallotInGarden(JsonNode payload) {
+        String gardenName = payload.get("gardenName").asText();
         List<String> allWinId = new ArrayList<>();
         List<Relationship> allSuccessfulBallots = new ArrayList<>();
         List<User> allUsers = new ArrayList<>();
 
-        for (Window window : allWindow) {
+        for (Window window : windowService.findAllWindows()) {
             allWinId.add(window.getWindowId());
         }
 
