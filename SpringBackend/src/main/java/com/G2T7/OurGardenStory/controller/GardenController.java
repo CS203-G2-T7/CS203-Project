@@ -119,7 +119,7 @@ public class GardenController {
     }
 
     @ApiOperation(value = "Get all successful Ballots in a Garden")
-    @GetMapping(path = "/community")
+    @GetMapping(path = "/friends")
     public ResponseEntity<?> findCommunity(@RequestParam(name = "name") Optional<String> gardenName, @RequestHeader Map<String, String> headers) {
         try {
             if (gardenName.isPresent()) {
