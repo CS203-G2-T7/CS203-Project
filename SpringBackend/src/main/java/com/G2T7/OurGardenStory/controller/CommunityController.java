@@ -1,6 +1,7 @@
 package com.G2T7.OurGardenStory.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +25,17 @@ public class CommunityController {
     }
 
     /**
-     * Gets a list of all users with successful ballots for a particular garden
+     * Gets a list of users with successful ballots for their own garden to connect with
      * If the garden is not found, throw an exception
      *
-     * @param gardenName a String
-     * @return the list of users with successful ballots for a particular garden
+     * @patams headers containing logged in user
+     * @return the list of users with successful ballots for their own garden
      */
     @ApiOperation(value = "Get all successful Ballots in a Garden")
-    @GetMapping(path = "/community/{gardenName}")
-    public ResponseEntity<List<User>> findSuccessfulBallotsInGarden(@PathVariable String gardenName) {
+    @GetMapping(path = "/community")
+    public ResponseEntity<List<User>> findSuccessfulBallotsInGarden(@RequestHeader Map<String, String> headers) {
         try {
-            return ResponseEntity.ok(communityService.findUserWithSuccessfulBallotInGarden(gardenName));
+            return ResponseEntity.ok(communityService.findUserWithSuccessfulBallotInGarden(headers.get("username")));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }

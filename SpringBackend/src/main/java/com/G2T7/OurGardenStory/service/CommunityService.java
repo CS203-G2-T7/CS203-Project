@@ -11,9 +11,9 @@ import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 @Service
 public class CommunityService {
 
-    private UserService userService;
-    private WindowService windowService;
-    private BallotService ballotService;
+    private final UserService userService;
+    private final WindowService windowService;
+    private final BallotService ballotService;
 
     @Autowired
     public CommunityService(UserService userService, WindowService windowService, BallotService ballotService) {
@@ -28,10 +28,10 @@ public class CommunityService {
      * Removes ballots that are not successful
      * Returns a list of users from those ballots
      *
-     * @param gardenName a String
+     * @param username a String
      * @return the list of users with successful ballots for a particular garden
      */
-    public List<User> findUserWithSuccessfulBallotInGarden(String gardenName) {
+    public List<User> findUserWithSuccessfulBallotInGarden(String username) {
         List<String> allWinId = new ArrayList<>();
         List<Relationship> allSuccessfulBallots = new ArrayList<>();
         List<User> allUsers = new ArrayList<>();
@@ -41,13 +41,17 @@ public class CommunityService {
         }
 
         for (String winId : allWinId) {
-            allSuccessfulBallots.addAll(ballotService.findAllBallotsInWindowGarden(winId, gardenName));
+            Relationship ballot = ballotService.findUserBallotInWindow(winId, username);
+            if (ballot.getBallotStatus().equals("SUCCESS")) {
+                String gardenName = ballot.getWinId_GardenName().substring(5);
+                allSuccessfulBallots.addAll(ballotService.findAllBallotsInWindowGarden(winId, gardenName));
+            }
         }
 
         Iterator<Relationship> allSuccessfulBallotsIterator = allSuccessfulBallots.iterator();
         while (allSuccessfulBallotsIterator.hasNext()) {
             Relationship ballot = allSuccessfulBallotsIterator.next();
-            if (!ballot.getBallotStatus().equals("SUCCESS")) {
+            if (!ballot.getBallotStatus().equals("SUCCESS") || ballot.getSK().equals(username)) {
                 allSuccessfulBallotsIterator.remove();
             }
         }

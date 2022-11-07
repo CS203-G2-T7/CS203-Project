@@ -78,7 +78,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "my-plant").authenticated()
                 .antMatchers(HttpMethod.DELETE, "my-plant").authenticated()
 
-                .antMatchers(HttpMethod.GET, "/community/{garden}").authenticated()
+                .antMatchers(HttpMethod.GET, "/community").authenticated()
 
                 .antMatchers(HttpMethod.GET, "/payment").authenticated()
                 .antMatchers(HttpMethod.POST, "/payment").authenticated()
