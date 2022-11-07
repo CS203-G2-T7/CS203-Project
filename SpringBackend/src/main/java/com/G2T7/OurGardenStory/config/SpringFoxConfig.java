@@ -32,7 +32,7 @@ public class SpringFoxConfig {
 
         return new ApiInfoBuilder()
                 .title("Swagger API Doc")
-                .description("More description about the API")
+                .description("OurGardenStory")
                 .version("1.0.0")
                 .build();
     }
