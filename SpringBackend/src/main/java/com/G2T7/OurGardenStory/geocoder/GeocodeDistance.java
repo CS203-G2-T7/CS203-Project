@@ -1,9 +1,8 @@
 package com.G2T7.OurGardenStory.geocoder;
 
 import java.io.IOException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.fasterxml.jackson.databind.*;
 public class GeocodeDistance {
 
     //radius of earth in KM
@@ -32,11 +31,7 @@ public class GeocodeDistance {
             System.out.println(label + " is located at " + userLat + "," + userLng + ".");
         }
 
-        double result = distanceBetweenTwoPoints(userLat, userLng, gardenLat, gardenLng);
-        // System.out.println("The distance between the two addresses is " + result + "km");
-        // System.out.println(result);
-        return result;
-
+        return distanceBetweenTwoPoints(userLat, userLng, gardenLat, gardenLng);
     }
 
     private static double distanceBetweenTwoPoints(String lat1, String lng1, String lat2, String lng2) {

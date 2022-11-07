@@ -1,20 +1,10 @@
 package com.G2T7.OurGardenStory.security;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import javax.servlet.FilterChain;
-import javax.servlet.GenericFilter;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AwsCognitoJwtAuthFilter extends GenericFilter {
-    private AwsCognitoIdTokenProcessor cognitoIdTokenProcessor;
+    private final AwsCognitoIdTokenProcessor cognitoIdTokenProcessor;
 
     public AwsCognitoJwtAuthFilter(AwsCognitoIdTokenProcessor cognitoIdTokenProcessor) {
         this.cognitoIdTokenProcessor = cognitoIdTokenProcessor;
@@ -35,8 +25,8 @@ public class AwsCognitoJwtAuthFilter extends GenericFilter {
      * @param request     HTTP Servlet Request
      * @param response    HTTP Servlet Response
      * @param filterChain Filter Chain
-     * @throws IOException
-     * @throws ServletException
+     * @throws IOException IOException
+     * @throws ServletException ServletException
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
@@ -66,7 +56,7 @@ final class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
     public MutableHttpServletRequest(HttpServletRequest request) {
         super(request);
-        this.customHeaders = new HashMap<String, String>();
+        this.customHeaders = new HashMap<>();
     }
 
     public void putHeader(String name, String value) {
@@ -86,10 +76,9 @@ final class MutableHttpServletRequest extends HttpServletRequestWrapper {
 
     public Enumeration<String> getHeaderNames() {
         // create a set of the custom header names
-        Set<String> set = new HashSet<String>(customHeaders.keySet());
+        Set<String> set = new HashSet<>(customHeaders.keySet());
 
         // now add the headers from the wrapped request object
-        @SuppressWarnings("unchecked")
         Enumeration<String> e = ((HttpServletRequest) getRequest()).getHeaderNames();
         while (e.hasMoreElements()) {
             // add the names of the request headers into the list

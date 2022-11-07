@@ -1,9 +1,9 @@
 package com.G2T7.OurGardenStory.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
+
 import lombok.*;
 
 @AllArgsConstructor
@@ -58,19 +58,4 @@ public class User {
     public void setSK(String sK) {
         SK = sK;
     }
-
-    // static public class LocalDateTimeConverter implements
-    // DynamoDBTypeConverter<String, LocalDateTime> {
-
-    // @Override
-    // public String convert(final LocalDateTime time) {
-    // return time.toString();
-    // }
-
-    // @Override
-    // public LocalDateTime unconvert(final String stringValue) {
-    // return LocalDateTime.parse(stringValue);
-    // }
-    // }
-
 }

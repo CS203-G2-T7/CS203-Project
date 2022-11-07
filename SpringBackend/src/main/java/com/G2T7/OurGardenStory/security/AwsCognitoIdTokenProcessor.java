@@ -1,14 +1,15 @@
 package com.G2T7.OurGardenStory.security;
 
 import com.nimbusds.jwt.JWTClaimsSet;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.*;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.List;
 
 import static java.util.List.of;
@@ -16,18 +17,22 @@ import static java.util.List.of;
 
 @Component
 public class AwsCognitoIdTokenProcessor {
-    @Autowired
-    private JWTProcessor jwtProcessor;
+
+    private final JWTProcessor jwtProcessor;
+    private final JWTConfiguration jwtConfiguration;
 
     @Autowired
-    private JWTConfiguration jwtConfiguration;
+    public AwsCognitoIdTokenProcessor(JWTProcessor jwtProcessor, JWTConfiguration jwtConfiguration) {
+        this.jwtProcessor = jwtProcessor;
+        this.jwtConfiguration = jwtConfiguration;
+    }
 
 
     /**
      * Check Http Servlet Request and return Authentication object
      * @param request Http Servlet Request
      * @return Authentication authenticated user's information
-     * @throws Exception
+     * @throws Exception throws exception if unable to authenticate
      */
     public Authentication authenticate(HttpServletRequest request) throws Exception {
         String idToken = request.getHeader("Authorization");
@@ -43,8 +48,6 @@ public class AwsCognitoIdTokenProcessor {
                 User user = new User(username, "", of());
                 return new JwtAuthentication(user, claims, grantedAuthorities);
             }
-        } else {
-
         }
         return null;
     }
@@ -52,7 +55,7 @@ public class AwsCognitoIdTokenProcessor {
     /**
      * Validate that the issuer matches cognito's identity pool
      * @param claims JWTClaimsSet claims
-     * @throws Exception
+     * @throws Exception throws exception of JWT Token is not an ID Token
      */
     private void validateIssuer(JWTClaimsSet claims) throws Exception {
         if (!claims.getIssuer().equals(jwtConfiguration.getCognitoIdentityPoolUrl())) {
@@ -68,7 +71,7 @@ public class AwsCognitoIdTokenProcessor {
 
     /**
      * Get the bearer token from the token
-     * @param token
+     * @param token JWT token
      * @return String
      */
     private String getBearerToken(String token) {

@@ -1,6 +1,7 @@
 package com.G2T7.OurGardenStory.model.RelationshipModel;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
+
 import lombok.*;
 
 /*
@@ -37,10 +38,6 @@ public class Relationship {
   @DynamoDBAttribute
   private String paymentStatus;
 
-  // public enum BallotStatus {
-  //   PENDING, SUCCESS, FAILED, INVALID
-  // };
-
   @DynamoDBHashKey(attributeName = "PK")
   public String getPK() {
     return this.PK;
@@ -66,9 +63,5 @@ public class Relationship {
 
   public void setWinId_GardenName(String WinId_GardenName) {
     this.WinId_GardenName = WinId_GardenName;
-  }
-
-  public Relationship(String winId, String username, String winId_GardenName2, Object leaseDuration2, Object object,
-      String ballotID2, String ballotDateTime2, double distance2, String ballotStatus2, String paymentStatus) {
   }
 }

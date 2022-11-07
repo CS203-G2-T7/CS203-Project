@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 public class JwtAuthentication extends AbstractAuthenticationToken {
     private final Object principal;
-    private JWTClaimsSet jwtClaimsSet;
+    private final JWTClaimsSet jwtClaimsSet;
 
     public JwtAuthentication(Object principal, JWTClaimsSet jwtClaimsSet, Collection<? extends GrantedAuthority> authorities) {
         super(authorities);

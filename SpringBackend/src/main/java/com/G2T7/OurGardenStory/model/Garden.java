@@ -1,6 +1,7 @@
 package com.G2T7.OurGardenStory.model;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
+
 import lombok.*;
 
 @AllArgsConstructor

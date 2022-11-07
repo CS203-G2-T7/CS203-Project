@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class Ballot extends Relationship {
-    public static enum BallotStatus {
+    public enum BallotStatus {
         PENDING("PENDING"),
         SUCCESS("SUCCESS"),
         FAIL("FAIL"),
@@ -16,7 +16,7 @@ public class Ballot extends Relationship {
 
         public final String value;
 
-        private BallotStatus(final String value) {
+        BallotStatus(final String value) {
             this.value = value;
         }
 
@@ -26,14 +26,14 @@ public class Ballot extends Relationship {
         }
     }
 
-    public static enum PaymentStatus {
+    public enum PaymentStatus {
         PENDING("PENDING"),
         SUCCESS("SUCCESS"),
         FAILED("FAILED");
 
         public final String value;
 
-        private PaymentStatus(final String value) {
+        PaymentStatus(final String value) {
             this.value = value;
         }
 

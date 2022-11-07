@@ -1,6 +1,7 @@
 package com.G2T7.OurGardenStory.model;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
+
 import lombok.*;
 
 @AllArgsConstructor
@@ -18,6 +19,7 @@ public class Window {
     private String PK = "Window";
     private String SK;
     private String windowId;
+
     @DynamoDBAttribute
     private String WindowDuration;
 
@@ -47,7 +49,6 @@ public class Window {
     public void setWindowId(String windowId) {
         this.windowId = windowId;
     }
-
 }
 
     
