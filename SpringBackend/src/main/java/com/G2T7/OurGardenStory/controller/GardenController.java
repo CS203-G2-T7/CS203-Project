@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -113,6 +114,19 @@ public class GardenController {
         } catch (DynamoDBMappingException | ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @ApiOperation(value = "Get all successful Ballots in a Garden")
+    @GetMapping(path = "/community")
+    public ResponseEntity<?> findSuccessfulBallotsInGarden(@RequestHeader Map<String, String> headers) {
+        try {
+//            List<User> userLit = communityService.findUserWithSuccessfulBallotInGarden(headers.get("username"));
+//            System.out.println(userList);
+            return ResponseEntity.ok("test");
+        } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.internalServerError().build();
         }
     }
