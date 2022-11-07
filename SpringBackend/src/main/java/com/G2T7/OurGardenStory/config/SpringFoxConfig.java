@@ -23,7 +23,7 @@ public class SpringFoxConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(getApiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.G2T7.OurGardenStory.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
