@@ -4,39 +4,43 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActionArea } from "@mui/material";
-import { ProfileCardStyled } from "./ProfileCard.styled";
-import { Plant } from "../Community";
+import { ProfileStyled } from "./Profile.styled";
+import { User } from "../Community";
+import Box from '@mui/material/Box';
+import CardActions from '@mui/material/CardActions';
 
 type Props = {
-  plant: Plant;
+  user: User;
 };
 
-export default function PlantCard({ plant }: Props) {
-  if (plant.sk === "") {
-    plant.sk = "Lettuce";
+export default function Profile({ user }: Props) {
+  if (user.sk === "") {
+    user.sk = "Lettuce";
   }
 
   return (
-    <ProfileCardStyled>
+    <ProfileStyled>
       <Card sx={{ maxWidth: 400, height: 268 }}>
         <CardActionArea>
           <CardMedia
             component="img"
             height="180"
-            image={require("assets/imgs/" + plant.sk + ".jpg")}
+            image={require("assets/imgs/Lettuce.jpg")}
             alt="Lettuce Image"
           />
 
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
-              {plant.sk}
+              {user.sk}
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              {plant.plantSpecies}
+              {user.email}
             </Typography>
           </CardContent>
         </CardActionArea>
       </Card>
-    </ProfileCardStyled>
+    </ProfileStyled>
   );
 }
+
+

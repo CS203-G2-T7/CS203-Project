@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const HeaderStyled = styled.div`
-  background-image: url("./image/myPlantsHeader.png");
+  background-image: url("./image/communityHeader.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
