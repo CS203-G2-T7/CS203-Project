@@ -1,12 +1,20 @@
 import axios, { AxiosResponse } from "axios";
 import { prod_url } from "urlConstants";
 
-const GET_ALL_USER_PLANTS_URL = `${prod_url}/my-plant`;
-const POST_NEW_PLANT_USER_URL = `${prod_url}/my-plant`;
+const USER_PLANTS_URL = `${prod_url}/my-plant`;
+const ALL_PLANTS_URL = `${prod_url}/plant`;
 
 class Plant {
   getAllUserPlants(): Promise<AxiosResponse<any, any>> {
-    return axios.get(GET_ALL_USER_PLANTS_URL, {
+    return axios.get(USER_PLANTS_URL, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtAccessToken"),
+      },
+    });
+  }
+
+  getAllPlants(): Promise<AxiosResponse<any, any>> {
+    return axios.get(ALL_PLANTS_URL, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("jwtAccessToken"),
       },
@@ -15,7 +23,7 @@ class Plant {
 
   addPlant(plantName: String): Promise<AxiosResponse<any, any>> {
     return axios.post(
-        POST_NEW_PLANT_USER_URL,
+      USER_PLANTS_URL,
       {
         plantName: plantName,
       },
@@ -26,7 +34,6 @@ class Plant {
       }
     );
   }
-
 }
 
 export default new Plant();
