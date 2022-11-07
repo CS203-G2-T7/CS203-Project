@@ -7,6 +7,8 @@ import MyPlants from "pages/MyPlants/MyPlants";
 import AllGarden from "pages/AllGarden/AllGarden";
 import BallotGarden from "pages/BallotGarden/BallotGarden";
 import Garden from "pages/Garden/Garden";
+import Community from "pages/Community/Community";
+
 
 function App() {
   const location = useLocation();
@@ -22,6 +24,8 @@ function App() {
       <Route path="/my-plant" element={<MyPlants />} />
       <Route path="/garden" element={<AllGarden />} />
       <Route path="/garden/:gardenName" element={<Garden />} />
+      <Route path="/community" element={<Community />} />
+
 
       {/* Accessible to NOT logged in users */}
 
