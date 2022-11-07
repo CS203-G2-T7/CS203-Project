@@ -111,7 +111,7 @@ public class BallotController {
     * @param winId a String
     * @param payload which includes a String gardenName
     * @param headers containing the username as a key
-    * @return the updated Ballot object
+    * @return the updated Ballot object h
     */
     @ApiOperation(value = "Update the Garden in which the Ballot is posted for")
     @PutMapping(path = "/window/{winId}/ballot")
