@@ -32,9 +32,9 @@ public class CommunityController {
      */
     @ApiOperation(value = "Get all successful Ballots in a Garden")
     @GetMapping(path = "/community")
-    public ResponseEntity<?> findSuccessfulBallotsInGarden() {
+    public ResponseEntity<?> findSuccessfulBallotsInGarden(@RequestHeader Map<String, String> headers) {
         try {
-            JSONArray jsonArray = communityService.findUserWithSuccessfulBallotInGarden("seanathan");
+            JSONArray jsonArray = communityService.findUserWithSuccessfulBallotInGarden(headers.get("username"));
             return ResponseEntity.ok(jsonArray);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
