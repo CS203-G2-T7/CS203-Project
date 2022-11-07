@@ -6,6 +6,7 @@ import { HeaderStyled } from "pages/MyPlants/Header.styled";
 import PlantCard from "./Content/PlantCard";
 import { ContentStyled } from "./Content/Content.styled";
 import plantService from "service/plantService";
+import { Box, CircularProgress } from "@mui/material";
 
 export type Plant = {
   plantSpecies: string;
@@ -23,6 +24,8 @@ export const defaultPlant: Plant = {
 
 export default function MyPlants() {
   const [plantDataList, setPlantDataList] = useState<Plant[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     plantService
@@ -30,11 +33,37 @@ export default function MyPlants() {
       .then((res) => {
         console.log(res.data);
         setPlantDataList(res.data);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setIsLoading(false);
+        setIsError(true);
       });
   }, []);
+
+  const loadingComponent: React.ReactNode = (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: "auto",
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  );
+
+  let plantGrid: React.ReactNode =
+    plantDataList.length === 0 ? (
+      <p>You have no plants.</p>
+    ) : (
+      plantDataList.map((Plant, index) => (
+        <PlantCard plant={Plant} key={index} />
+      ))
+    );
+  plantGrid = isError ? <p>Error</p> : plantGrid;
 
   return (
     <MyPlantsStyled>
@@ -45,15 +74,7 @@ export default function MyPlants() {
         <p>My Plants</p>
         <p>View all the plants you are growing in your allotment garden here</p>
       </HeaderStyled>
-      <ContentStyled>
-        {plantDataList.length === 0 ? (
-          <p>You have no plants.</p>
-        ) : (
-          plantDataList.map((Plant, index) => (
-            <PlantCard plant={Plant} key={index} />
-          ))
-        )}
-      </ContentStyled>
+      <ContentStyled>{isLoading ? loadingComponent : plantGrid}</ContentStyled>
     </MyPlantsStyled>
   );
 }
