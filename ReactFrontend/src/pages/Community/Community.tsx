@@ -4,7 +4,6 @@ import Navbar from "components/Navbar/Navbar";
 import { NavBarStyled } from "pages/Landing/NavBar.styled";
 import { HeaderStyled } from "pages/Community/Header.styled";
 import { ContentStyled } from "./Content/Content.styled";
-import { Plant } from "models/Plant";
 import Profile from "./Content/Profile";
 import communityService from "service/communityService";
 
@@ -19,32 +18,6 @@ export const defaultUser: User = {
   email: "",
   gardenName: "",
 };
-
-// export type User = {
-//   address: string;
-//   sk: string;
-//   email: string;
-//   dob: string;
-//   pk: string;
-//   plant: Plant[];
-//   phoneNumber: string;
-//   firstName: string;
-//   lastName: string;
-//   accountDateCreated: string;
-// };
-
-// export const defaultUser: User = {
-//   address: "",
-//   sk: "",
-//   email: "",
-//   dob: "",
-//   pk: "",
-//   plant: [],
-//   phoneNumber: "",
-//   firstName: "",
-//   lastName: "",
-//   accountDateCreated: "",
-// };
 
 export default function MyPlants() {
   const [userDataList, setUserDataList] = useState<User[]>([defaultUser]);
@@ -70,7 +43,7 @@ export default function MyPlants() {
       </NavBarStyled>
       <HeaderStyled>
         <p>My Community</p>
-        <p>View all the different profiles in your allotment garden</p>
+        <p>View all the different profiles in your allotment garden community at {userDataList[0].gardenName}</p>
       </HeaderStyled>
       <ParkNameStyled>
         {" "}
