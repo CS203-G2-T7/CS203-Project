@@ -4,8 +4,7 @@ import com.G2T7.OurGardenStory.model.ReqResModel.UserSignUpRequest;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -13,16 +12,18 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 public class SignUpService {
-  @Autowired
-  private AWSCognitoIdentityProvider cognitoClient;
+
+  private final AWSCognitoIdentityProvider cognitoClient;
+  private final UserService userService;
 
   @Autowired
-  private UserService userService;
+  public SignUpService(AWSCognitoIdentityProvider cognitoClient, UserService userService) {
+    this.cognitoClient = cognitoClient;
+    this.userService = userService;
+  }
 
   @Value(value = "${aws.cognito.userPoolId}")
   private String userPoolId;
-  @Value(value = "${aws.cognito.clientId}")
-  private String clientId;
 
   public void signUpFromUserSignUpRequest(UserSignUpRequest userSignUpRequest) {
     // TODO: Basic sign up validation. Can be improved. Can have a dedicated user
@@ -47,12 +48,11 @@ public class SignUpService {
   }
 
   private AdminSetUserPasswordRequest userPasswordRequest(UserSignUpRequest userSignUpRequest) {
-    AdminSetUserPasswordRequest adminSetUserPasswordRequest = new AdminSetUserPasswordRequest()
+
+    return new AdminSetUserPasswordRequest()
         .withUsername(userSignUpRequest.getUsername())
         .withUserPoolId(userPoolId)
         .withPassword(userSignUpRequest.getPassword()).withPermanent(true);
-
-    return adminSetUserPasswordRequest;
   }
 
   private AdminCreateUserRequest createUserRequest(UserSignUpRequest userSignUpRequest) {
@@ -73,14 +73,12 @@ public class SignUpService {
     AttributeType phoneNumberVerifiedAttr = new AttributeType().withName("phone_number_verified")
         .withValue("true");
 
-    AdminCreateUserRequest userRequest = new AdminCreateUserRequest()
+    return new AdminCreateUserRequest()
         .withUserPoolId(userPoolId).withUsername(userSignUpRequest.getUsername())
         .withTemporaryPassword(userSignUpRequest.getPassword())
         .withUserAttributes(emailAttr, emailVerifiedAttr, addressAttr, givenNameAttr, familyNameAttr,
             birthDateAttr, phoneNumberAttr, phoneNumberVerifiedAttr)
         .withMessageAction(MessageActionType.SUPPRESS)
         .withDesiredDeliveryMediums(DeliveryMediumType.EMAIL);
-
-    return userRequest;
   }
 }
