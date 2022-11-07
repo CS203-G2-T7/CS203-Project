@@ -49,40 +49,36 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(permitAllEndpointList.toArray(new String[permitAllEndpointList.size()])).permitAll()
+
                 .antMatchers(HttpMethod.GET, "/").permitAll()
-                .antMatchers(HttpMethod.GET, "/garden").permitAll()
-                .antMatchers(HttpMethod.POST, "/garden").permitAll()
-                .antMatchers(HttpMethod.PUT, "/garden").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/garden").permitAll()
 
-                .antMatchers(HttpMethod.GET, "/ballots").permitAll()
-                .antMatchers(HttpMethod.GET, "/ballot").permitAll()
-                .antMatchers(HttpMethod.POST, "/ballot").permitAll() // combine to line 43, permitAllEndpointList?
+                .antMatchers(HttpMethod.GET, "/garden").authenticated()
+                .antMatchers(HttpMethod.POST, "/garden").authenticated()
+                .antMatchers(HttpMethod.PUT, "/garden").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/garden").authenticated()
 
-                .antMatchers(HttpMethod.GET, "/geocode").permitAll()
-                .antMatchers(HttpMethod.PUT, "/geocode").permitAll()
-
-                .antMatchers(HttpMethod.POST, "/window").permitAll()
                 .antMatchers(HttpMethod.GET, "/window").authenticated()
-                .antMatchers(HttpMethod.GET, "/window/{id}/garden").permitAll()
-                .antMatchers(HttpMethod.POST, "/window/{id}/garden").permitAll()
-                .antMatchers(HttpMethod.PUT, "/window/{id}/garden").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/window/{id}/garden").permitAll()
-                .antMatchers(HttpMethod.PUT, "/window").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/window").permitAll()
+                .antMatchers(HttpMethod.POST, "/window").authenticated()
+                .antMatchers(HttpMethod.PUT, "/window").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/window").authenticated()
+                .antMatchers(HttpMethod.GET, "/window/{id}/garden").authenticated()
+                .antMatchers(HttpMethod.POST, "/window/{id}/garden").authenticated()
+                .antMatchers(HttpMethod.PUT, "/window/{id}/garden").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/window/{id}/garden").authenticated()
         
-                .antMatchers(HttpMethod.GET, "/api/users/user").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/users/user").authenticated()
 
-                .antMatchers(HttpMethod.GET, "/magic").permitAll()
+                .antMatchers(HttpMethod.GET, "/window/{winId}/ballot").authenticated()
+                .antMatchers(HttpMethod.POST, "/window/{winId}/ballot").authenticated()
+                .antMatchers(HttpMethod.PUT, "/window/{winId}/ballot").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/window/{winId}/ballot").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/window/{winId}/allBallot").authenticated()
 
-                .antMatchers(HttpMethod.GET, "/window/{winId}/ballot").permitAll()
-                .antMatchers(HttpMethod.POST, "/window/{winId}/ballot").permitAll()
-                .antMatchers(HttpMethod.PUT, "/window/{winId}/ballot").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/window/{winId}/ballot").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/window/{winId}/allBallot").permitAll()
+                .antMatchers(HttpMethod.GET, "my-plant").authenticated()
+                .antMatchers(HttpMethod.POST, "my-plant").authenticated()
+                .antMatchers(HttpMethod.DELETE, "my-plant").authenticated()
 
-
-                .antMatchers(HttpMethod.GET, "/community/{garden}").permitAll()
+                .antMatchers(HttpMethod.GET, "/community/{garden}").authenticated()
 
                 .antMatchers(HttpMethod.GET, "/payment").authenticated()
                 .antMatchers(HttpMethod.POST, "/payment").authenticated()
