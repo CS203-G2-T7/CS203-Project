@@ -29,7 +29,8 @@ export const defaultPlant: Plant = {
 };
 
 export default function MyPlants() {
-  const [plantDataList, setPlantDataList] = useState<Plant[]>([]);
+  const [userPlantList, setUserPlantList] = useState<Plant[]>([]);
+  const [allPlantList, setAllPlantList] = useState<Plant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [modalShow, setModalShow] = useState(false);
@@ -37,17 +38,15 @@ export default function MyPlants() {
   const portalElement = document.getElementById("overlays") || new Element();
 
   useEffect(() => {
-    plantService
-      .getAllUserPlants()
-      .then((res) => {
-        console.log(res.data);
-        setPlantDataList(res.data);
+    Promise.all([plantService.getAllUserPlants(), plantService.getAllPlants()])
+      .then((values) => {
+        setUserPlantList(values[0].data);
+        setAllPlantList(values[1].data);
         setIsLoading(false);
       })
       .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
         setIsError(true);
+        console.log(err);
       });
   }, []);
 
@@ -65,10 +64,10 @@ export default function MyPlants() {
   );
 
   let plantGrid: React.ReactNode =
-    plantDataList.length === 0 ? (
+    userPlantList.length === 0 ? (
       <p>You have no plants.</p>
     ) : (
-      plantDataList.map((Plant, index) => (
+      userPlantList.map((Plant, index) => (
         <PlantCard plant={Plant} key={index} />
       ))
     );
@@ -104,7 +103,7 @@ export default function MyPlants() {
           menuShow && (
             <>
               {ReactDOM.createPortal(
-                <AddPlantModal onOverlayClick={setModalShow} style={styles} />,
+                <AddPlantModal onOverlayClick={setModalShow} style={styles} allPlantList={allPlantList}/>,
                 portalElement
               )}
             </>

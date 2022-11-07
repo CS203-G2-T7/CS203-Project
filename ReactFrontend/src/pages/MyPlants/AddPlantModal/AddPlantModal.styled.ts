@@ -12,11 +12,23 @@ export const AddPlantModalStyled = styled(animated.div)`
 
   left: 35%;
   right: 35%;
+
+  h4 {
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    font-size: 2rem;
+    text-align: center;
+    margin: 1.5rem;
+  }
+
   ul {
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
     padding: 0;
     margin: 0;
-    margin-top: 1.25rem;
-    height: fit-content;
-    max-height: 70vh;
+    height: 75%;
   }
 `;

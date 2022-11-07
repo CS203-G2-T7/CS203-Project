@@ -2,15 +2,21 @@ import React from "react";
 import { AddPlantModalStyled } from "./AddPlantModal.styled";
 import { SpringValue } from "react-spring";
 import { PlantEntryLiStyled } from "./PlantEntryLi.styled";
+import { Plant } from "models/Plant";
 
 type Props = {
   onOverlayClick: React.Dispatch<React.SetStateAction<boolean>>;
   style: {
     transform: SpringValue<string>;
   };
+  allPlantList: Plant[];
 };
 
-export default function AddPlantModal({ onOverlayClick, style }: Props) {
+export default function AddPlantModal({
+  onOverlayClick,
+  style,
+  allPlantList,
+}: Props) {
   /*categoryClickHandler
     click occurs
     1. Get plant list from parent
@@ -36,17 +42,15 @@ export default function AddPlantModal({ onOverlayClick, style }: Props) {
 
   return (
     <AddPlantModalStyled style={style}>
+      <h4>Add Plants</h4>
       <ul>
-        {/* {categories.map((category) => {
+        {allPlantList.map((plantItem, index) => {
           return (
-            <PlantEntryLiStyled
-              key={category.name}
-              onClick={PlantLiClickHandler}
-            >
-              {category.name}
+            <PlantEntryLiStyled key={index} onClick={() => {}}>
+              {plantItem.sk}
             </PlantEntryLiStyled>
           );
-        })} */}
+        })}
       </ul>
     </AddPlantModalStyled>
   );
