@@ -12,7 +12,7 @@ import com.G2T7.OurGardenStory.service.CommunityService;
 
 import io.swagger.annotations.*;
 
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @Api(value = "Community Controller", description = "Operations pertaining to Community model")
 public class CommunityController {
@@ -34,7 +34,9 @@ public class CommunityController {
     @GetMapping(path = "/community")
     public ResponseEntity<?> findSuccessfulBallotsInGarden(@RequestHeader Map<String, String> headers) {
         try {
+            System.out.println("here");
             JSONArray jsonArray = communityService.findUserWithSuccessfulBallotInGarden(headers.get("username"));
+            System.out.println(jsonArray);
             return ResponseEntity.ok(jsonArray);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
