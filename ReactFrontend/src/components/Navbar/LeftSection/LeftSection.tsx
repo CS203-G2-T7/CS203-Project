@@ -7,10 +7,12 @@ type Props = {};
 export default function LeftSection({}: Props) {
   return (
     <LeftSectionStyled>
-      <a href="/landing">
+      <a href="/">
         <LogoMain />
       </a>
-      <a href="/landing"><span>OurGardenStory</span></a>
+      <a href="/">
+        <span>OurGardenStory</span>
+      </a>
     </LeftSectionStyled>
   );
 }
