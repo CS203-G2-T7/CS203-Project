@@ -13,7 +13,7 @@ import com.G2T7.OurGardenStory.service.CommunityService;
 @RestController
 public class CommunityController {
 
-    private CommunityService communityService;
+    private final CommunityService communityService;
 
     @Autowired public CommunityController(CommunityService communityService) {
         this.communityService = communityService;

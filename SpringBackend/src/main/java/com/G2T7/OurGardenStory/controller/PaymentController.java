@@ -12,7 +12,7 @@ import java.util.Map;
 @CrossOrigin("*")
 @RestController
 public class PaymentController {
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
 
     public PaymentController(PaymentService paymentService) {
         this.paymentService = paymentService;
@@ -41,7 +41,7 @@ public class PaymentController {
     }
 
     /**
-    * Charges a USer for all his outstanding ballot Charges
+    * Charges a User for all his outstanding ballot Charges
     * If username does not belong to a registered user, throw AuthenticationCredentialsNotFoundException
     *
     * @param headers containing the username as a key

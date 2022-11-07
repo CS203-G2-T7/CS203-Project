@@ -2,27 +2,33 @@ package com.G2T7.OurGardenStory.controller;
 
 import java.util.*;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.G2T7.OurGardenStory.model.Plant;
 import com.G2T7.OurGardenStory.service.PlantService;
+
 import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 @CrossOrigin("*")
 @RestController
 public class PlantController {
+
+    private final PlantService plantService;
+
     @Autowired
-    private PlantService plantService;
+    public PlantController(PlantService plantService) {
+        this.plantService = plantService;
+    }
 
     /**
     * Adds a new Plant object
     *
-    * @param Plant a Plant object
+    * @param plant a Plant object
     * @return a new Plant object that is successfully 
     */
     @PostMapping(path = "/plant")

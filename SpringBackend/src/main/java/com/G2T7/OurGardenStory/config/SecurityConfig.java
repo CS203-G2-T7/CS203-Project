@@ -25,8 +25,8 @@ public class SecurityConfig {
     public static final String SIGNUP_URL = "/api/users/sign-up";
     public static final String SIGNIN_URL = "/api/users/sign-in";
 
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private AwsCognitoJwtAuthFilter awsCognitoJwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final AwsCognitoJwtAuthFilter awsCognitoJwtAuthenticationFilter;
 
     @Autowired
     public SecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, AwsCognitoJwtAuthFilter awsCognitoJwtAuthenticationFilter) {

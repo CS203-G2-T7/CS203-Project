@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 @RestController
 public class BallotController {
 
-    private BallotService ballotService;
+    private final BallotService ballotService;
 
     @Autowired
     public BallotController(BallotService ballotService) {

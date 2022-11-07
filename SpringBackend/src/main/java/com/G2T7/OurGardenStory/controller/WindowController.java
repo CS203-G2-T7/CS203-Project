@@ -2,30 +2,33 @@ package com.G2T7.OurGardenStory.controller;
 
 import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
-import com.G2T7.OurGardenStory.service.AlgorithmServiceImpl;
-import com.G2T7.OurGardenStory.service.WinGardenService;
-import com.G2T7.OurGardenStory.service.WindowService;
+import com.G2T7.OurGardenStory.service.*;
+
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class WindowController {
+
+    private final WindowService windowService;
+    private final WinGardenService winGardenService;
+    private final AlgorithmServiceImpl algorithmServiceImpl;
+
     @Autowired
-    private WindowService windowService;
-    @Autowired
-    private WinGardenService relationshipService;
-    @Autowired
-    private AlgorithmServiceImpl algorithmServiceImpl;
+    public WindowController(WindowService windowService, WinGardenService winGardenService, AlgorithmServiceImpl algorithmServiceImpl) {
+        this.windowService = windowService;
+        this.winGardenService = winGardenService;
+        this.algorithmServiceImpl = algorithmServiceImpl;
+    }
 
     /**
     * Gets all windows that exist
@@ -137,11 +140,11 @@ public class WindowController {
             @RequestParam(name = "name") Optional<String> gardenName) {
         try {
             if (gardenName.isEmpty()) {
-                List<Relationship> relationList = relationshipService.findAllGardensInWindow(winId);
+                List<Relationship> relationList = winGardenService.findAllGardensInWindow(winId);
                 System.out.println(relationList);
                 return ResponseEntity.ok(relationList);
             }
-            Relationship gardenRelation = relationshipService.findGardenInWindow(winId, gardenName.get());
+            Relationship gardenRelation = winGardenService.findGardenInWindow(winId, gardenName.get());
             System.out.println(gardenRelation);
             return ResponseEntity.ok(gardenRelation);
         } catch (ResourceNotFoundException e) {
@@ -163,7 +166,7 @@ public class WindowController {
     @PostMapping(path = "/window/{winId}/garden")
     public ResponseEntity<?> addGardensInWindow(@PathVariable String winId, @RequestBody JsonNode payload) {
         try {
-            List<Relationship> gardenRelations = relationshipService.addGardensInWindow(winId, payload);
+            List<Relationship> gardenRelations = winGardenService.addGardensInWindow(winId, payload);
             return ResponseEntity.ok(gardenRelations);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -188,7 +191,7 @@ public class WindowController {
     public ResponseEntity<?> updateGardenInWindow(@PathVariable String winId,
             @RequestParam(name = "name") String gardenName, @RequestBody JsonNode payload) {
         try {
-            Relationship updatedRelation = relationshipService.updateGardenInWindow(winId, gardenName, payload);
+            Relationship updatedRelation = winGardenService.updateGardenInWindow(winId, gardenName, payload);
             return ResponseEntity.ok(updatedRelation);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -202,7 +205,7 @@ public class WindowController {
 
     /**
     * Delete an existing GardenWin Relationship object
-    * If the GardenWin Relationship object does not exist, throw ResourceNotFOundException
+    * If the GardenWin Relationship object does not exist, throw ResourceNotFoundException
     *
     * @param winId a String
     * @param gardenName a String
@@ -213,10 +216,10 @@ public class WindowController {
             @RequestParam(name = "name") Optional<String> gardenName) {
         try {
             if (gardenName.isPresent()) {
-                relationshipService.deleteGardenInWindow(winId, gardenName.get());
+                winGardenService.deleteGardenInWindow(winId, gardenName.get());
                 return ResponseEntity.noContent().build();
             }
-            relationshipService.deleteAllGardensInWindow(winId);
+            winGardenService.deleteAllGardensInWindow(winId);
             return ResponseEntity.noContent().build();
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

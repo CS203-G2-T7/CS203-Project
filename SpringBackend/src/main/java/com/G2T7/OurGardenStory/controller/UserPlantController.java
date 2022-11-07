@@ -3,20 +3,25 @@ package com.G2T7.OurGardenStory.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import com.G2T7.OurGardenStory.service.UserService;
+
 import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 @CrossOrigin("*")
 @RestController
 public class UserPlantController {
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserPlantController(UserService userService) {
+        this.userService = userService;
+    }
 
     /**
     * Get the user's plant that corresponds to the given plantName. If plant is not found, get all of user's plants

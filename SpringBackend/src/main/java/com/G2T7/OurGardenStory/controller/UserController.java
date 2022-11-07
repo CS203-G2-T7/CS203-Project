@@ -1,28 +1,26 @@
 package com.G2T7.OurGardenStory.controller;
 
 import com.G2T7.OurGardenStory.model.ReqResModel.*;
-import com.G2T7.OurGardenStory.model.ReqResModel.UserSignUpRequest;
-import com.G2T7.OurGardenStory.service.SignInService;
-import com.G2T7.OurGardenStory.service.SignUpService;
-import com.G2T7.OurGardenStory.service.UserService;
+import com.G2T7.OurGardenStory.service.*;
+
 import com.amazonaws.AmazonServiceException;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 import java.time.format.DateTimeParseException;
+
 import java.util.Optional;
 
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping(path = "/api/users")
 public class UserController {
-    private UserService userService;
-    private SignInService signInService;
-    private SignUpService signUpService;
+    private final UserService userService;
+    private final SignInService signInService;
+    private final SignUpService signUpService;
 
     @Autowired
     public UserController(UserService userService, SignInService signInService, SignUpService signUpService) {
@@ -46,8 +44,7 @@ public class UserController {
         } catch (IllegalArgumentException | DateTimeParseException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (AmazonServiceException e) {
-            AmazonServiceException ase = (AmazonServiceException) e;
-            return ResponseEntity.status(ase.getStatusCode()).body(ase.getMessage());
+            return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
@@ -68,8 +65,7 @@ public class UserController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (AmazonServiceException e) {
-            AmazonServiceException ase = (AmazonServiceException) e;
-            return ResponseEntity.status(ase.getStatusCode()).body(ase.getMessage());
+            return ResponseEntity.status(e.getStatusCode()).body(e.getMessage());
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();

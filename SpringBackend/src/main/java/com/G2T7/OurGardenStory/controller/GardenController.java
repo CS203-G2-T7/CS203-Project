@@ -2,22 +2,28 @@ package com.G2T7.OurGardenStory.controller;
 
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.service.GardenService;
+
 import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMappingException;
+
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class GardenController {
+
+    private final GardenService gardenService;
+
     @Autowired
-    private GardenService gardenService;
+    public GardenController(GardenService gardenService) {
+        this.gardenService = gardenService;
+    }
 
     /**
     * Add a garden 
