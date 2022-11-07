@@ -13,11 +13,15 @@ class Payment {
   }
 
   sendPayment(): Promise<AxiosResponse<any, any>> {
-    return axios.post(PAYMENT_URL, {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("jwtAccessToken"),
-      },
-    });
+    return axios.post(
+      PAYMENT_URL,
+      {},
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwtAccessToken"),
+        },
+      }
+    );
   }
 }
 
