@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "https://ourgardenstory.me")
+@CrossOrigin(origins = {"https://ourgardenstory.me/garden", "*"})
 @RestController
 @Api(value = "Community Controller", description = "Operations pertaining to Community model")
 public class GardenController {

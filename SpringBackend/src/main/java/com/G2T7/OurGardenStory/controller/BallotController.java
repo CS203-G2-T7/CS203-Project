@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@CrossOrigin(origins = "https://ourgardenstory.me")
+@CrossOrigin(origins = {"https://ourgardenstory.me/ballot", "*"})
 @RestController
 @Api(value = "Ballot Controller", description = "Operations pertaining to Ballot model")
 public class BallotController {

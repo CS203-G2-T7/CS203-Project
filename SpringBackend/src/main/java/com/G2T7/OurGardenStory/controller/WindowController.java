@@ -19,7 +19,7 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import java.util.*;
 
 @Api(value = "Window Controller", description = "Operations pertaining to Window and GardenWin model")
-@CrossOrigin(origins = "https://ourgardenstory.me")
+@CrossOrigin(origins = {"{https://ourgardenstory.me/ballot}", "*"})
 @RestController
 public class WindowController {
 
