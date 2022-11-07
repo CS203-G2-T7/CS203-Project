@@ -2,8 +2,6 @@ package com.G2T7.OurGardenStory.service;
 
 import java.util.*;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +28,10 @@ public class CommunityService {
      * Removes ballots that are not successful
      * Returns a list of users from those ballots
      *
-     * @param payload which includes a String gardenName
+     * @param gardenName a String
      * @return the list of users with successful ballots for a particular garden
      */
-    public List<User> findUserWithSuccessfulBallotInGarden(JsonNode payload) {
-        String gardenName = payload.get("gardenName").asText();
+    public List<User> findUserWithSuccessfulBallotInGarden(String gardenName) {
         List<String> allWinId = new ArrayList<>();
         List<Relationship> allSuccessfulBallots = new ArrayList<>();
         List<User> allUsers = new ArrayList<>();
