@@ -13,6 +13,7 @@ import { FabStyled } from "./Fab.styled";
 import { useTransition } from "react-spring";
 import ReactDOM from "react-dom";
 import Overlay from "components/Overlay";
+import PlantModal from "./PlantModal/PlantModal";
 
 export type Plant = {
   plantSpecies: string;
@@ -33,7 +34,9 @@ export default function MyPlants() {
   const [allPlantList, setAllPlantList] = useState<Plant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
-  const [modalShow, setModalShow] = useState(false);
+  const [addPlantModal, setAddPlantModal] = useState(false);
+  const [plantModal, setPlantModal] = useState(false);
+  const [clickedPlant, setClickedPlant] = useState<Plant>(defaultPlant);
 
   const portalElement = document.getElementById("overlays") || new Element();
 
@@ -68,12 +71,17 @@ export default function MyPlants() {
       <p>You have no plants.</p>
     ) : (
       userPlantList.map((Plant, index) => (
-        <PlantCard plant={Plant} key={index} />
+        <PlantCard
+          plant={Plant}
+          key={index}
+          setPlantModal={setPlantModal}
+          setClickedPlant={setClickedPlant}
+        />
       ))
     );
   plantGrid = isError ? <p>Error</p> : plantGrid;
 
-  const menuModalTransition = useTransition(modalShow, {
+  const addPlantModalTransition = useTransition(addPlantModal, {
     from: { transform: "translateY(100vh)" },
     enter: { transform: "translateY(0vh)" },
     leave: { transform: "translateY(100vh)" },
@@ -84,7 +92,30 @@ export default function MyPlants() {
       velocity: 0.006,
     },
   });
-  const overlayTransition = useTransition(modalShow, {
+  const addPlantOverlayTransition = useTransition(addPlantModal, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    config: {
+      mass: 0.7,
+      tension: 238,
+      friction: 25,
+      velocity: 0.006,
+    },
+  });
+
+  const plantModalTransition = useTransition(plantModal, {
+    from: { transform: "translateY(100vh)" },
+    enter: { transform: "translateY(0vh)" },
+    leave: { transform: "translateY(100vh)" },
+    config: {
+      mass: 0.7,
+      tension: 238,
+      friction: 25,
+      velocity: 0.006,
+    },
+  });
+  const plantOverlayTransition = useTransition(plantModal, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 },
@@ -98,13 +129,13 @@ export default function MyPlants() {
 
   return (
     <>
-      {menuModalTransition(
+      {addPlantModalTransition(
         (styles, menuShow) =>
           menuShow && (
             <>
               {ReactDOM.createPortal(
                 <AddPlantModal
-                  onOverlayClick={setModalShow}
+                  onOverlayClick={setAddPlantModal}
                   style={styles}
                   allPlantList={allPlantList}
                   setUserPlantList={setUserPlantList}
@@ -114,17 +145,41 @@ export default function MyPlants() {
             </>
           )
       )}
-      {overlayTransition(
+      {addPlantOverlayTransition(
         (styles, menuShow) =>
           menuShow && (
             <>
               {ReactDOM.createPortal(
-                <Overlay onCloseModal={setModalShow} style={styles} />,
+                <Overlay onCloseModal={setAddPlantModal} style={styles} />,
                 portalElement
               )}
             </>
           )
       )}
+
+      {plantModalTransition(
+        (styles, menuShow) =>
+          menuShow && (
+            <>
+              {ReactDOM.createPortal(
+                <PlantModal style={styles} plant={clickedPlant} />,
+                portalElement
+              )}
+            </>
+          )
+      )}
+      {plantOverlayTransition(
+        (styles, menuShow) =>
+          menuShow && (
+            <>
+              {ReactDOM.createPortal(
+                <Overlay onCloseModal={setPlantModal} style={styles} />,
+                portalElement
+              )}
+            </>
+          )
+      )}
+
       <MyPlantsStyled>
         <NavBarStyled>
           <Navbar />
@@ -142,7 +197,7 @@ export default function MyPlants() {
           color="primary"
           aria-label="add"
           onClick={() => {
-            setModalShow(true);
+            setAddPlantModal(true);
           }}
         >
           <AddIcon />

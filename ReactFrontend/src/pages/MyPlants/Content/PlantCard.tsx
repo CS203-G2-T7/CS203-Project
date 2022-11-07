@@ -9,16 +9,23 @@ import { Plant } from "../MyPlants";
 
 type Props = {
   plant: Plant;
+  setPlantModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setClickedPlant: React.Dispatch<React.SetStateAction<Plant>>;
 };
 
-export default function PlantCard({ plant }: Props) {
+export default function PlantCard({ plant, setPlantModal, setClickedPlant }: Props) {
   // console.log(plant);
   if (plant.sk === "") {
     plant.sk = "Lettuce";
   }
 
   return (
-    <PlantCardStyled>
+    <PlantCardStyled
+      onClick={() => {
+        setPlantModal(true);
+        setClickedPlant(plant);
+      }}
+    >
       <Card sx={{ maxWidth: 400, height: 268 }}>
         <CardActionArea>
           <CardMedia
