@@ -66,7 +66,11 @@ export default function FirstTextFields({}: Props) {
         name={"username"}
         control={control}
         rules={{
-          required: "Username is required.", //could check for duplicates in backend
+          required: "Username is required.",
+          pattern: {
+            value: /^[a-z0-9_\-]+$/,
+            message: "Username must be lowercase characters."
+          }
         }}
         render={({
           field: { onChange, onBlur, value, name, ref },

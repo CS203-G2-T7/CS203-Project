@@ -1,12 +1,14 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import BallotGardenList from "pages/BallotGardenList/BallotGardenList";
-import NotFound from "pages/404";
 import Login from "pages/Login/Login";
 import SignUp from "pages/SignUp/SignUp";
 import Landing from "pages/Landing/Landing";
 import MyPlants from "pages/MyPlants/MyPlants";
 import AllGarden from "pages/AllGarden/AllGarden";
 import BallotGarden from "pages/BallotGarden/BallotGarden";
+import Garden from "pages/Garden/Garden";
+import Community from "pages/Community/Community";
+import Payment from "pages/Payment/Payment";
 
 function App() {
   const location = useLocation();
@@ -15,15 +17,15 @@ function App() {
     <Routes location={location}>
       {/* Accessible to all */}
       <Route path="/" element={<Landing />} />
-      <Route path="/landing" element={<Landing />} />
-      <Route path="/ballot" element={<BallotGardenList />}>
-        <Route path=":name" element={<BallotGarden />} />
-      </Route>
+      <Route path="/ballot" element={<BallotGardenList />} />
+      <Route path="/ballot/:gardenName" element={<BallotGarden />} />
       <Route path="/login" element={<Login />} />
       <Route path="/sign-up" element={<SignUp />} />
-      {/* <Route path="/garden" element={<></>} /> */}
-      <Route path="/my-plants" element={<MyPlants />} />
-      <Route path="/gardens" element={<AllGarden />} />
+      <Route path="/my-plant" element={<MyPlants />} />
+      <Route path="/garden" element={<AllGarden />} />
+      <Route path="/garden/:gardenName" element={<Garden />} />
+      <Route path="/community" element={<Community />} />
+      <Route path="/payment" element={<Payment />} />
 
       {/* Accessible to NOT logged in users */}
 

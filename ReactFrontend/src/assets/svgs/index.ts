@@ -12,3 +12,6 @@ export { ReactComponent as WindowOptionArrow } from "./WindowOptionArrow.svg";
 export { ReactComponent as FacebookIcon } from "./FacebookIcon.svg";
 export { ReactComponent as InstagramIcon } from "./InstagramIcon.svg";
 export { ReactComponent as TwitterIcon } from "./TwitterIcon.svg";
+export { ReactComponent as EmailIcon } from "./EmailIcon.svg";
+export { ReactComponent as Avatar } from "./Avatar.svg";
+

@@ -23,11 +23,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </TabPanelStyled>
   );
 }
@@ -108,7 +104,7 @@ export default function BasicTabs() {
               <VegListStyled>
                 Bayam, Cai Xin, Kang Kong, Kailan, Kale, Lettuce, Okinawa
                 Spinach, Sweet Potato, Ulam Raja, Brinjal, Chilli,
-                Lady’s-Finger, Long Bean, Tomato, Basil, Cekur, Chives, Cincau,
+                Lady's-Finger, Long Bean, Tomato, Basil, Cekur, Chives, Cincau,
                 Indian Borage, Laska, Mint, Oyster Plant, Pandan, Saw Tooth
                 Coriander, Tumeric
               </VegListStyled>
@@ -194,7 +190,7 @@ export default function BasicTabs() {
                 The minimum age to apply for a plot is 18 years old at the time
                 of application. New allotment garden plots are allocated by
                 computerised balloting. Priority is accorded to applicants by
-                virtue of proximity of the allotment garden to the applicant’s
+                virtue of proximity of the allotment garden to the applicant's
                 address. This ensures fair opportunity for all applicants to
                 secure a plot.
               </p>
@@ -212,10 +208,62 @@ export default function BasicTabs() {
           </ul>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequuntur
-          quos nostrum voluptatem tempora deleniti cumque? Sequi explicabo
-          deleniti omnis, quisquam, quidem ad veritatis porro esse officia
-          maiores obcaecati, quaerat voluptates?
+          <p>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+            Consequuntur quos nostrum voluptatem tempora deleniti cumque? Sequi
+            explicabo deleniti omnis, quisquam, quidem ad veritatis porro esse
+            officia maiores obcaecati, quaerat voluptates?
+          </p>
+          <p>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam
+            repellat quisquam veniam, unde totam mollitia, nisi repudiandae fuga
+            dolores quos necessitatibus vero voluptatibus officia voluptas
+            assumenda tenetur minus ad maiores? Lorem ipsum dolor sit amet,
+            consectetur adipisicing elit.
+          </p>
+          <p>
+            At, tempora id deleniti eaque ullam ipsam libero cupiditate optio
+            totam quis placeat aperiam assumenda dolores nemo qui, soluta ex
+            sapiente sequi? Lorem ipsum dolor sit amet consectetur adipisicing
+            elit. Consequatur autem cum, cumque dolore accusantium quisquam
+            tempore mollitia eos sapiente voluptates necessitatibus dignissimos
+            officiis fugit totam vitae pariatur. Amet, debitis earum.
+          </p><p>
+            At, tempora id deleniti eaque ullam ipsam libero cupiditate optio
+            totam quis placeat aperiam assumenda dolores nemo qui, soluta ex
+            sapiente sequi? Lorem ipsum dolor sit amet consectetur adipisicing
+            elit. Consequatur autem cum, cumque dolore accusantium quisquam
+            tempore mollitia eos sapiente voluptates necessitatibus dignissimos
+            officiis fugit totam vitae pariatur. Amet, debitis earum.
+          </p><p>
+            At, tempora id deleniti eaque ullam ipsam libero cupiditate optio
+            totam quis placeat aperiam assumenda dolores nemo qui, soluta ex
+            sapiente sequi? Lorem ipsum dolor sit amet consectetur adipisicing
+            elit. Consequatur autem cum, cumque dolore accusantium quisquam
+            tempore mollitia eos sapiente voluptates necessitatibus dignissimos
+            officiis fugit totam vitae pariatur. Amet, debitis earum.
+          </p><p>
+            At, tempora id deleniti eaque ullam ipsam libero cupiditate optio
+            totam quis placeat aperiam assumenda dolores nemo qui, soluta ex
+            sapiente sequi? Lorem ipsum dolor sit amet consectetur adipisicing
+            elit. Consequatur autem cum, cumque dolore accusantium quisquam
+            tempore mollitia eos sapiente voluptates necessitatibus dignissimos
+            officiis fugit totam vitae pariatur. Amet, debitis earum.
+          </p><p>
+            At, tempora id deleniti eaque ullam ipsam libero cupiditate optio
+            totam quis placeat aperiam assumenda dolores nemo qui, soluta ex
+            sapiente sequi? Lorem ipsum dolor sit amet consectetur adipisicing
+            elit. Consequatur autem cum, cumque dolore accusantium quisquam
+            tempore mollitia eos sapiente voluptates necessitatibus dignissimos
+            officiis fugit totam vitae pariatur. Amet, debitis earum.
+          </p><p>
+            At, tempora id deleniti eaque ullam ipsam libero cupiditate optio
+            totam quis placeat aperiam assumenda dolores nemo qui, soluta ex
+            sapiente sequi? Lorem ipsum dolor sit amet consectetur adipisicing
+            elit. Consequatur autem cum, cumque dolore accusantium quisquam
+            tempore mollitia eos sapiente voluptates necessitatibus dignissimos
+            officiis fugit totam vitae pariatur. Amet, debitis earum.
+          </p>
         </TabPanel>
       </Box>
     </SectionBoxStyled>

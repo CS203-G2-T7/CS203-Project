@@ -16,7 +16,10 @@ export default function Row({ gardenObject }: Props) {
     gardenObject: gardenObject,
   };
   return (
-    <RowStyled state={linkState} to={"/garden?id=" + gardenObject.sk}>
+    <RowStyled
+      state={linkState}
+      to={"/garden/" + gardenObject.sk.replace(" ", "-")}
+    >
       <RowGardenEntryStyled>
         <span>{gardenObject.sk}</span>
         <span>{gardenObject.gardenAddress}</span>
