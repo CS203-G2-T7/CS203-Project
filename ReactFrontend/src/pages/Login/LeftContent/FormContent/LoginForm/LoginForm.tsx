@@ -42,7 +42,7 @@ export default function LoginForm({}: Props) {
       .then((res) => {
         console.log(res);
         localStorage.setItem("jwtAccessToken", res.data.accessToken);
-        navigate("/landing");
+        navigate("/");
         console.log(res.data.accessToken);
       })
       .catch((err) => {

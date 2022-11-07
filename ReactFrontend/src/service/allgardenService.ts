@@ -1,9 +1,8 @@
 import axios, { AxiosResponse } from "axios";
-const GET_GARDEN_BY_NAME_URL = "http://localhost:5000/garden?name=";
-const GET_ALL_GARDEN_URL = "http://localhost:5000/garden";
+import { prod_url } from "urlConstants";
 
-
-
+const GET_GARDEN_BY_NAME_URL = `${prod_url}/garden?name=`;
+const GET_ALL_GARDEN_URL = `${prod_url}/garden`;
 
 class AllGarden {
   //gets Window, which contains array of Gardens

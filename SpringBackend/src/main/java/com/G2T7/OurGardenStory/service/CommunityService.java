@@ -2,9 +2,6 @@ package com.G2T7.OurGardenStory.service;
 
 import java.util.*;
 
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

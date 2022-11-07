@@ -11,25 +11,17 @@ import Content from "./Content/Content";
 import { useNavigate } from "react-router-dom";
 import landingService from "service/landingService";
 
-const fakeDB = [
-  {plantName: "",
-  dessfm: ""},
-  {}
-]
-
-type Props = {};
-
 export default function Landing() {
   const navigate = useNavigate();
   const loadHandler = (): void => {
     landingService
-    .checkLoggedIn()
+      .checkLoggedIn()
       .then((res) => {
         console.log(res);
       })
       .catch((err) => {
         console.log(err);
-        navigate("/login")
+        navigate("/login");
       });
   };
 
