@@ -13,22 +13,22 @@ type Props = {
 export default function SocialMedia({ email }: Props) {
   const emailURL = "mailto:" + email;
   return (
-       <SocialMediaStyled>
-        <a href="https://www.facebook.com/nparksbuzz/">
-          <FacebookIcon />
-        </a>
+    <SocialMediaStyled>
+      <a href={emailURL}>
+        <EmailIcon />
+      </a>
 
-        <a href="https://www.instagram.com/nparksbuzz/?hl=en">
-          <InstagramIcon />
-        </a>
+      <a href="https://www.facebook.com/nparksbuzz/">
+        <FacebookIcon />
+      </a>
 
-        <a href="https://twitter.com/nparksbuzz?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">
-          <TwitterIcon />
-        </a>
+      <a href="https://www.instagram.com/nparksbuzz/?hl=en">
+        <InstagramIcon />
+      </a>
 
-        <a href= {emailURL}>
-          <EmailIcon />
-        </a>
-      </SocialMediaStyled>
+      <a href="https://twitter.com/nparksbuzz?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">
+        <TwitterIcon />
+      </a>
+    </SocialMediaStyled>
   );
 }
