@@ -7,7 +7,7 @@ import AddPlantModal from "./AddPlantModal/AddPlantModal";
 import PlantCard from "./Content/PlantCard";
 import { ContentStyled } from "./Content/Content.styled";
 import plantService from "service/plantService";
-import { Box, CircularProgress, Fab } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { FabStyled } from "./Fab.styled";
 import { useTransition } from "react-spring";

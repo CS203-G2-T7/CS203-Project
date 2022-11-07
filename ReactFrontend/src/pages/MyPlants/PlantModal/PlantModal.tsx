@@ -1,7 +1,6 @@
 import React from "react";
 import { SpringValue } from "react-spring";
 import { Plant } from "models/Plant";
-import plantService from "service/plantService";
 import { PlantModalStyled } from "./PlantModal.styled";
 
 type Props = {

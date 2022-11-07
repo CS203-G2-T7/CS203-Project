@@ -13,8 +13,11 @@ type Props = {
   setClickedPlant: React.Dispatch<React.SetStateAction<Plant>>;
 };
 
-export default function PlantCard({ plant, setPlantModal, setClickedPlant }: Props) {
-  // console.log(plant);
+export default function PlantCard({
+  plant,
+  setPlantModal,
+  setClickedPlant,
+}: Props) {
   if (plant.sk === "") {
     plant.sk = "Lettuce";
   }
