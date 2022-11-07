@@ -9,7 +9,7 @@ import { FacebookIcon, InstagramIcon, TwitterIcon } from "assets/svgs";
 
 type Props = {};
 
-export default function Landing() {
+export default function SocialMedia() {
   return (
     <SocialMediaStyled>
       <p>Connect With Us</p>
