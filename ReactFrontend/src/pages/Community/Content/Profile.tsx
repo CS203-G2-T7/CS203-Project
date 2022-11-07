@@ -12,7 +12,7 @@ export default function Profile({ user }: Props) {
   return (
     <ProfileStyled>
       <Avatar />
-      <p>{user.userName}</p>
+      <p>{user.sk}</p>
       <SocialMedia email={user.email}/>
     </ProfileStyled>
   );

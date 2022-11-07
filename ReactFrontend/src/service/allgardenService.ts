@@ -7,7 +7,11 @@ const GET_ALL_GARDEN_URL = `${prod_url}/garden`;
 class AllGarden {
   //gets Window, which contains array of Gardens
   getAllGarden(): Promise<AxiosResponse<any, any>> {
-    return axios.get(GET_ALL_GARDEN_URL);
+    return axios.get(GET_ALL_GARDEN_URL, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtAccessToken"),
+      },
+    });
   }
 }
 

@@ -4,12 +4,6 @@ import { prod_url } from "urlConstants";
 const PLACE_BALLOT_URL = `${prod_url}/window/win%w/ballot`;
 const GET_GARDEN_WIN_RELATION = `${prod_url}/window/win%w/garden?name=%n`;
 
-const config = {
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("jwtAccessToken")}`,
-  },
-};
-
 class Ballot {
   placeBallot(
     gardenName: String,
@@ -36,7 +30,12 @@ class Ballot {
       GET_GARDEN_WIN_RELATION.replace("%w", windowNum.toString()).replace(
         "%n",
         gardenName.replace(" ", "-")
-      )
+      ),
+      {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwtAccessToken"),
+        },
+      }
     );
   }
 }
