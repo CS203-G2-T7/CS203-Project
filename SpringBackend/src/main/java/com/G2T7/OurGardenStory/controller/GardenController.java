@@ -120,13 +120,15 @@ public class GardenController {
 
     @ApiOperation(value = "Get all successful Ballots in a Garden")
     @GetMapping(path = "/community")
-    public ResponseEntity<?> findSuccessfulBallotsInGarden(@RequestHeader Map<String, String> headers) {
+    public ResponseEntity<?> findCommunity(@RequestParam(name = "name") Optional<String> gardenName, @RequestHeader Map<String, String> headers) {
         try {
-//            List<User> userLit = communityService.findUserWithSuccessfulBallotInGarden(headers.get("username"));
-//            System.out.println(userList);
-            return ResponseEntity.ok("test");
+            if (gardenName.isPresent()) {
+                return ResponseEntity.ok(gardenService.findGardenByGardenName(gardenName.get()));
+            }
+            return ResponseEntity.ok(gardenService.findAllGardens());
+        } catch (DynamoDBMappingException | ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            System.out.println(e);
             return ResponseEntity.internalServerError().build();
         }
     }
