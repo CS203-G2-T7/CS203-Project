@@ -79,7 +79,7 @@ export default function SignUpFormComponent() {
             loginResponse.data.accessToken
           ); //save JWT in local storage
           console.log(loginResponse.data.accessToken);
-          navigate("/home");
+          navigate("/");
         }
       }
     } catch (e) {
