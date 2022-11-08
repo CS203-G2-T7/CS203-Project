@@ -6,7 +6,7 @@ type Props = {};
 export default function LeftContent({}: Props) {
   return (
     <LeftImageStyled
-      src="./image/LeftPottedPlants.png"
+      src="https://www.ourgardenstory.me/image/LeftPottedPlants.png"
       alt="Potted Plants on white background"
     />
   );
