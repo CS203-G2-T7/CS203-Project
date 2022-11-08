@@ -17,7 +17,7 @@ export default function FirstTextFields({}: Props) {
 
   const handleChange = (newValue: Dayjs | null) => {
     setDateValue(newValue);
-    setValue("dateOfBirth", newValue?.format("DD/MM/YYYY"));
+    setValue("dateOfBirth", newValue?.format("MM-DD-YYYY"));
   };
 
   return (
