@@ -6,7 +6,6 @@ export default function WindowLabel() {
     <WindowLabelStyled>
       <div>
         <h1>All Allotment Gardens</h1>
-        <p>Simply click on any gardens to view them in detail</p>
       </div>
     </WindowLabelStyled>
   );
