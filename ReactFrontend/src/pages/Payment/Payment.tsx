@@ -75,7 +75,7 @@ export default function Payment() {
         <Row
           gardenName={gardenName}
           windowId={windowId}
-          paymentAmount={paymentStatus.amount}
+          paymentAmount={paymentStatus.amount/100}
         />
       )}
       <StyledButton>
