@@ -72,7 +72,7 @@ public class PaymentService {
 
         try {
             Stripe.apiKey = STRIPE_API_KEY;
-            int amount = 69; // amount is in cents
+            int amount = 6900; // amount is in cents
             chargeParams.put("amount", amount);
             chargeParams.put("currency", "sgd");
             chargeParams.put("description", winId_GardenName);
