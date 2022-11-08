@@ -68,8 +68,21 @@ export default function Payment() {
 
       {paymentComplete ? (
         <>
-          <div>Payment successful</div>
-          <p>{successMessage}</p>
+          <html>
+          <head><title>Thanks for your order!</title></head>
+          <body>
+          <h1>Payment Success!</h1>
+          <Row
+              gardenName={gardenName}
+              windowId={windowId}
+              paymentAmount={paymentStatus.amount/100}
+          />
+          <p>
+            If you have any questions, please email
+            <a href="ourgardnestory@gmail.com"> ourgardenstory@gmail.com</a>.
+          </p>
+          </body>
+          </html>
         </>
       ) : (
         <Row
