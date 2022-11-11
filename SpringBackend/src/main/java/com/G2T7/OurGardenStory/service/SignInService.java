@@ -58,11 +58,6 @@ public class SignInService {
         .withUserPoolId(userPoolId).withAuthParameters(authParams);
   }
 
-  /*
-   * If not going to have any challenges, we can remove this block
-   * Or else how to implement forget password? What does browser need to send?
-   * Just add an extra "new password" in body?
-   */
   private UserSignInResponse authenticateChallenge(AdminInitiateAuthResult authResult,
       UserSignInRequest signInRequest) {
     AdminRespondToAuthChallengeRequest challengeRequest = createChallengeRequest(authResult, signInRequest);

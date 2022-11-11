@@ -4,7 +4,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.*;
 
 import lombok.*;
 
-/*
+/**
  * This class models the window to garden many-to-many relationship.
  * PK: WinId/Garden
  * SK: GardenName/WinId
