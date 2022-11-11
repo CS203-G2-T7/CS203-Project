@@ -34,23 +34,6 @@ public class GardenServiceTest {
         assertEquals(expected, actual);
     }
 
-    public class QueryService {
-        private final DynamoDBMapper mapper;
-
-        public QueryService(DynamoDBMapper mapper) {
-            this.mapper = mapper;
-        }
-
-        public PaginatedQueryList<Garden> query() {
-            Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-            eav.put(":GDN", new AttributeValue().withS("Garden"));
-            DynamoDBQueryExpression<Garden> qe = new DynamoDBQueryExpression<Garden>()
-                .withKeyConditionExpression("PK = :GDN").withExpressionAttributeValues(eav);
-            
-                return mapper.query(Garden.class, qe);
-        }
-    }
-
     @Test
     void findGardenByGardenName_noSuchGarden_ReturnNull() {
         DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
@@ -79,16 +62,33 @@ public class GardenServiceTest {
         assertEquals(expected, actual);
     }
 
-    public class LoadService {
-        private final DynamoDBMapper mapper;
+}
 
-        public LoadService(DynamoDBMapper mapper) {
-            this.mapper = mapper;
-        }
+class LoadService {
+    private final DynamoDBMapper mapper;
 
-        public Garden load(String pk, String sk) {            
-            return mapper.load(Garden.class, pk, sk);
-        }
+    public LoadService(DynamoDBMapper mapper) {
+        this.mapper = mapper;
     }
 
+    public Garden load(String pk, String sk) {            
+        return mapper.load(Garden.class, pk, sk);
+    }
+}
+
+class QueryService {
+    private final DynamoDBMapper mapper;
+
+    public QueryService(DynamoDBMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    public PaginatedQueryList<Garden> query() {
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":GDN", new AttributeValue().withS("Garden"));
+        DynamoDBQueryExpression<Garden> qe = new DynamoDBQueryExpression<Garden>()
+            .withKeyConditionExpression("PK = :GDN").withExpressionAttributeValues(eav);
+        
+            return mapper.query(Garden.class, qe);
+    }
 }
