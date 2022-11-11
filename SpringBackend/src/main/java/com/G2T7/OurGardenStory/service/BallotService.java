@@ -59,7 +59,7 @@ public class BallotService {
     public List<Relationship> findAllBallotsInWindowGarden(String windowId, String gardenName) {
         String capWinId = StringUtils.capitalize(windowId);
 
-        if (!winGardenService.validateWinExist(capWinId)) {
+        if (winGardenService.validateWinExist(capWinId)) {
             throw new ResourceNotFoundException(capWinId + " does not exist.");
         }
         Map<String, AttributeValue> eav = new HashMap<>();

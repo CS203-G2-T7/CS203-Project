@@ -8,6 +8,14 @@ import java.time.Duration;
 
 public class Geocoder {
 
+    /**
+    * Calls HERE api
+    *
+    * @param query
+    * @param resource
+    * @param apiKey
+    * @return a responseBody for the geocoder
+    */
     public String GeocodeSync(String query, String resource, String apiKey) throws IOException, InterruptedException {
         HttpClient httpClient = HttpClient.newHttpClient();
 

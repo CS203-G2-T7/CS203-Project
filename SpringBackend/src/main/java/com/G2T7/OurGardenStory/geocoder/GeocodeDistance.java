@@ -10,6 +10,16 @@ public class GeocodeDistance {
     //converts miles to KM
     final static double KILOMETER = 1.609344;
 
+    /**
+    * Calculates the distance between a User's address and the Garden's address
+    *
+    * @param userAddress a String
+    * @param gardenLng the longitude of the Garden's address
+    * @param gardenLat the latitude of the Garden's address
+    * @param resource the Geocode Here api resource
+    * @param apiKey the api key for the Geocode Here api
+    * @return the distance between the user's address and the garden
+    */
     //calculates distance between garden and user address
     public static double distanceCalculator(String userAddress, String gardenLat, String gardenLng, String resource, String apiKey) throws IOException, InterruptedException {
         String userLat = "";
@@ -34,6 +44,15 @@ public class GeocodeDistance {
         return distanceBetweenTwoPoints(userLat, userLng, gardenLat, gardenLng);
     }
 
+    /**
+    * Calculates the distance between two points defined by their latitude and longitude
+    *
+    * @param lat1 latitude of first address
+    * @param lng1 longitude of first address
+    * @param lat2 latitude of second address
+    * @param lng2 longitude of second address
+    * @return the distance between the two points
+    */
     private static double distanceBetweenTwoPoints(String lat1, String lng1, String lat2, String lng2) {
         double latitude1 = Double.parseDouble(lat1);
         double longitude1 = Double.parseDouble(lng1);

@@ -1,26 +1,23 @@
 package com.G2T7.OurGardenStory.utils;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.Period;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtil {
   /**
    * Converts string in the format MM-dd-yyyy to a LocalDate object.
    * 
-   * @param date
+   * @param date a String
    * @return convertedLocalDate object
    */
   public static LocalDate convertStringToLocalDate(String date) {
-    String dateComponents[] = date.split("-");
+    String[] dateComponents = date.split("-");
 
     int year = Integer.parseInt(dateComponents[2]);
     int month = Integer.parseInt(dateComponents[0]);
     int day = Integer.parseInt(dateComponents[1]);
 
-    LocalDate convertedDate = LocalDate.of(year, month, day);
-    return convertedDate;
+    return LocalDate.of(year, month, day);
   }
 
   public static String convertLocalDateToString(LocalDate date) {
@@ -32,8 +29,7 @@ public class DateUtil {
     if (periodInput.contains("minute")) {
       return Period.of(0, 0, 0);
     }
-    Period convertedPeriod = Period.parse(periodInput);
-    return convertedPeriod;
+    return Period.parse(periodInput);
   }
 
   // duration for PnDTnHnMn.nS. Day, Hour, Min, Sec

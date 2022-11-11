@@ -8,15 +8,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.G2T7.OurGardenStory.model.Window;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
-import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
+
+import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 
 @Service
 public class WindowService {
+
+    private final DynamoDBMapper dynamoDBMapper;
+
     @Autowired
-    private DynamoDBMapper dynamoDBMapper;
+    public WindowService(DynamoDBMapper dynamoDBMapper) {
+        this.dynamoDBMapper = dynamoDBMapper;
+    }
 
     /**
     * Get a Window object based on the PK and SK in the database
@@ -33,14 +37,14 @@ public class WindowService {
     * Get the Window object corresponding to the given windowId
     * If no Window object is returned, throw ResourceNotFoundException
     *
-    * @param windowId
+    * @param windowId a String
     * @return a list containing only the Window object corresponding to the given windowId
     */
     public List<Window> findWindowById(final String windowId) { // queries must always return a paginated list
         String capWinId = StringUtils.capitalize(windowId);
 
         // Build query expression to Query GSI by windowID
-        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        Map<String, AttributeValue> eav = new HashMap<>();
         eav.put(":WID", new AttributeValue().withS(capWinId));
         DynamoDBQueryExpression<Window> qe = new DynamoDBQueryExpression<Window>().withIndexName("WindowId-index")
                 .withConsistentRead(false)
@@ -61,7 +65,7 @@ public class WindowService {
     * @return a list of all Window objects in database
     */
     public List<Window> findAllWindows() {
-        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        Map<String, AttributeValue> eav = new HashMap<>();
         eav.put(":WIN", new AttributeValue().withS(Window.entityName));
         DynamoDBQueryExpression<Window> qe = new DynamoDBQueryExpression<Window>()
                 .withKeyConditionExpression("PK = :WIN").withExpressionAttributeValues(eav);
@@ -74,7 +78,7 @@ public class WindowService {
     }
 
     public Window findLatestWindow() {
-        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        Map<String, AttributeValue> eav = new HashMap<>();
         eav.put(":WIN", new AttributeValue().withS(Window.entityName));
         DynamoDBQueryExpression<Window> qe = new DynamoDBQueryExpression<Window>()
                 .withKeyConditionExpression("PK = :WIN").withExpressionAttributeValues(eav).withScanIndexForward(false);
@@ -89,7 +93,7 @@ public class WindowService {
     * Saves a Window object into the database
     * If a Window with the same startDate already exists, throw Exception
     *
-    * @param window
+    * @param window a Window object
     * @return the newly created Window object
     */
     public Window createWindow(final Window window) {
@@ -112,7 +116,7 @@ public class WindowService {
     * If the windowId does not correspond to an already existing Window, throw ResourceNotFoundException
     *
     * @param windowDuration to be updated
-    * @param windowId
+    * @param windowId a String
     * @return the updated Window object, if update was successful
     */
     public Window putWindow(final String windowDuration, final String windowId) {
@@ -126,8 +130,7 @@ public class WindowService {
     * Delete an already existing Window, corresponding to the given windowId
     * If the windowId does not correspond t an already existing Window, throw ResourceNotFoundException
     *
-    * @param windowId
-    * @return no content
+    * @param windowId a String
     */
     public void deleteWindow(final String windowId) {
         Window toDeleteWindow = findWindowById(windowId).get(0);
