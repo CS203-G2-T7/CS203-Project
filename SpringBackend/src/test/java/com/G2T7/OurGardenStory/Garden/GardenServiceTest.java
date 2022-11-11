@@ -12,6 +12,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
+import org.mockito.stubbing.Answer;
 
 import com.G2T7.OurGardenStory.model.Garden;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
@@ -59,10 +60,24 @@ public class GardenServiceTest {
             .thenReturn(expected);
 
         LoadService loadService = new LoadService(mapperMock);
-        Garden actual = loadService.load();
+        Garden actual = loadService.load("No such Garden", "No such Garden");
 
         assertEquals(expected, actual);
     } 
+
+    @Test
+    void findGardenByGardenName_GardenPresent_ReturnGarden() {
+        DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
+        Garden expected = mock(Garden.class);
+
+        when(mapperMock.load(Garden.class, "Garden", "Sembawang Park"))
+            .thenReturn(expected);
+
+        LoadService loadService = new LoadService(mapperMock);
+        Garden actual = loadService.load("Garden", "Sembawang Park");
+
+        assertEquals(expected, actual);
+    }
 
     public class LoadService {
         private final DynamoDBMapper mapper;
@@ -71,8 +86,9 @@ public class GardenServiceTest {
             this.mapper = mapper;
         }
 
-        public Garden load() {            
-            return mapper.load(Garden.class, "No such garden", "No such garden");
+        public Garden load(String pk, String sk) {            
+            return mapper.load(Garden.class, pk, sk);
         }
     }
+
 }
