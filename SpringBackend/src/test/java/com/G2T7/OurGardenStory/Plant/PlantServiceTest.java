@@ -76,16 +76,25 @@ public class PlantServiceTest {
 
     @Test
     void findPlantByName_noSuchPlant_ReturnNull() {
-        DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
-        Plant expected = mock(Plant.class);
+        // DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
+        // Plant expected = mock(Plant.class);
 
-        when(mapperMock.load(eq(Plant.class),any(String.class), any(String.class)))
-            .thenReturn(expected);
+        // when(mapperMock.load(eq(Plant.class),any(String.class), any(String.class)))
+        //     .thenReturn(expected);
 
-        LoadService loadService = new LoadService(mapperMock);
-        Plant actual = loadService.load();
+        // LoadService loadService = new LoadService(mapperMock);
+        // Plant actual = loadService.load();
 
-        assertEquals(expected, actual);
+        // assertEquals(expected, actual);
+        Plant plant = new Plant("Plant", "New Plant", "New Plant Species", "New plant description");
+
+        when(mapperMock.load(eq(Plant.class), any(String.class))).thenReturn(null);
+
+        Plant foundPlant = plantService.findPlantByName("No name");
+        assertEquals(foundPlant, null);
+
+        //verify(mapperMock).load()
+
     } 
 
     public class LoadService {
@@ -113,7 +122,7 @@ public class PlantServiceTest {
         assertNotNull(savedPLant);
 
         //verify
-        //verify(mapperMock).load(plant);
+        verify(mapperMock).load(Plant.class, plant.getPK(), plant.getSK());
         verify(mapperMock).save(plant);
     }
 
