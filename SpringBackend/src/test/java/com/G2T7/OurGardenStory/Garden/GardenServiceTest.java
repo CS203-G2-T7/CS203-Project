@@ -56,11 +56,11 @@ public class GardenServiceTest {
     @Mock
     private ApplicationContext applicationContext;
 
-    @BeforeAll
-  	public void setUp() {
-  		this.dynamoDBTemplate = new DynamoDBTemplate(dynamoDB, dynamoDBMapper, dynamoDBMapperConfig);
- 		this.dynamoDBTemplate.setApplicationContext((org.springframework.context.ApplicationContext) applicationContext);
-    }
+    // @BeforeAll
+  	// public void setUp() {
+  	// 	this.dynamoDBTemplate = new DynamoDBTemplate(dynamoDB, dynamoDBMapper, dynamoDBMapperConfig);
+ 	// 	this.dynamoDBTemplate.setApplicationContext((org.springframework.context.ApplicationContext) applicationContext);
+    // }
 
     DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
 
