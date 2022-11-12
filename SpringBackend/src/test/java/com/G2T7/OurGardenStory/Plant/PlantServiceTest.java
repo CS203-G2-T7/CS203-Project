@@ -2,6 +2,7 @@ package com.G2T7.OurGardenStory.Plant;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -25,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.context.annotation.Role;
 import org.yaml.snakeyaml.LoaderOptions;
+import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
 
 import com.G2T7.OurGardenStory.model.Plant;
 import com.G2T7.OurGardenStory.service.PlantService;
@@ -57,56 +59,26 @@ public class PlantServiceTest {
         //when(mapperMock.query(Plant.class, any(DynamoDBQueryExpression.class))).thenReturn(PaginatedQueryList<Plant>.class);
     }
 
-    public class QueryService {
-        private final DynamoDBMapper mapper;
+    @Test
+    void findPlantByName_noSuchPlant_throwResourceNotFoundException() {
+        when(mapperMock.load(eq(Plant.class), any(String.class))).thenReturn(null);
 
-        public QueryService(DynamoDBMapper mapper) {
-            this.mapper = mapper;
-        }
+        assertThrows(ResourceNotFoundException.class, () -> plantService.findPlantByName("No name"));
 
-        public PaginatedQueryList<Plant> query() {
-            Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
-            eav.put(":PLNT", new AttributeValue().withS("Plant"));
-            DynamoDBQueryExpression<Plant> qe = new DynamoDBQueryExpression<Plant>()
-                .withKeyConditionExpression("PK = :PLNT").withExpressionAttributeValues(eav);
-            
-                return mapper.query(Plant.class, qe);
-        }
+        verify(mapperMock).load(Plant.class, "Plant", "No name");
+
     }
 
     @Test
-    void findPlantByName_noSuchPlant_ReturnNull() {
-        // DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
-        // Plant expected = mock(Plant.class);
+    void findPlantByName_HaveSuchPlant_ReturnPlant() {
+        //Plant plant = new Plant("Plant", "New Plant", "New Plant Species", "New plant description");
 
-        // when(mapperMock.load(eq(Plant.class),any(String.class), any(String.class)))
-        //     .thenReturn(expected);
+        when(mapperMock.load(Plant.class, "Kang Kong")).thenReturn(new Plant());
 
-        // LoadService loadService = new LoadService(mapperMock);
-        // Plant actual = loadService.load();
+        Plant foundPlant = plantService.findPlantByName("Kang Kong");
+        assertNotNull(foundPlant);
 
-        // assertEquals(expected, actual);
-        Plant plant = new Plant("Plant", "New Plant", "New Plant Species", "New plant description");
-
-        when(mapperMock.load(eq(Plant.class), any(String.class))).thenReturn(null);
-
-        Plant foundPlant = plantService.findPlantByName("No name");
-        assertEquals(foundPlant, null);
-
-        //verify(mapperMock).load()
-
-    } 
-
-    public class LoadService {
-        private final DynamoDBMapper mapper;
-
-        public LoadService(DynamoDBMapper mapper) {
-            this.mapper = mapper;
-        }
-
-        public Plant load() {            
-            return mapper.load(Plant.class, "No such plant", "No such plant");
-        }
+        verify(mapperMock).load(Plant.class, "Plant", "Kang Kong");
     }
 
     @Test
