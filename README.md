@@ -1,6 +1,6 @@
 # OurGardenStory
 
-![cs203Poster](https://user-images.githubusercontent.com/95681243/201477346-11d146cd-8c9a-45ad-a6bc-09e644e0d040.png)
+![Adeline   Rachelle](https://user-images.githubusercontent.com/95681243/201478771-84fd6c95-fa49-4789-bf88-e29784c42869.png)
 
 Greenhouse gases (GHG) like Carbon Dioxide are produced at every stage of food production 
 – during transportation, packaging, and disposal. Singapore relies heavily on other countries 
