@@ -113,7 +113,7 @@ public class PlantServiceTest {
         assertNotNull(savedPLant);
 
         //verify
-        verify(mapperMock).load(plant);
+        //verify(mapperMock).load(plant);
         verify(mapperMock).save(plant);
     }
 
