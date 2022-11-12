@@ -4,7 +4,7 @@ name: Production ECS Deployment
 on:
   push:
     branches:
-      - "backendRefactoring"
+      - "master"
 
 env:
   AWS_REGION: ap-southeast-1                  # set this to your preferred AWS region, e.g. us-west-1
