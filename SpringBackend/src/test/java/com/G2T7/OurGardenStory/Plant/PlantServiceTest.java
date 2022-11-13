@@ -82,18 +82,6 @@ public class PlantServiceTest {
         assertEquals(actual, expected);
     }
 
-    // @Test
-    // void findPlantByName_HaveSuchPlant_ReturnPlant() {
-    //     //Plant plant = new Plant("Plant", "New Plant", "New Plant Species", "New plant description");
-
-    //     when(mapperMock.load(Plant.class, "Kang Kong")).thenReturn(new Plant());
-
-    //     Plant foundPlant = plantService.findPlantByName("Kang Kong");
-    //     assertNotNull(foundPlant);
-
-    //     verify(mapperMock).load(Plant.class, "Plant", "Kang Kong");
-    // }
-
     @Test
     void createPlant_NewPlant_ReturnPlant() {
         Plant plant = new Plant("Plant", "New Plant", "New Plant Species", "New plant description");
@@ -125,16 +113,6 @@ public class PlantServiceTest {
 
         verify(mapperMock).load(Plant.class, plant.getPK(), plant.getSK());
     }
-
-    // @Test
-    // void putGarden_noDescription_throwIllegalArgumentException() {
-    //     Plant expected = mock(Plant.class);
-    //     when(plantService.findPlantByName("Existing plant name")).thenReturn(expected);
-
-    //     assertThrows(IllegalArgumentException.class, () -> plantService.putPlant("Existing plant name", null));
-
-    //     verify(plantService).findPlantByName("Existing plant name");
-    // }
 
 }
 

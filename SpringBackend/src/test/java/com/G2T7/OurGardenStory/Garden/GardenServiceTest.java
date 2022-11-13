@@ -57,12 +57,6 @@ public class GardenServiceTest {
     @Mock
     private ApplicationContext applicationContext;
 
-    // @BeforeAll
-  	// public void setUp() {
-  	// 	this.dynamoDBTemplate = new DynamoDBTemplate(dynamoDB, dynamoDBMapper, dynamoDBMapperConfig);
- 	// 	this.dynamoDBTemplate.setApplicationContext((org.springframework.context.ApplicationContext) applicationContext);
-    // }
-
     DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
 
 
@@ -81,18 +75,7 @@ public class GardenServiceTest {
 
     @Test
     void findGardenByGardenName_noSuchGarden_ThrowResourceNotFoundException() {
-        // DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
-        // Garden expected = mock(Garden.class);
-
-        // when(mapperMock.load(eq(Garden.class),any(String.class), any(String.class)))
-        //     .thenReturn(expected);
-
-        // LoadService loadService = new LoadService(mapperMock);
-        // Garden actual = loadService.load("No such Garden", "No such Garden");
-        //Garden actual = gardenService.findGardenByGardenName("No such Garden");
         assertThrows(NullPointerException.class, () -> gardenService.findGardenByGardenName("No such Garden"));
-        //assertNull(actual);
-        //assertEquals(expected, actual);
     }
 
     @Test
@@ -129,14 +112,7 @@ public class GardenServiceTest {
 
         when(mapperMock.load(Garden.class, "Garden", "Sembawang Park"))
                 .thenReturn(expected);
-
-        // LoadService loadService = new LoadService(mapperMock);
-        // Garden actual = loadService.load("Garden", "Sembawang Park");
         Garden actual = gardenService.findGardenByGardenName("Sembawang Park");
-
-        // LoadService loadService = new LoadService(mapperMock);
-        // Garden actual = loadService.load("Garden", "Sembawang Park");
-        // verify(mapperMock).load(Garden.class, "Garden", "Sembawang Park");
         assertEquals(expected, actual);
     }
 
