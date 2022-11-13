@@ -1,6 +1,7 @@
 package com.G2T7.OurGardenStory.Algorithm;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 import java.util.*;
@@ -35,6 +36,13 @@ public class AlgorithmServiceTest {
         assertNotNull(ballotSuccess);
 
         verify(algorithmService).getBallotSuccess(map, 3);
+    }
+
+    @Test
+    void callScheduleAlgo_haveSchedule_returnSchedule() {
+        doNothing().when(algorithmService).scheduleAlgo("win1");
+
+        verify(algorithmService).scheduleAlgo("win1");
     }
 
     // @Test
