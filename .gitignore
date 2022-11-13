@@ -249,5 +249,3 @@ test-output
 atlassian-ide-plugin.xml
 ogs.pem
 .env
-application.properties
-.properties
