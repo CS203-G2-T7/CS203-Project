@@ -49,7 +49,7 @@ public class PlantServiceTest {
         Plant plant = new Plant("Plant", "Existing plant name", "Existing plant species", "Existing plant description");
         mapperMock.delete(plant.getSK());
         mapperMock.save(plant);
-        }
+    }
 
     @Test
     void findAllPlants_allPlants_ReturnAllPlants() {

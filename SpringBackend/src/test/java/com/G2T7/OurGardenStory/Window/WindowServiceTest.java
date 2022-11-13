@@ -1,16 +1,23 @@
 package com.G2T7.OurGardenStory.Window;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import com.G2T7.OurGardenStory.service.PlantService;
+import com.G2T7.OurGardenStory.service.WindowService;
+import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import com.G2T7.OurGardenStory.model.Garden;
@@ -20,8 +27,62 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class WindowServiceTest {
+    @Mock
+    private DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
+    @InjectMocks
+    private WindowService windowService;
+
+//    @BeforeEach
+//    void resettingDatabase() {
+//        Window window = new Window("Window", "11/11/22", "Win1", "P1M");
+//        mapperMock.delete(window.getSK());
+//        mapperMock.save(window);
+//    }
+
+    @Test
+    void createWindow_NewWindow_ReturnWindow() {
+        Window window = new Window("Window", "11/11/22", "Win1", "P1M");
+
+        //mock the load operation
+        when(mapperMock.load(eq(Window.class), any(String.class))).thenReturn(null);
+        //mock the save operation
+        doNothing().when(mapperMock).save(window);
+
+        Window savedWindow = windowService.createWindow(window);
+        assertNotNull(window);
+
+        //verify
+        verify(mapperMock).load(Window.class, window.getPK(), window.getSK());
+        verify(mapperMock).save(window);
+    }
+
+    @Test
+    void createWindow_existingWindow_throwRuntImeException() {
+        Window window = new Window("Window", "11/11/22", "Win1", "P1M");
+
+        when(mapperMock.load(Window.class, "Window", "11/11/22")).thenReturn(window);
+        assertThrows(RuntimeException.class, () -> windowService.createWindow(window));
+
+        verify(mapperMock).load(Window.class, window.getPK(), window.getSK());
+    }
+
+    @Test
+    void findWindowById_noSuchWindow_throwResourceNotFoundException() {
+        //when(mapperMock.load(eq(Window.class), any(String.class))).thenReturn(null);
+
+        assertThrows(NullPointerException.class, () -> windowService.findWindowById("No window Id"));
+
+        //verify(mapperMock).load(Window.class, "Window", "No window Id");
+
+    }
+
     @Test
     void findAllWindow_allWindow_ReturnAllWindow() {
         DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
