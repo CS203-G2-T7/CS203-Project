@@ -98,8 +98,8 @@ public class PlantServiceTest {
         //mock the save operation
         doNothing().when(mapperMock).save(plant);
 
-        Plant savedPLant = plantService.createPlant(plant);
-        assertNotNull(savedPLant);
+        Plant savedPlant = plantService.createPlant(plant);
+        assertNotNull(savedPlant);
 
         //verify
         verify(mapperMock).load(Plant.class, plant.getPK(), plant.getSK());
