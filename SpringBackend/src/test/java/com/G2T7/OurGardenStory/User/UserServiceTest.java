@@ -1,6 +1,7 @@
 package com.G2T7.OurGardenStory.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -9,8 +10,12 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.G2T7.OurGardenStory.model.ReqResModel.UserSignUpRequest;
+import com.G2T7.OurGardenStory.service.UserService;
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 
 import com.G2T7.OurGardenStory.model.Garden;
@@ -20,8 +25,30 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class UserServiceTest {
+    @InjectMocks
+    UserService userService;
+
+//    @Test
+//    void createSignUpRequest_underageUser_throwIllegalArgumentException() {
+//        UserSignUpRequest userSignUpRequest = new UserSignUpRequest();
+//        userSignUpRequest.setUsername("John");
+//        userSignUpRequest.setPassword("Password1");
+//        userSignUpRequest.setUsername("JohnTest");
+//        userSignUpRequest.setEmail("John@email.com");
+//        userSignUpRequest.setFamilyName("Tan");
+//        userSignUpRequest.setGivenName("John");
+//        userSignUpRequest.setPhoneNumber("+6591234567");
+//        userSignUpRequest.setBirthDate("01-01-2010");
+//        assertThrows(IllegalArgumentException.class, () -> userService.createUser(userSignUpRequest));
+//    }
+
     @Test
     void findAllUser_allUser_ReturnAllUser() {
         DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
