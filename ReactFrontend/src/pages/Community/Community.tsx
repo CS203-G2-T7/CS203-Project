@@ -43,11 +43,15 @@ export default function MyPlants() {
       </NavBarStyled>
       <HeaderStyled>
         <p>My Community</p>
-        <p>View all the different profiles in your allotment garden community at {userDataList[0].gardenName}</p>
+        {userDataList.length === 0
+          ? "Please ballot for a garden to join a community"
+          : "View all the different profiles in your allotment garden community at " +
+          userDataList[0].gardenName}
       </HeaderStyled>
       <ParkNameStyled>
-        {" "}
-        My {userDataList[0].gardenName} Community
+        {userDataList.length === 0
+          ? "Join a community by balloting for an allotment garden!"
+          : "My " + userDataList[0].gardenName + " Community"}
       </ParkNameStyled>
       <ContentStyled>
         {userDataList.map((User, index) => (
