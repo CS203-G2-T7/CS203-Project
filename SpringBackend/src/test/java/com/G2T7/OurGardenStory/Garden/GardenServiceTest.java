@@ -154,6 +154,7 @@ public class GardenServiceTest {
 
         verify(mapperMock).load(Garden.class, garden.getPK(), garden.getSK());
     }
+
 }
 
 class LoadService {

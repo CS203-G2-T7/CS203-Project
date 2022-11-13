@@ -1,6 +1,7 @@
 package com.G2T7.OurGardenStory.Ballot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -10,20 +11,38 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.util.StringUtils;
 
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
+import com.G2T7.OurGardenStory.model.RelationshipModel.Ballot;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
+import com.G2T7.OurGardenStory.service.BallotService;
+import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.fasterxml.jackson.databind.JsonNode;
 
+import org.mockito.quality.Strictness;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class BallotServiceTest {
+        @Mock
+        private DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
+        @InjectMocks
+        private BallotService ballotService = mock(BallotService.class);
+
     @Test
     void findAllBallot_allBallot_ReturnAllBallot() {
         Window window = new Window("Window", "11-07-2022", "win1","P3M"); //random values
@@ -63,20 +82,24 @@ public class BallotServiceTest {
         }
     }
 
-    @Test
-    void findUserBallotInWindow_noSuchUserBallot_ReturnNull() {
-        DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
-        
-        Relationship expected = mock(Relationship.class);
+    // @Test
+    // void findUserBallotInWindow_noSuchUserBallot_throwResourceNotFoundException() {
+    //     when(mapperMock.load(eq(Ballot.class), any(String.class), any(String.class))).thenReturn(null);
 
-        when(mapperMock.load(eq(Relationship.class),any(String.class), any(String.class)))
-            .thenReturn(expected);
+    //     assertThrows(ResourceNotFoundException.class, () -> ballotService.findUserBallotInWindow("windowId", "username"));
+    // } 
 
-        LoadService loadService = new LoadService(mapperMock);
-        Relationship actual = loadService.load();
+    // @Test
+    // void addBallotInWindowGarden_successfulAddition_returnRelationship() {
+    //     Ballot ballot = new Ballot("winId", "username", "gardenName", "ballotId", "04-04-2022", 33, 14, "PENDING", "PENDING");
 
-        assertEquals(expected, actual);
-    } 
+    //     doNothing().when(mapperMock).save(ballot);
+
+    //     JsonNode payload = new JsonNode() {
+    //         "gardenName": "Sembawang Park"
+    //     };
+    //     Ballot savedBallot = ballotService.addBallotInWindowGarden("winId", "username", null);
+    // }
 
     public class LoadService {
         private final DynamoDBMapper mapper;

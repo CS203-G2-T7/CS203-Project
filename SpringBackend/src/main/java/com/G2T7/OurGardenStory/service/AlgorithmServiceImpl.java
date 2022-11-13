@@ -64,7 +64,6 @@ public class AlgorithmServiceImpl {
             int idx = rand.nextInt(size);
             output.add(list.get(idx));
             list.removeIf(name -> name.equals(list.get(idx)));
-
         }
 
         return output;

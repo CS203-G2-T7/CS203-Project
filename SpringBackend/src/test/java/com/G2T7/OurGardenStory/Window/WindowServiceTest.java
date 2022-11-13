@@ -56,7 +56,7 @@ public class WindowServiceTest {
         doNothing().when(mapperMock).save(window);
 
         Window savedWindow = windowService.createWindow(window);
-        assertNotNull(window);
+        assertNotNull(savedWindow);
 
         //verify
         verify(mapperMock).load(Window.class, window.getPK(), window.getSK());

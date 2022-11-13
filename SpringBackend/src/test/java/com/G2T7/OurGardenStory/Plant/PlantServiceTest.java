@@ -28,7 +28,7 @@ import org.mockito.quality.Strictness;
 import org.springframework.context.annotation.Role;
 import org.yaml.snakeyaml.LoaderOptions;
 import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
-
+import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.Plant;
 import com.G2T7.OurGardenStory.service.PlantService;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
@@ -53,18 +53,15 @@ public class PlantServiceTest {
 
     @Test
     void findAllPlants_allPlants_ReturnAllPlants() {
-        // //DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
-        // PaginatedQueryList<Plant> expected = mock(PaginatedQueryList.class);
-        // // Note that when needs to be completed before thenReturn can be called.
-        // when(mapperMock.query(eq(Plant.class), Mockito.any(DynamoDBQueryExpression.class))).thenReturn(expected);
+        PaginatedQueryList<Garden> expected = mock(PaginatedQueryList.class);
+        // Note that when needs to be completed before thenReturn can be called.
+        when(mapperMock.query(eq(Garden.class), Mockito.any(DynamoDBQueryExpression.class))).thenReturn(expected);
 
-        // QueryService queryService = new QueryService(mapperMock);
-        // PaginatedQueryList<Plant> actual = queryService.query();
+        QueryService queryService = new QueryService(mapperMock);
+        PaginatedQueryList<Garden> actual = queryService.queryAllGardens();
 
-        // assertEquals(expected, actual);
-        
-        //mock the query method
-        //when(mapperMock.query(Plant.class, any(DynamoDBQueryExpression.class))).thenReturn(PaginatedQueryList<Plant>.class);
+        assertEquals(expected, actual);
+        verify(mapperMock).query(eq(Garden.class), Mockito.any(DynamoDBQueryExpression.class));
     }
 
     @Test
@@ -75,6 +72,14 @@ public class PlantServiceTest {
 
         verify(mapperMock).load(Plant.class, "Plant", "No name");
 
+    }
+
+    @Test
+    void findPlantByName_HaveSuchPlant_ReturnName() {
+        Plant expected = mock(Plant.class);
+        when(mapperMock.load(Plant.class, "Plant", "Existing plant name")).thenReturn(expected);
+        Plant actual = plantService.findPlantByName("Existing plant name");
+        assertEquals(actual, expected);
     }
 
     // @Test
@@ -121,5 +126,32 @@ public class PlantServiceTest {
         verify(mapperMock).load(Plant.class, plant.getPK(), plant.getSK());
     }
 
+    // @Test
+    // void putGarden_noDescription_throwIllegalArgumentException() {
+    //     Plant expected = mock(Plant.class);
+    //     when(plantService.findPlantByName("Existing plant name")).thenReturn(expected);
+
+    //     assertThrows(IllegalArgumentException.class, () -> plantService.putPlant("Existing plant name", null));
+
+    //     verify(plantService).findPlantByName("Existing plant name");
+    // }
+
+}
+
+class QueryService {
+    private final DynamoDBMapper mapper;
+
+    public QueryService(DynamoDBMapper mapper) {
+        this.mapper = mapper;
+    }
+
+    public PaginatedQueryList<Garden> queryAllGardens() {
+        Map<String, AttributeValue> eav = new HashMap<String, AttributeValue>();
+        eav.put(":GDN", new AttributeValue().withS("Garden"));
+        DynamoDBQueryExpression<Garden> qe = new DynamoDBQueryExpression<Garden>()
+                .withKeyConditionExpression("PK = :GDN").withExpressionAttributeValues(eav);
+
+        return mapper.query(Garden.class, qe);
+    }
 }
 
