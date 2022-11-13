@@ -9,16 +9,12 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.management.relation.Relation;
-
-import org.springframework.expression.spel.ast.RealLiteral;
 import org.springframework.util.StringUtils;
 
 import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
 
-import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.Window;
 import com.G2T7.OurGardenStory.model.RelationshipModel.GardenWin;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;

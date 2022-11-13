@@ -9,10 +9,7 @@ import static org.mockito.Mockito.verify;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.G2T7.OurGardenStory.service.PlantService;
 import com.G2T7.OurGardenStory.service.WindowService;
-import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,8 +17,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.G2T7.OurGardenStory.model.Garden;
-import com.G2T7.OurGardenStory.model.Plant;
 import com.G2T7.OurGardenStory.model.Window;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;

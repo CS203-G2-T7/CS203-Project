@@ -14,22 +14,17 @@ import static org.mockito.Mockito.when;
 
 import java.util.*;
 
-import com.G2T7.OurGardenStory.model.Plant;
 import org.apache.catalina.core.ApplicationContext;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
 import org.socialsignin.spring.data.dynamodb.core.DynamoDBTemplate;
 
-import com.G2T7.OurGardenStory.config.DynamoDBConfig;
 import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.service.GardenService;
-import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;

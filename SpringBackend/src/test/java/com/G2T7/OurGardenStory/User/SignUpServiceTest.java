@@ -1,6 +1,5 @@
 package com.G2T7.OurGardenStory.User;
 
-import com.G2T7.OurGardenStory.model.ReqResModel.UserSignInRequest;
 import com.G2T7.OurGardenStory.model.ReqResModel.UserSignUpRequest;
 import com.G2T7.OurGardenStory.service.SignUpService;
 import org.junit.jupiter.api.Test;

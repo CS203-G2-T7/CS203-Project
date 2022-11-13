@@ -1,8 +1,6 @@
 package com.G2T7.OurGardenStory.Ballot;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -20,20 +18,14 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.springframework.util.StringUtils;
 
 import com.G2T7.OurGardenStory.model.Garden;
-import com.G2T7.OurGardenStory.model.User;
 import com.G2T7.OurGardenStory.model.Window;
-import com.G2T7.OurGardenStory.model.RelationshipModel.Ballot;
 import com.G2T7.OurGardenStory.model.RelationshipModel.Relationship;
 import com.G2T7.OurGardenStory.service.BallotService;
-import com.amazonaws.services.cognitoidp.model.ResourceNotFoundException;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBQueryExpression;
 import com.amazonaws.services.dynamodbv2.datamodeling.PaginatedQueryList;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
-import com.fasterxml.jackson.databind.JsonNode;
-
 import org.mockito.quality.Strictness;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)

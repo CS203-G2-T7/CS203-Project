@@ -11,14 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.G2T7.OurGardenStory.model.ReqResModel.UserSignUpRequest;
 import com.G2T7.OurGardenStory.service.UserService;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +24,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.G2T7.OurGardenStory.model.Garden;
 import com.G2T7.OurGardenStory.model.Plant;
 import com.G2T7.OurGardenStory.model.User;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
