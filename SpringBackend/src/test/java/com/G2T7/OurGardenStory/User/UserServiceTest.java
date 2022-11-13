@@ -1,21 +1,30 @@
 package com.G2T7.OurGardenStory.User;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.G2T7.OurGardenStory.model.ReqResModel.UserSignUpRequest;
 import com.G2T7.OurGardenStory.service.UserService;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import com.G2T7.OurGardenStory.model.Garden;
@@ -35,6 +44,9 @@ public class UserServiceTest {
     @InjectMocks
     UserService userService;
 
+    @Mock
+    DynamoDBMapper dynamoDBMapper;
+
 //    @Test
 //    void createSignUpRequest_underageUser_throwIllegalArgumentException() {
 //        UserSignUpRequest userSignUpRequest = new UserSignUpRequest();
@@ -50,17 +62,47 @@ public class UserServiceTest {
 //    }
 
     @Test
-    void findAllUser_allUser_ReturnAllUser() {
+    void findAllUser_allUser_throwNullPointerException() {
         DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
         PaginatedQueryList<User> expected = mock(PaginatedQueryList.class);
         // Note that when needs to be completed before thenReturn can be called.
         when(mapperMock.query(eq(User.class), Mockito.any(DynamoDBQueryExpression.class))).thenReturn(expected);
 
         QueryService queryService = new QueryService(mapperMock);
-        PaginatedQueryList<User> actual = queryService.query();
 
-        assertEquals(expected, actual);
+        assertThrows(NullPointerException.class, () -> userService.findAllUsers());
     }
+
+    @Test
+    void findAllUserPlants_allUserPlants_throwResourceNotFoundException() {
+        DynamoDBMapper mapperMock = mock(DynamoDBMapper.class);
+        List<Plant> allPlants = userService.findAllUserPlants("wfwefewfewf");
+        assertThrows(ResourceNotFoundException.class, () -> userService.findAllUserPlants("John"));
+    }
+
+    @Test
+    void findUserPlant_UserPlant_throwResourceNotFoundException() {
+        assertThrows(ResourceNotFoundException.class, () -> userService.findUserPlant("John", "Kang Kong"));
+    }
+
+    @Test
+    void removeUserPlant_UserPlant_throwResourceNotFoundException() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonFactory jfactory = new JsonFactory(mapper);
+        JsonParser jp = jfactory.createJsonParser("{\"k1\":\"v1\"}");
+        JsonNode actualObj = mapper.readTree(jp);
+        assertThrows(ResourceNotFoundException.class, () -> userService.removeUserPlantName("John", actualObj));
+    }
+
+    @Test
+    void addUserPlant_UserPlant_throwResourceNotFoundException() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonFactory jfactory = new JsonFactory(mapper);
+        JsonParser jp = jfactory.createJsonParser("{\"k1\":\"v1\"}");
+        JsonNode actualObj = mapper.readTree(jp);
+        assertThrows(ResourceNotFoundException.class, () -> userService.addUserPlantName("John", actualObj));
+    }
+
 
     public class QueryService {
         private final DynamoDBMapper mapper;
